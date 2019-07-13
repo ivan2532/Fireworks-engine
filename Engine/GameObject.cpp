@@ -9,5 +9,6 @@ void GameObject::Update() noexcept
 
 void GameObject::AddComponent(std::unique_ptr<Component> component) noexcept
 {
+	component->SetObject(this);
 	components.push_back(std::move(component));
 }
