@@ -5,6 +5,7 @@
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
 #include <iostream>
+#include "Transform.hpp"
 
 Game::Game() noexcept //Window initialized first so glfwInit() is called in the window
 	//:
@@ -25,6 +26,8 @@ Game::Game() noexcept //Window initialized first so glfwInit() is called in the 
 
 	ImGui_ImplGlfw_InitForOpenGL(wnd.GetWindow(), true);
 	ImGui_ImplOpenGL3_Init("#version 460");
+
+	testObject.AddComponent(std::make_unique<Transform>());
 }
 
 Game::~Game() noexcept
@@ -63,6 +66,7 @@ void Game::Update() noexcept
 {
 	ProcessInput();
 	RenderFrame();
+	testObject.Update();
 }
 
 void Game::EndFrame(Window& wnd) noexcept

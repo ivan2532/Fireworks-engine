@@ -1,5 +1,6 @@
 #pragma once
 #include "Window.hpp"
+#include "GameObject.hpp"
 #include "ImGuiManager.hpp"
 #include "Model.hpp"
 #include "Shader.hpp"
@@ -25,6 +26,7 @@ private:
 	float deltaTime = 0.0f;
 	Window wnd;
 	//User variables here
+	GameObject testObject;
 	ImGuiManager imGuiManager;
 	FPCamera camera;
 	Model materialBall;
