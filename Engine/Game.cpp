@@ -29,7 +29,7 @@ Game::Game() noexcept
 	auto transformComponent = ballObject.GetComponent<Transform>();
 
 	if(transformComponent.has_value())
-		transformComponent.value()->Translate(glm::vec3(5.0f, 100.0f, 0.0f));
+		transformComponent.value()->Translate(glm::vec3(5.0f, 0.0f, 0.0f));
 }
 
 Game::~Game() noexcept
