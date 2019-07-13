@@ -12,8 +12,11 @@ class Transform : public Component
 {
 public:
 	Transform() noexcept;
-	Transform(const Transform&) = default; //FIX
-	Transform& operator=(const Transform&) = default; //FIX
+	~Transform() noexcept;
+	Transform(const Transform&) noexcept;
+	Transform& operator=(const Transform&) noexcept;
+	Transform(Transform&&) noexcept;
+	Transform& operator=(Transform&&) noexcept;
 public:
 	void SetPosition(glm::vec3 value) noexcept;
 	glm::vec3 GetPosition() const noexcept;

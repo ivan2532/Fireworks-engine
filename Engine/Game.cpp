@@ -6,6 +6,7 @@
 #include "imgui/imgui_impl_opengl3.h"
 #include <iostream>
 #include "Transform.hpp"
+#include "ModelRenderer.hpp"
 
 Game::Game() noexcept //Window initialized first so glfwInit() is called in the window
 	//:
@@ -13,8 +14,6 @@ Game::Game() noexcept //Window initialized first so glfwInit() is called in the 
 	:
 	wnd(false),
 	camera(20.0f, 0.005f, glm::vec3(0.0f, 0.0f, 50.0f), glm::zero<glm::vec3>()),
-	materialBall("Material_ball/material_ball.obj"),
-	nanosuit("Nanosuit/nanosuit.obj"),
 	unlitTextureShader("UnlitTextureVS.glsl", "UnlitTextureFS.glsl")
 {
 	glfwSetWindowUserPointer(wnd.GetWindow(), (void*)this);
@@ -27,7 +26,10 @@ Game::Game() noexcept //Window initialized first so glfwInit() is called in the 
 	ImGui_ImplGlfw_InitForOpenGL(wnd.GetWindow(), true);
 	ImGui_ImplOpenGL3_Init("#version 460");
 
-	testObject.AddComponent(std::make_unique<Transform>());
+	Transform trans;
+	trans.AddShaderToUpdate(std::make_unique<Shader>(unlitTextureShader));
+	ballObject.AddComponent(std::make_unique<Transform>(std::move(trans)));
+	ballObject.AddComponent(std::make_unique<ModelRenderer>("Material_ball/material_ball.obj", unlitTextureShader));
 }
 
 Game::~Game() noexcept
@@ -96,11 +98,8 @@ void Game::RenderFrame() noexcept
 		glm::perspective(glm::radians(80.0f), (float)wnd.GetWidth() / (float)wnd.GetHeight(), 0.1f, 1000.0f) *
 		camera.GetViewMatrix();
 
-	glm::mat4 model(1.0f);
-	model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
 	//model = glm::rotate(model, (float)glfwGetTime() * 2.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 	unlitTextureShader.SetMat4x4("viewProj", viewProj);
-	unlitTextureShader.SetMat4x4("model", model);
 
 	//TEST
 	unlitTextureShader.SetVec3("viewPos", camera.GetPosition());
@@ -115,22 +114,7 @@ void Game::RenderFrame() noexcept
 	unlitTextureShader.SetFloat("pointLight.attenuation_quadratic", 0.0075f);
 	//TEST
 
-	materialBall.Draw(unlitTextureShader);
-
-	glm::mat4 model2(1.0f);
-	model2 = glm::translate(model2, glm::vec3(20.0f, 0.0f, 0.0f));
-	//model = glm::rotate(model2, (float)glfwGetTime() * 2.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-	model2 = glm::scale(model2, glm::vec3(2.0f, 2.0f, 2.0f));
-	unlitTextureShader.SetMat4x4("viewProj", viewProj);
-	unlitTextureShader.SetMat4x4("model", model2);
-
-	nanosuit.Draw(unlitTextureShader);
-
-	if (ImGui::Begin("Hello world window!"))
-	{
-		ImGui::Text("Hello world!");
-	}
-	ImGui::End();
+	ballObject.Update();
 }
 
 void CursorMoveCallback(GLFWwindow* wnd, double x, double y)

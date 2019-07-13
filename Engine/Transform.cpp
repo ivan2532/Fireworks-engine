@@ -33,6 +33,51 @@ Transform::Transform() noexcept
 	UpdateTransform();
 }
 
+Transform::~Transform() noexcept
+{
+	parent.release();
+}
+
+Transform::Transform(const Transform& lhs) noexcept
+	:
+	position(lhs.position),
+	eulerAngles(lhs.eulerAngles),
+	scale(lhs.scale),
+	transform(lhs.transform),
+	parent(new Transform( *(lhs.parent) ))
+{
+}
+
+Transform& Transform::operator=(const Transform& lhs) noexcept
+{
+	position = lhs.position;
+	eulerAngles = lhs.eulerAngles;
+	scale = lhs.scale;
+	transform = lhs.transform;
+	parent.reset(new Transform( *(lhs.parent) ));
+	return *this;
+}
+
+Transform::Transform(Transform&& lhs) noexcept
+	:
+	position(std::move(lhs.position)),
+	eulerAngles(std::move(lhs.eulerAngles)),
+	scale(std::move(lhs.scale)),
+	transform(std::move(lhs.transform)),
+	parent(std::move(lhs.parent))
+{
+}
+
+Transform& Transform::operator=(Transform&& lhs) noexcept
+{
+	position = std::move(lhs.position);
+	eulerAngles = std::move(lhs.eulerAngles);
+	scale = std::move(lhs.scale);
+	transform = std::move(lhs.transform);
+	parent = std::move(lhs.parent);
+	return *this;
+}
+
 void Transform::SetPosition(glm::vec3 value) noexcept
 {
 	position = value;

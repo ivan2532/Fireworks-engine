@@ -7,10 +7,13 @@
 class Shader
 {
 public:
-	//Delete unnecessary constructors
+	//Delete unnecessary constructors and rule of 5
 	Shader() = delete;
-	Shader(const Shader&) = delete;
-	Shader& operator=(const Shader&) = delete;
+	~Shader() = default;
+	Shader(const Shader&) = default;
+	Shader& operator=(const Shader&) = default;
+	Shader(Shader&&) = default;
+	Shader& operator=(Shader&&) = default;
 
 	Shader(std::string vsPath, std::string fsPath);
 public:

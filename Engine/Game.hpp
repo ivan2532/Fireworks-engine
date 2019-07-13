@@ -5,6 +5,7 @@
 #include "Model.hpp"
 #include "Shader.hpp"
 #include "FPCamera.hpp"
+#include "GameObject.hpp"
 
 class Game
 {
@@ -29,9 +30,8 @@ private:
 	GameObject testObject;
 	ImGuiManager imGuiManager;
 	FPCamera camera;
-	Model materialBall;
-	Model nanosuit;
 	Shader unlitTextureShader;
+	GameObject ballObject;
 };
 
 void CursorMoveCallback(GLFWwindow* wnd, double x, double y);

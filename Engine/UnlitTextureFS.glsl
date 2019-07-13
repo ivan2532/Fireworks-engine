@@ -28,11 +28,11 @@ uniform sampler2D tex_normal1;
 uniform sampler2D tex_normal2;
 
 in vec3 vertexPos;
-//in vec3 normal;
+in vec3 normal;
 in vec2 texCoord;
 out vec4 color;
 
-vec3 normal;
+//vec3 normal;
 
 vec4 CalculatePointLight(PointLight light, vec3 viewPos, vec3 lightPos, vec3 fragmentPos)
 {
@@ -58,7 +58,7 @@ vec4 CalculatePointLight(PointLight light, vec3 viewPos, vec3 lightPos, vec3 fra
 
 void main()
 {
-	normal = texture(tex_normal1, texCoord).rgb;
-	normal = normalize(normal * 2.0f - 1.0f);
+	//normal = texture(tex_normal1, texCoord).rgb;
+	//normal = normalize(normal * 2.0f - 1.0f);
 	color =  CalculatePointLight(pointLight, viewPos, lightPos, vertexPos);
 }
