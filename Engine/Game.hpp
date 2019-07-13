@@ -6,7 +6,7 @@
 #include "Shader.hpp"
 #include "FPCamera.hpp"
 #include "GameObject.hpp"
-#include "Transform.hpp"
+#include "ComponentIncludes.hpp"
 
 class Game
 {

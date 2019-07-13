@@ -1,8 +1,6 @@
 #pragma once
 #include "Component.hpp"
-#include "glm/glm.hpp"
-#include "glm/gtc/matrix_transform.hpp"
-#include "glm/gtc/type_ptr.hpp"
+#include "glmIncludes.hpp"
 #include <memory>
 #include <vector>
 
@@ -19,12 +17,15 @@ public:
 	Transform& operator=(Transform&&) noexcept;
 public:
 	void SetPosition(glm::vec3 value) noexcept;
+	void SetPosition(float x, float y, float z) noexcept;
 	glm::vec3 GetPosition() const noexcept;
 
 	void SetEulerAngles(glm::vec3 value) noexcept;
+	void SetEulerAngles(float x, float y, float z) noexcept;
 	glm::vec3 GetEulerAngles() const noexcept;
 
 	void SetScale(glm::vec3 value) noexcept;
+	void SetScale(float x, float y, float z) noexcept;
 	glm::vec3 GetScale() const noexcept;
 
 	glm::mat4 GetTransformation() const noexcept;

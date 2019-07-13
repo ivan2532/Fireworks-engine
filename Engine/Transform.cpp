@@ -1,6 +1,5 @@
 #include "Transform.hpp"
 #include "Shader.hpp"
-#include <iostream>
 
 void Transform::Update() noexcept
 {
@@ -95,6 +94,11 @@ void Transform::SetPosition(glm::vec3 value) noexcept
 	position = value;
 }
 
+void Transform::SetPosition(float x, float y, float z) noexcept
+{
+	SetPosition(glm::vec3(x, y, z));
+}
+
 glm::vec3 Transform::GetPosition() const noexcept
 {
 	return position;
@@ -105,6 +109,11 @@ void Transform::SetEulerAngles(glm::vec3 value) noexcept
 	eulerAngles = value;
 }
 
+void Transform::SetEulerAngles(float x, float y, float z) noexcept
+{
+	SetEulerAngles(glm::vec3(x, y, z));
+}
+
 glm::vec3 Transform::GetEulerAngles() const noexcept
 {
 	return eulerAngles;
@@ -113,6 +122,11 @@ glm::vec3 Transform::GetEulerAngles() const noexcept
 void Transform::SetScale(glm::vec3 value) noexcept
 {
 	scale = value;
+}
+
+void Transform::SetScale(float x, float y, float z) noexcept
+{
+	SetScale(glm::vec3(x, y, z));
 }
 
 glm::vec3 Transform::GetScale() const noexcept

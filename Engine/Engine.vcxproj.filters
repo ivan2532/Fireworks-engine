@@ -31,6 +31,9 @@
     <Filter Include="Source Files\Graphics">
       <UniqueIdentifier>{006511f2-87e1-409d-872c-66291a85d4c1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Includes">
+      <UniqueIdentifier>{00401ab8-5143-423e-8e96-16f8278b5a24}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -131,9 +134,6 @@
     <ClInclude Include="Model.hpp">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="ImGuiManager.hpp">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="Shader.hpp">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
@@ -142,6 +142,21 @@
     </ClInclude>
     <ClInclude Include="ModelRenderer.hpp">
       <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGuiManager.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="imguiIncludes.hpp">
+      <Filter>Header Files\Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="glmIncludes.hpp">
+      <Filter>Header Files\Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGLIncludes.hpp">
+      <Filter>Header Files\Includes</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentIncludes.hpp">
+      <Filter>Header Files\Includes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

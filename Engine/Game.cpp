@@ -1,12 +1,6 @@
 #include "Game.hpp"
-#include "glad/glad.h"
-#include "GLFW/glfw3.h"
-#include "imgui/imgui.h"
-#include "imgui/imgui_impl_glfw.h"
-#include "imgui/imgui_impl_opengl3.h"
-#include <iostream>
-#include "Transform.hpp"
-#include "ModelRenderer.hpp"
+#include "OpenGLIncludes.hpp"
+#include "imguiIncludes.hpp"
 
 Game::Game() noexcept
 	//:
@@ -30,6 +24,12 @@ Game::Game() noexcept
 	trans.AddShaderToUpdate(std::make_unique<Shader>(unlitTextureShader));
 	ballObject.AddComponent(std::make_unique<Transform>(trans));
 	ballObject.AddComponent(std::make_unique<ModelRenderer>("Material_ball/material_ball.obj", unlitTextureShader));
+
+	//ballObject.GetComponent<Transform>()->get()->Translate(glm::vec3(5.0f, 1.0f, 0.0f));
+	auto transformComponent = ballObject.GetComponent<Transform>();
+
+	if(transformComponent.has_value())
+		transformComponent.value()->Translate(glm::vec3(5.0f, 100.0f, 0.0f));
 }
 
 Game::~Game() noexcept
@@ -98,7 +98,6 @@ void Game::RenderFrame() noexcept
 		glm::perspective(glm::radians(80.0f), (float)wnd.GetWidth() / (float)wnd.GetHeight(), 0.1f, 1000.0f) *
 		camera.GetViewMatrix();
 
-	//model = glm::rotate(model, (float)glfwGetTime() * 2.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 	unlitTextureShader.SetMat4x4("viewProj", viewProj);
 
 	//TEST
