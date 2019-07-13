@@ -89,14 +89,14 @@ Transform& Transform::operator=(Transform&& rhs) noexcept
 	return *this;
 }
 
-void Transform::SetPosition(glm::vec3 value) noexcept
-{
-	position = value;
-}
-
 void Transform::SetPosition(float x, float y, float z) noexcept
 {
 	SetPosition(glm::vec3(x, y, z));
+}
+
+void Transform::SetPosition(glm::vec3 value) noexcept
+{
+	position = value;
 }
 
 glm::vec3 Transform::GetPosition() const noexcept
@@ -104,14 +104,14 @@ glm::vec3 Transform::GetPosition() const noexcept
 	return position;
 }
 
-void Transform::SetEulerAngles(glm::vec3 value) noexcept
-{
-	eulerAngles = value;
-}
-
 void Transform::SetEulerAngles(float x, float y, float z) noexcept
 {
 	SetEulerAngles(glm::vec3(x, y, z));
+}
+
+void Transform::SetEulerAngles(glm::vec3 value) noexcept
+{
+	eulerAngles = value;
 }
 
 glm::vec3 Transform::GetEulerAngles() const noexcept
@@ -119,14 +119,14 @@ glm::vec3 Transform::GetEulerAngles() const noexcept
 	return eulerAngles;
 }
 
-void Transform::SetScale(glm::vec3 value) noexcept
-{
-	scale = value;
-}
-
 void Transform::SetScale(float x, float y, float z) noexcept
 {
 	SetScale(glm::vec3(x, y, z));
+}
+
+void Transform::SetScale(glm::vec3 value) noexcept
+{
+	scale = value;
 }
 
 glm::vec3 Transform::GetScale() const noexcept
@@ -139,14 +139,29 @@ glm::mat4 Transform::GetTransformation() const noexcept
 	return transform;
 }
 
+void Transform::Translate(float x, float y, float z) noexcept
+{
+	Translate(glm::vec3(x, y, z));
+}
+
 void Transform::Translate(glm::vec3 value) noexcept
 {
 	position += value;
 }
 
+void Transform::Rotate(float x, float y, float z) noexcept
+{
+	Rotate(glm::vec3(x, y, z));
+}
+
 void Transform::Rotate(glm::vec3 value) noexcept
 {
 	eulerAngles += value;
+}
+
+void Transform::Scale(float x, float y, float z) noexcept
+{
+	Scale(glm::vec3(x, y, z));
 }
 
 void Transform::Scale(glm::vec3 value) noexcept

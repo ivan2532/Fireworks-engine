@@ -25,11 +25,12 @@ Game::Game() noexcept
 	ballObject.AddComponent(std::make_unique<Transform>(trans));
 	ballObject.AddComponent(std::make_unique<ModelRenderer>("Material_ball/material_ball.obj", unlitTextureShader));
 
-	//ballObject.GetComponent<Transform>()->get()->Translate(glm::vec3(5.0f, 1.0f, 0.0f));
-	auto transformComponent = ballObject.GetComponent<Transform>();
+	auto trans = ballObject.GetComponent<Transform>();
 
-	if(transformComponent.has_value())
-		transformComponent.value()->Translate(glm::vec3(5.0f, 0.0f, 0.0f));
+	if (trans.has_value())
+	{
+		trans.value()->Translate(0.0f, 10.0f, 0.0f);
+	}
 }
 
 Game::~Game() noexcept

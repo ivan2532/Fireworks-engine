@@ -16,22 +16,25 @@ public:
 	Transform(Transform&&) noexcept;
 	Transform& operator=(Transform&&) noexcept;
 public:
-	void SetPosition(glm::vec3 value) noexcept;
 	void SetPosition(float x, float y, float z) noexcept;
+	void SetPosition(glm::vec3 value) noexcept;
 	glm::vec3 GetPosition() const noexcept;
 
-	void SetEulerAngles(glm::vec3 value) noexcept;
 	void SetEulerAngles(float x, float y, float z) noexcept;
+	void SetEulerAngles(glm::vec3 value) noexcept;
 	glm::vec3 GetEulerAngles() const noexcept;
 
-	void SetScale(glm::vec3 value) noexcept;
 	void SetScale(float x, float y, float z) noexcept;
+	void SetScale(glm::vec3 value) noexcept;
 	glm::vec3 GetScale() const noexcept;
 
 	glm::mat4 GetTransformation() const noexcept;
 
+	void Translate(float x, float y, float z) noexcept;
 	void Translate(glm::vec3 value) noexcept;
+	void Rotate(float x, float y, float z) noexcept;
 	void Rotate(glm::vec3 value) noexcept; // in degrees not radians
+	void Scale(float x, float y, float z) noexcept;
 	void Scale(glm::vec3 value) noexcept;
 
 	void AddShaderToUpdate(std::unique_ptr<Shader> shader) noexcept;
