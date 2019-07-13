@@ -1,4 +1,5 @@
 #include "ModelRenderer.hpp"
+#include <iostream>
 
 ModelRenderer::ModelRenderer(std::string modelPath, Shader& aShader)
 	:

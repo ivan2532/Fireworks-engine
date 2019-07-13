@@ -31,6 +31,7 @@ public:
 
 	void Translate(glm::vec3 value) noexcept;
 	void Rotate(glm::vec3 value) noexcept; // in degrees not radians
+	void Scale(glm::vec3 value) noexcept;
 
 	void AddShaderToUpdate(std::unique_ptr<Shader> shader) noexcept;
 public:

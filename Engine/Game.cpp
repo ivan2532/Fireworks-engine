@@ -8,13 +8,14 @@
 #include "Transform.hpp"
 #include "ModelRenderer.hpp"
 
-Game::Game() noexcept //Window initialized first so glfwInit() is called in the window
+Game::Game() noexcept
 	//:
 	//wnd(800u, 600u, "Test", false)
 	:
-	wnd(false),
+	wnd(true),
 	camera(20.0f, 0.005f, glm::vec3(0.0f, 0.0f, 50.0f), glm::zero<glm::vec3>()),
-	unlitTextureShader("UnlitTextureVS.glsl", "UnlitTextureFS.glsl")
+	unlitTextureShader("UnlitTextureVS.glsl", "UnlitTextureFS.glsl"),
+	ball("Material_ball/material_ball.obj")
 {
 	glfwSetWindowUserPointer(wnd.GetWindow(), (void*)this);
 
@@ -26,9 +27,8 @@ Game::Game() noexcept //Window initialized first so glfwInit() is called in the 
 	ImGui_ImplGlfw_InitForOpenGL(wnd.GetWindow(), true);
 	ImGui_ImplOpenGL3_Init("#version 460");
 
-	Transform trans;
 	trans.AddShaderToUpdate(std::make_unique<Shader>(unlitTextureShader));
-	ballObject.AddComponent(std::make_unique<Transform>(std::move(trans)));
+	ballObject.AddComponent(std::make_unique<Transform>(trans));
 	ballObject.AddComponent(std::make_unique<ModelRenderer>("Material_ball/material_ball.obj", unlitTextureShader));
 }
 

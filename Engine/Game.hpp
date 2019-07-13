@@ -6,6 +6,7 @@
 #include "Shader.hpp"
 #include "FPCamera.hpp"
 #include "GameObject.hpp"
+#include "Transform.hpp"
 
 class Game
 {
@@ -32,6 +33,8 @@ private:
 	FPCamera camera;
 	Shader unlitTextureShader;
 	GameObject ballObject;
+	Model ball;
+	Transform trans;
 };
 
 void CursorMoveCallback(GLFWwindow* wnd, double x, double y);
