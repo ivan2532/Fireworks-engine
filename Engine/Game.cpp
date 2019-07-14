@@ -2,12 +2,13 @@
 #include "OpenGLIncludes.hpp"
 #include "imguiIncludes.hpp"
 
+float Game::deltaTime = 0.0f;
+
 Game::Game() noexcept
 	//:
 	//wnd(800u, 600u, "Test", false)
 	:
 	wnd(true),
-	camera(20.0f, 0.005f, glm::vec3(0.0f, 0.0f, 50.0f), glm::zero<glm::vec3>()),
 	unlitTextureShader("UnlitTextureVS.glsl", "UnlitTextureFS.glsl")
 {
 	glfwSetWindowUserPointer(wnd.GetWindow(), (void*)this);
@@ -24,11 +25,17 @@ Game::Game() noexcept
 	ballObject.GetComponent<Transform>().value()->AddShaderToUpdate(std::make_unique<Shader>(unlitTextureShader));
 	ballObject.AddComponent(std::make_unique<ModelRenderer>(&ballObject, "Material_ball/material_ball.obj", unlitTextureShader));
 
+	cameraObject.AddComponent(std::make_unique<Transform>(&cameraObject));
+	cameraObject.GetComponent<Transform>().value()->AddShaderToUpdate(std::make_unique<Shader>(unlitTextureShader));
+	cameraObject.GetComponent<Transform>().value()->Translate(0.0f, 10.0f, 10.0f);
+	cameraObject.AddComponent(std::make_unique<Camera>(&cameraObject, static_cast<float>(wnd.GetWidth()), static_cast<float>(wnd.GetHeight())));
+	cameraObject.AddComponent(std::make_unique<FPCameraMovement>(&cameraObject, wnd, 7.0f, 0.5f));
+
 	auto transComponent = ballObject.GetComponent<Transform>();
 
 	if (transComponent.has_value())
 	{
-		transComponent.value()->Translate(0.0f, 10.0f, 0.0f);
+		transComponent.value()->Translate(0.0f, 0.0f, 0.0f);
 	}
 }
 
@@ -68,7 +75,9 @@ void Game::Update() noexcept
 {
 	ProcessInput();
 	RenderFrame();
-	testObject.Update();
+
+	ballObject.Update();
+	cameraObject.Update();
 }
 
 void Game::EndFrame(Window& wnd) noexcept
@@ -83,26 +92,17 @@ void Game::ProcessInput() noexcept
 {
 	if (wnd.GetKey(GLFW_KEY_ESCAPE))
 		wnd.Close();
-
-	camera.KeyboardUpdate(wnd, deltaTime);
 }
 
 void Game::MouseUpdate(double x, double y) noexcept
 {
-	camera.MouseUpdate((float)x, (float)y, deltaTime);
+	cameraObject.GetComponent<FPCameraMovement>().value()->MouseCallback(static_cast<float>(x), static_cast<float>(y));
 }
 
 void Game::RenderFrame() noexcept
 {
-	glm::mat4 viewProj =
-		glm::perspective(glm::radians(80.0f), (float)wnd.GetWidth() / (float)wnd.GetHeight(), 0.1f, 1000.0f) *
-		camera.GetViewMatrix();
-
-	unlitTextureShader.SetMat4x4("viewProj", viewProj);
-
 	//TEST
-	unlitTextureShader.SetVec3("viewPos", camera.GetPosition());
-	unlitTextureShader.SetVec3("lightPos", glm::vec3(sin(glfwGetTime()) * 5.0f, sin(glfwGetTime()) * 2.5f, 10.0f));
+	unlitTextureShader.SetVec3("lightPos", glm::vec3(sin(glfwGetTime()) * 5.0f, sin(glfwGetTime()) * 2.5f, 8.0f));
 	unlitTextureShader.SetVec4("pointLight.lightColor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 	unlitTextureShader.SetFloat("pointLight.ambientStrength", 0.1f);
 	unlitTextureShader.SetFloat("pointLight.shininess", 32.0f);
@@ -112,8 +112,6 @@ void Game::RenderFrame() noexcept
 	unlitTextureShader.SetFloat("pointLight.attenuation_linear", 0.045f);
 	unlitTextureShader.SetFloat("pointLight.attenuation_quadratic", 0.0075f);
 	//TEST
-
-	ballObject.Update();
 }
 
 void CursorMoveCallback(GLFWwindow* wnd, double x, double y)

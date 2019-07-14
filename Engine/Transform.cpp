@@ -94,7 +94,7 @@ Transform::Transform(Transform&& rhs) noexcept
 	transform(std::move(rhs.transform)),
 	parent(std::move(rhs.parent)),
 	shadersToUpdate(std::move(rhs.shadersToUpdate)),
-	updateAxes(std::move(updateAxes))
+	updateAxes(std::move(rhs.updateAxes))
 {
 }
 
@@ -107,7 +107,7 @@ Transform& Transform::operator=(Transform&& rhs) noexcept
 	transform = std::move(rhs.transform);
 	parent = std::move(rhs.parent);
 	shadersToUpdate = std::move(rhs.shadersToUpdate);
-	updateAxes = std::move(updateAxes);
+	updateAxes = std::move(rhs.updateAxes);
 
 	return *this;
 }

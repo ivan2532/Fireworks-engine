@@ -9,6 +9,7 @@ class Shader;
 
 class Transform : public Component
 {
+	friend class Camera;
 public:
 	Transform(GameObject* go) noexcept;
 	~Transform() noexcept;
@@ -49,7 +50,6 @@ private:
 	void UpdateTransform() noexcept;
 	void UpdateShaders() noexcept;
 private:
-	bool updateAxes; //No need to calculate axes every frame
 	glm::vec3 position;
 	glm::vec3 eulerAngles;
 	glm::vec3 scale;
@@ -60,6 +60,8 @@ private:
 	std::unique_ptr<Transform> parent;
 	//Shaders
 	std::vector<std::unique_ptr<Shader>> shadersToUpdate;
+
+	bool updateAxes; //No need to calculate axes every frame
 public:
 	static constexpr glm::vec3 worldForward = glm::vec3(0.0f, 0.0f, -1.0f);
 	static constexpr glm::vec3 worldRight = glm::vec3(1.0f, 0.0f, 0.0f);

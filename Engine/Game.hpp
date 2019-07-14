@@ -4,7 +4,6 @@
 #include "ImGuiManager.hpp"
 #include "Model.hpp"
 #include "Shader.hpp"
-#include "FPCamera.hpp"
 #include "GameObject.hpp"
 #include "ComponentIncludes.hpp"
 
@@ -25,14 +24,14 @@ private:
 	void RenderFrame() noexcept;
 private:
 	float lastFrame = 0.0f;
-	float deltaTime = 0.0f;
 	Window wnd;
 	//User variables here
-	GameObject testObject;
+	GameObject cameraObject;
 	ImGuiManager imGuiManager;
-	FPCamera camera;
 	Shader unlitTextureShader;
 	GameObject ballObject;
+public:
+	static float deltaTime;
 };
 
 void CursorMoveCallback(GLFWwindow* wnd, double x, double y);
