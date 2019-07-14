@@ -33,8 +33,6 @@ private:
 	FPCamera camera;
 	Shader unlitTextureShader;
 	GameObject ballObject;
-	Model ball;
-	Transform trans;
 };
 
 void CursorMoveCallback(GLFWwindow* wnd, double x, double y);

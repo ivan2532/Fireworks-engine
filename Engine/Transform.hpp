@@ -4,12 +4,13 @@
 #include <memory>
 #include <vector>
 
+class GameObject;
 class Shader;
 
 class Transform : public Component
 {
 public:
-	Transform() noexcept;
+	Transform(GameObject* go) noexcept;
 	~Transform() noexcept;
 	Transform(const Transform&) noexcept;
 	Transform& operator=(const Transform&) noexcept;
@@ -28,6 +29,10 @@ public:
 	void SetScale(glm::vec3 value) noexcept;
 	glm::vec3 GetScale() const noexcept;
 
+	glm::vec3 GetForward() const noexcept;
+	glm::vec3 GetRight() const noexcept;
+	glm::vec3 GetUp() const noexcept;
+
 	glm::mat4 GetTransformation() const noexcept;
 
 	void Translate(float x, float y, float z) noexcept;
@@ -44,12 +49,19 @@ private:
 	void UpdateTransform() noexcept;
 	void UpdateShaders() noexcept;
 private:
-	//Properties
+	bool updateAxes; //No need to calculate axes every frame
 	glm::vec3 position;
 	glm::vec3 eulerAngles;
 	glm::vec3 scale;
+	glm::vec3 forward;
+	glm::vec3 right;
+	glm::vec3 up;
 	glm::mat4 transform;
 	std::unique_ptr<Transform> parent;
 	//Shaders
 	std::vector<std::unique_ptr<Shader>> shadersToUpdate;
+public:
+	static constexpr glm::vec3 worldForward = glm::vec3(0.0f, 0.0f, -1.0f);
+	static constexpr glm::vec3 worldRight = glm::vec3(1.0f, 0.0f, 0.0f);
+	static constexpr glm::vec3 worldUp = glm::vec3(0.0f, 1.0f, 0.0f);
 };

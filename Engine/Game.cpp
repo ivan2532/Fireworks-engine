@@ -8,8 +8,7 @@ Game::Game() noexcept
 	:
 	wnd(true),
 	camera(20.0f, 0.005f, glm::vec3(0.0f, 0.0f, 50.0f), glm::zero<glm::vec3>()),
-	unlitTextureShader("UnlitTextureVS.glsl", "UnlitTextureFS.glsl"),
-	ball("Material_ball/material_ball.obj")
+	unlitTextureShader("UnlitTextureVS.glsl", "UnlitTextureFS.glsl")
 {
 	glfwSetWindowUserPointer(wnd.GetWindow(), (void*)this);
 
@@ -21,15 +20,15 @@ Game::Game() noexcept
 	ImGui_ImplGlfw_InitForOpenGL(wnd.GetWindow(), true);
 	ImGui_ImplOpenGL3_Init("#version 460");
 
-	trans.AddShaderToUpdate(std::make_unique<Shader>(unlitTextureShader));
-	ballObject.AddComponent(std::make_unique<Transform>(trans));
-	ballObject.AddComponent(std::make_unique<ModelRenderer>("Material_ball/material_ball.obj", unlitTextureShader));
+	ballObject.AddComponent(std::make_unique<Transform>(&ballObject));
+	ballObject.GetComponent<Transform>().value()->AddShaderToUpdate(std::make_unique<Shader>(unlitTextureShader));
+	ballObject.AddComponent(std::make_unique<ModelRenderer>(&ballObject, "Material_ball/material_ball.obj", unlitTextureShader));
 
-	auto trans = ballObject.GetComponent<Transform>();
+	auto transComponent = ballObject.GetComponent<Transform>();
 
-	if (trans.has_value())
+	if (transComponent.has_value())
 	{
-		trans.value()->Translate(0.0f, 10.0f, 0.0f);
+		transComponent.value()->Translate(0.0f, 10.0f, 0.0f);
 	}
 }
 

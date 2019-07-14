@@ -3,12 +3,13 @@
 #include "Model.hpp"
 #include <string>
 
+class GameObject;
 class Shader;
 
 class ModelRenderer : public Component
 {
 public:
-	ModelRenderer(std::string modelPath, Shader& shader);
+	ModelRenderer(GameObject* go, std::string modelPath, Shader& shader);
 public:
 	void Update() noexcept override;
 private:

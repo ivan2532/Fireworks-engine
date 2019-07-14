@@ -9,6 +9,19 @@ void Transform::Update() noexcept
 
 void Transform::UpdateTransform() noexcept
 {
+	if (updateAxes)
+	{
+		forward.x = sin(glm::radians(eulerAngles.y)) * cos(glm::radians(eulerAngles.x));
+		forward.y = sin(glm::radians(eulerAngles.x));
+		forward.z = -cos(glm::radians(eulerAngles.y)) * cos(glm::radians(eulerAngles.x));
+		forward = glm::normalize(forward);
+
+		right = glm::normalize(glm::cross(forward, worldUp));
+		up = glm::normalize(glm::cross(right, forward));
+
+		updateAxes = false;
+	}
+
 	transform = glm::rotate(glm::mat4(1.0f), eulerAngles.x, glm::vec3(1.0f, 0.0f, 0.0f));
 	transform = glm::rotate(glm::mat4(1.0f), eulerAngles.y, glm::vec3(0.0f, 1.0f, 0.0f));
 	transform = glm::rotate(glm::mat4(1.0f), eulerAngles.z, glm::vec3(0.0f, 0.0f, 1.0f));
@@ -24,14 +37,15 @@ void Transform::UpdateShaders() noexcept
 	}
 }
 
-Transform::Transform() noexcept
+Transform::Transform(GameObject* go) noexcept
 	:
+	Component(go),
 	position(0.0f, 0.0f, 0.0f),
 	eulerAngles(0.0f, 0.0f, 0.0f),
 	scale(1.0f, 1.0f, 1.0f),
-	transform(1.0f)
+	transform(1.0f),
+	updateAxes(true)
 {
-	UpdateTransform();
 }
 
 Transform::~Transform() noexcept
@@ -41,11 +55,13 @@ Transform::~Transform() noexcept
 
 Transform::Transform(const Transform& rhs) noexcept
 	:
+	Component(rhs.gameObject),
 	position(rhs.position),
 	eulerAngles(rhs.eulerAngles),
 	scale(rhs.scale),
 	transform(rhs.transform),
-	parent((rhs.parent).get())
+	parent((rhs.parent).get()),
+	updateAxes(rhs.updateAxes)
 {
 	shadersToUpdate.resize(rhs.shadersToUpdate.size());
 	for (unsigned i = 0; i < rhs.shadersToUpdate.size(); i++)
@@ -54,11 +70,13 @@ Transform::Transform(const Transform& rhs) noexcept
 
 Transform& Transform::operator=(const Transform& rhs) noexcept
 {
+	gameObject = rhs.gameObject;
 	position = rhs.position;
 	eulerAngles = rhs.eulerAngles;
 	scale = rhs.scale;
 	transform = rhs.transform;
 	parent.reset((rhs.parent).get());
+	updateAxes = rhs.updateAxes;
 
 	shadersToUpdate.resize(rhs.shadersToUpdate.size());
 	for (unsigned i = 0; i < rhs.shadersToUpdate.size(); i++)
@@ -69,23 +87,28 @@ Transform& Transform::operator=(const Transform& rhs) noexcept
 
 Transform::Transform(Transform&& rhs) noexcept
 	:
+	Component(std::move(rhs.gameObject)),
 	position(std::move(rhs.position)),
 	eulerAngles(std::move(rhs.eulerAngles)),
 	scale(std::move(rhs.scale)),
 	transform(std::move(rhs.transform)),
 	parent(std::move(rhs.parent)),
-	shadersToUpdate(std::move(rhs.shadersToUpdate))
+	shadersToUpdate(std::move(rhs.shadersToUpdate)),
+	updateAxes(std::move(updateAxes))
 {
 }
 
 Transform& Transform::operator=(Transform&& rhs) noexcept
 {
+	gameObject = std::move(rhs.gameObject);
 	position = std::move(rhs.position);
 	eulerAngles = std::move(rhs.eulerAngles);
 	scale = std::move(rhs.scale);
 	transform = std::move(rhs.transform);
 	parent = std::move(rhs.parent);
 	shadersToUpdate = std::move(rhs.shadersToUpdate);
+	updateAxes = std::move(updateAxes);
+
 	return *this;
 }
 
@@ -97,6 +120,7 @@ void Transform::SetPosition(float x, float y, float z) noexcept
 void Transform::SetPosition(glm::vec3 value) noexcept
 {
 	position = value;
+	updateAxes = true;
 }
 
 glm::vec3 Transform::GetPosition() const noexcept
@@ -112,6 +136,7 @@ void Transform::SetEulerAngles(float x, float y, float z) noexcept
 void Transform::SetEulerAngles(glm::vec3 value) noexcept
 {
 	eulerAngles = value;
+	updateAxes = true;
 }
 
 glm::vec3 Transform::GetEulerAngles() const noexcept
@@ -127,11 +152,27 @@ void Transform::SetScale(float x, float y, float z) noexcept
 void Transform::SetScale(glm::vec3 value) noexcept
 {
 	scale = value;
+	updateAxes = true;
 }
 
 glm::vec3 Transform::GetScale() const noexcept
 {
 	return scale;
+}
+
+glm::vec3 Transform::GetForward() const noexcept
+{
+	return forward;
+}
+
+glm::vec3 Transform::GetRight() const noexcept
+{
+	return right;
+}
+
+glm::vec3 Transform::GetUp() const noexcept
+{
+	return up;
 }
 
 glm::mat4 Transform::GetTransformation() const noexcept
@@ -147,6 +188,7 @@ void Transform::Translate(float x, float y, float z) noexcept
 void Transform::Translate(glm::vec3 value) noexcept
 {
 	position += value;
+	updateAxes = true;
 }
 
 void Transform::Rotate(float x, float y, float z) noexcept
@@ -157,6 +199,7 @@ void Transform::Rotate(float x, float y, float z) noexcept
 void Transform::Rotate(glm::vec3 value) noexcept
 {
 	eulerAngles += value;
+	updateAxes = true;
 }
 
 void Transform::Scale(float x, float y, float z) noexcept
@@ -167,6 +210,7 @@ void Transform::Scale(float x, float y, float z) noexcept
 void Transform::Scale(glm::vec3 value) noexcept
 {
 	scale += value;
+	updateAxes = true;
 }
 
 void Transform::AddShaderToUpdate(std::unique_ptr<Shader> shader) noexcept

@@ -1,8 +1,10 @@
 #include "ModelRenderer.hpp"
+#include "GameObject.hpp"
 #include <iostream>
 
-ModelRenderer::ModelRenderer(std::string modelPath, Shader& aShader)
+ModelRenderer::ModelRenderer(GameObject* go, std::string modelPath, Shader& aShader)
 	:
+	Component(go),
 	model(modelPath),
 	shader(aShader)
 {

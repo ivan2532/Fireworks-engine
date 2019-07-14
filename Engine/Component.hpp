@@ -3,13 +3,10 @@
 
 class Component
 {
-	friend class GameObject;
 public:
-	Component() = default;
+	Component(GameObject* go) noexcept;
 	GameObject* GetObject() const noexcept;
 	virtual void Update() noexcept = 0;
-private:
-	void SetObject(GameObject* go) noexcept;
 protected:
 	GameObject* gameObject;
 };
