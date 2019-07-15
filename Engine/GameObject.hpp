@@ -7,6 +7,7 @@
 
 class GameObject
 {
+	friend class Scene;
 public:
 	GameObject(const std::string& name) noexcept;
 public:

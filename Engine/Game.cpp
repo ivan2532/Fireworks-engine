@@ -11,9 +11,6 @@ Game::Game() noexcept
 	:
 	wnd(true),
 	activeScene(std::make_unique<TestScene>(wnd))
-	//unlitTextureShader("UnlitTextureVS.glsl", "UnlitTextureFS.glsl"),
-	//cameraObject("Camera"),
-	//ballObject("Material ball")
 {
 	glfwSetWindowUserPointer(wnd.GetWindow(), (void*)this);
 
@@ -24,23 +21,6 @@ Game::Game() noexcept
 
 	ImGui_ImplGlfw_InitForOpenGL(wnd.GetWindow(), true);
 	ImGui_ImplOpenGL3_Init("#version 460");
-
-	/*ballObject.AddComponent(std::make_unique<Transform>(&ballObject));
-	ballObject.GetComponent<Transform>().value()->AddShaderToUpdate(std::make_unique<Shader>(unlitTextureShader));
-	ballObject.AddComponent(std::make_unique<ModelRenderer>(&ballObject, "Material_ball/material_ball.obj", unlitTextureShader));
-
-	cameraObject.AddComponent(std::make_unique<Transform>(&cameraObject));
-	cameraObject.GetComponent<Transform>().value()->AddShaderToUpdate(std::make_unique<Shader>(unlitTextureShader));
-	cameraObject.GetComponent<Transform>().value()->Translate(0.0f, 10.0f, 10.0f);
-	cameraObject.AddComponent(std::make_unique<Camera>(&cameraObject, static_cast<float>(wnd.GetWidth()), static_cast<float>(wnd.GetHeight())));
-	cameraObject.AddComponent(std::make_unique<FPCameraMovement>(&cameraObject, wnd, 7.0f, 0.5f));
-
-	auto transComponent = ballObject.GetComponent<Transform>();
-
-	if (transComponent.has_value())
-	{
-		transComponent.value()->Translate(0.0f, 0.0f, 0.0f);
-	}*/
 }
 
 Game::~Game() noexcept
@@ -54,9 +34,7 @@ void Game::Go() noexcept
 	while (!wnd.ShouldClose())
 	{
 		BeginFrame();
-
 		Update();
-
 		EndFrame(wnd);
 	}
 }
@@ -78,11 +56,7 @@ void Game::BeginFrame() noexcept
 void Game::Update() noexcept
 {
 	ProcessInput();
-	RenderFrame();
 	activeScene->Update();
-
-	//ballObject.Update();
-	//cameraObject.Update();
 }
 
 void Game::EndFrame(Window& wnd) noexcept
@@ -101,23 +75,7 @@ void Game::ProcessInput() noexcept
 
 void Game::MouseUpdate(double x, double y) noexcept
 {
-	activeScene->MouseCallback(static_cast<float>(x), static_cast<float>(y));
-	//cameraObject.GetComponent<FPCameraMovement>().value()->MouseCallback(static_cast<float>(x), static_cast<float>(y));
-}
-
-void Game::RenderFrame() noexcept
-{
-	//TEST
-	/*unlitTextureShader.SetVec3("lightPos", glm::vec3(sin(glfwGetTime()) * 5.0f, sin(glfwGetTime()) * 2.5f, 8.0f));
-	unlitTextureShader.SetVec4("pointLight.lightColor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-	unlitTextureShader.SetFloat("pointLight.ambientStrength", 0.1f);
-	unlitTextureShader.SetFloat("pointLight.shininess", 32.0f);
-	unlitTextureShader.SetFloat("pointLight.specularStrength", 0.7f);
-	unlitTextureShader.SetFloat("pointLight.intensity", 2.0f);
-	unlitTextureShader.SetFloat("pointLight.attenuation_const", 1.0f);
-	unlitTextureShader.SetFloat("pointLight.attenuation_linear", 0.045f);
-	unlitTextureShader.SetFloat("pointLight.attenuation_quadratic", 0.0075f);*/
-	//TEST
+	activeScene->OnMouseMove(static_cast<float>(x), static_cast<float>(y));
 }
 
 void CursorMoveCallback(GLFWwindow* wnd, double x, double y)

@@ -11,11 +11,13 @@ FPCameraMovement::FPCameraMovement(GameObject* go, Window& window, float mSpeed,
 	wnd(window),
 	transform(gameObject->GetComponent<Transform>().value()),
 	movementSpeed(mSpeed),
-	lookSensitivity(lSens)
+	lookSensitivity(lSens),
+	lastMouseX(0.0f),
+	lastMouseY(0.0f)
 {
 }
 
-void FPCameraMovement::MouseCallback(float x, float y) noexcept
+void FPCameraMovement::OnMouseMove(float x, float y) noexcept
 {
 	if (firstMouse)
 	{

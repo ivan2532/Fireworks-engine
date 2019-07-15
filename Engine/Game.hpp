@@ -22,15 +22,11 @@ private:
 	void EndFrame(Window& wnd) noexcept;
 	//User functions here
 	void ProcessInput() noexcept;
-	void RenderFrame() noexcept;
 private:
 	float lastFrame = 0.0f;
 	Window wnd;
 	//User variables here
 	ImGuiManager imGuiManager;
-	//Shader unlitTextureShader;
-	//GameObject cameraObject;
-	//GameObject ballObject;
 	std::unique_ptr<Scene> activeScene;
 public:
 	static float deltaTime;

@@ -18,12 +18,17 @@ GameObject* Scene::AddSceneObject(const std::string& name) noexcept
 	return sceneObjects.back().get();
 }
 
+void Scene::OnMouseMove(float x, float y) noexcept
+{
+	for (auto& object : sceneObjects)
+	{
+		for (auto& component : object->components)
+			component->OnMouseMove(x, y);
+	}
+}
+
 void Scene::Update() noexcept
 {
 	for (auto& object : sceneObjects)
 		object->Update();
-}
-
-void Scene::MouseCallback(float x, float y)
-{
 }

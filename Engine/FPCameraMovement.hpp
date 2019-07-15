@@ -7,9 +7,9 @@ class Window;
 class FPCameraMovement : public Component
 {
 public:
-	FPCameraMovement(GameObject* go, Window& window, float mSpeed = 1.0f, float lSens = 1.0f) noexcept;
+	FPCameraMovement(GameObject* go, Window& window, float mSpeed = 7.0f, float lSens = 0.2f) noexcept;
 public:
-	void MouseCallback(float x, float y) noexcept;
+	void OnMouseMove(float x, float y) noexcept override;
 public:
 	void Update() noexcept override;
 private:

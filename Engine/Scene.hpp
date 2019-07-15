@@ -11,8 +11,8 @@ public:
 public:
 	std::string GetName() const noexcept;
 	GameObject* AddSceneObject(const std::string& name) noexcept;
+	void OnMouseMove(float x, float y) noexcept;
 	virtual void Update() noexcept;
-	virtual void MouseCallback(float x, float y);
 protected:
 	std::string name;
 	std::vector<std::unique_ptr<GameObject>> sceneObjects;
