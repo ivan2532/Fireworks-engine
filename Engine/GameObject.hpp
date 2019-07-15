@@ -10,6 +10,11 @@ class GameObject
 	friend class Scene;
 public:
 	GameObject(const std::string& name) noexcept;
+	~GameObject() = default;
+	GameObject(const GameObject&) noexcept;
+	GameObject& operator=(const GameObject&) noexcept;
+	GameObject(GameObject&&) noexcept;
+	GameObject& operator=(GameObject&&) noexcept;
 public:
 	std::string GetName() const noexcept;
 	void Update() noexcept;

@@ -4,6 +4,30 @@
 #include <fstream>
 #include <iostream>
 
+Shader::Shader(const Shader& rhs) noexcept
+	:
+	programID(rhs.programID)
+{
+}
+
+Shader& Shader::operator=(const Shader& rhs) noexcept
+{
+	programID = rhs.programID;
+	return *this;
+}
+
+Shader::Shader(Shader&& rhs) noexcept
+	:
+	programID(std::move(rhs.programID))
+{
+}
+
+Shader& Shader::operator=(Shader&& rhs) noexcept
+{
+	programID = std::move(programID);
+	return *this;
+}
+
 Shader::Shader(std::string vsPath, std::string fsPath)
 {
 	std::string vsSourceStr, fsSourceStr;

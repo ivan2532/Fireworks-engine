@@ -5,12 +5,12 @@
 ModelRenderer::ModelRenderer(GameObject* go, std::string modelPath, Shader& aShader)
 	:
 	Component(go),
-	model(modelPath),
+	model(modelPath, aShader),
 	shader(aShader)
 {
 }
 
 void ModelRenderer::Update() noexcept
 {
-	model.Draw(shader);
+	//model.Draw(shader);
 }

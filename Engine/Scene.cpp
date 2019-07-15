@@ -18,6 +18,11 @@ GameObject* Scene::AddSceneObject(const std::string& name) noexcept
 	return sceneObjects.back().get();
 }
 
+void Scene::MoveSceneObject(std::unique_ptr<GameObject> go) noexcept
+{
+	sceneObjects.push_back(std::move(go));
+}
+
 void Scene::OnMouseMove(float x, float y) noexcept
 {
 	for (auto& object : sceneObjects)

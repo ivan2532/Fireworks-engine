@@ -14,6 +14,58 @@ Mesh::Mesh(std::vector<Vertex> v, std::vector<unsigned> i, std::vector<Texture> 
 	InitMesh();
 }
 
+Mesh::Mesh(const Mesh& rhs) noexcept
+	:
+	vertices(rhs.vertices),
+	indices(rhs.indices),
+	textures(rhs.textures),
+	vertexBufferID(rhs.vertexBufferID),
+	elementBufferID(rhs.elementBufferID),
+	vertexArrayID(rhs.vertexArrayID)
+{
+	InitMesh();
+}
+
+Mesh& Mesh::operator=(const Mesh& rhs) noexcept
+{
+	vertices = rhs.vertices;
+	indices = rhs.indices;
+	textures = rhs.textures;
+	vertexBufferID = rhs.vertexBufferID;
+	elementBufferID = rhs.elementBufferID;
+	vertexArrayID = rhs.vertexArrayID;
+
+	InitMesh();
+
+	return *this;
+}
+
+Mesh::Mesh(Mesh&& rhs) noexcept
+	:
+	vertices(std::move(rhs.vertices)),
+	indices(std::move(rhs.indices)),
+	textures(std::move(rhs.textures)),
+	vertexBufferID(std::move(rhs.vertexBufferID)),
+	elementBufferID(std::move(rhs.elementBufferID)),
+	vertexArrayID(std::move(rhs.vertexArrayID))
+{
+	InitMesh();
+}
+
+Mesh& Mesh::operator=(Mesh&& rhs) noexcept
+{
+	vertices = std::move(rhs.vertices);
+	indices = std::move(rhs.indices);
+	textures = std::move(rhs.textures);
+	vertexBufferID = std::move(rhs.vertexBufferID);
+	elementBufferID = std::move(rhs.elementBufferID);
+	vertexArrayID = std::move(rhs.vertexArrayID);
+
+	InitMesh();
+
+	return *this;
+}
+
 void Mesh::Draw(Shader& shader) const noexcept
 {
 	shader.Use();

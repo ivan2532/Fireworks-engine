@@ -10,10 +10,10 @@ public:
 	//Delete unnecessary constructors and rule of 5
 	Shader() = delete;
 	~Shader() = default;
-	Shader(const Shader&) = default;
-	Shader& operator=(const Shader&) = default;
-	Shader(Shader&&) = default;
-	Shader& operator=(Shader&&) = default;
+	Shader(const Shader&) noexcept;
+	Shader& operator=(const Shader&) noexcept;
+	Shader(Shader&&) noexcept;
+	Shader& operator=(Shader&&) noexcept;
 
 	Shader(std::string vsPath, std::string fsPath);
 public:

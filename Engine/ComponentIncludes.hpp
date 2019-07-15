@@ -3,3 +3,4 @@
 #include "ModelRenderer.hpp"
 #include "Camera.hpp"
 #include "FPCameraMovement.hpp"
+#include "MeshRenderer.hpp"

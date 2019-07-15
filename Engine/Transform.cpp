@@ -9,6 +9,11 @@ void Transform::Update() noexcept
 
 void Transform::UpdateTransform() noexcept
 {
+	glm::mat4 parentTransform(1.0f);
+
+	if (parent)
+		parentTransform = parent->GetTransformation();
+
 	if (updateAxes)
 	{
 		forward.x = sin(glm::radians(eulerAngles.y)) * cos(glm::radians(eulerAngles.x));
@@ -19,14 +24,20 @@ void Transform::UpdateTransform() noexcept
 		right = glm::normalize(glm::cross(forward, worldUp));
 		up = glm::normalize(glm::cross(right, forward));
 
+		forward = parentTransform * glm::vec4(forward, 0.0f); //w = 0.0f PURE DIRECTIONAL VECTOR
+		right = parentTransform * glm::vec4(right, 0.0f);
+		up = parentTransform * glm::vec4(up, 0.0f);
+
 		updateAxes = false;
 	}
 
-	transform = glm::rotate(glm::mat4(1.0f), eulerAngles.x, glm::vec3(1.0f, 0.0f, 0.0f));
-	transform = glm::rotate(glm::mat4(1.0f), eulerAngles.y, glm::vec3(0.0f, 1.0f, 0.0f));
-	transform = glm::rotate(glm::mat4(1.0f), eulerAngles.z, glm::vec3(0.0f, 0.0f, 1.0f));
-	transform = glm::scale(glm::mat4(1.0f), scale);
-	transform = glm::translate(glm::mat4(1.0f), position);
+	transform = glm::mat4(1.0f);
+	transform = glm::scale(transform, scale);
+	transform = glm::rotate(transform, eulerAngles.x, glm::vec3(1.0f, 0.0f, 0.0f));
+	transform = glm::rotate(transform, eulerAngles.y, glm::vec3(0.0f, 1.0f, 0.0f));
+	transform = glm::rotate(transform, eulerAngles.z, glm::vec3(0.0f, 0.0f, 1.0f));
+	transform = glm::translate(transform, position);
+	transform = parentTransform * transform;
 }
 
 void Transform::UpdateShaders() noexcept
@@ -206,6 +217,16 @@ void Transform::Scale(glm::vec3 value) noexcept
 {
 	scale += value;
 	updateAxes = true;
+}
+
+Transform* Transform::GetParent() const noexcept
+{
+	return parent.get();
+}
+
+void Transform::SetParent(Transform* p) noexcept
+{
+	parent.reset(p);
 }
 
 void Transform::AddShaderToUpdate(std::unique_ptr<Shader> shader) noexcept

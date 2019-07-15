@@ -43,6 +43,9 @@ public:
 	void Scale(float x, float y, float z) noexcept;
 	void Scale(glm::vec3 value) noexcept;
 
+	Transform* GetParent() const noexcept;
+	void SetParent(Transform* parent) noexcept;
+
 	void AddShaderToUpdate(std::unique_ptr<Shader> shader) noexcept;
 public:
 	void Update() noexcept override;

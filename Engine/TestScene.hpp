@@ -1,6 +1,7 @@
 #pragma once
 #include "Scene.hpp"
 #include "Shader.hpp"
+#include "Model.hpp"
 
 class Window;
 
@@ -12,4 +13,5 @@ public:
 private:
 	Window& wnd;
 	Shader textureShader;
+	Model testModel;
 };

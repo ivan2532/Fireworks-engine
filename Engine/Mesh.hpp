@@ -32,6 +32,11 @@ class Mesh
 {
 public:
 	Mesh(std::vector<Vertex> vertices, std::vector<unsigned> indices, std::vector<Texture> textures) noexcept;
+	~Mesh() = default;
+	Mesh(const Mesh&) noexcept;
+	Mesh& operator=(const Mesh&) noexcept;
+	Mesh(Mesh&&) noexcept;
+	Mesh& operator=(Mesh&&) noexcept;
 	void Draw(Shader& shader) const noexcept;
 private:
 	void InitMesh() noexcept;

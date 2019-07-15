@@ -6,13 +6,16 @@
 TestScene::TestScene(Window& w) noexcept
 	:
 	Scene("Test scene"),
+	wnd(w),
 	textureShader("UnlitTextureVS.glsl", "UnlitTextureFS.glsl"),
-	wnd(w)
+	testModel("Draenei/draenei.fbx", textureShader)
 {
 	auto ballObject = AddSceneObject("Material Ball");
 	ballObject->AddComponent(std::make_unique<Transform>(ballObject));
-	ballObject->GetComponent<Transform>().value()->AddShaderToUpdate(std::make_unique<Shader>(textureShader));
-	ballObject->AddComponent(std::make_unique<ModelRenderer>(ballObject, "Material_ball/material_ball.obj", textureShader));
+	//ballObject->GetComponent<Transform>().value()->AddShaderToUpdate(std::make_unique<Shader>(textureShader));
+	//ballObject->AddComponent(std::make_unique<ModelRenderer>(ballObject, "Material_ball/material_ball.obj", textureShader));
+
+	testModel.MoveToScene(*this);
 
 	auto cameraObject = AddSceneObject("Camera");
 	cameraObject->AddComponent(std::make_unique<Transform>(cameraObject));

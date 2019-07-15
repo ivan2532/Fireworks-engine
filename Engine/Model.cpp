@@ -1,19 +1,17 @@
 #include "Model.hpp"
 #include "glad/glad.h"
 #include "stb_image.h"
+#include "Shader.hpp"
+#include "Scene.hpp"
 #include <iostream>
 
 #define DETAILED_LOGGING
 
-Model::Model(std::string path) noexcept
+Model::Model(std::string path, Shader& s) noexcept
+	:
+	shader(s)
 {
 	LoadMesh(path);
-}
-
-void Model::Draw(Shader& shader) const noexcept
-{
-	for (auto& mesh : meshes)
-		mesh->Draw(shader);
 }
 
 void Model::LoadMesh(std::string path) noexcept
@@ -32,30 +30,77 @@ void Model::LoadMesh(std::string path) noexcept
 	}
 
 	directory = path.substr(0, path.find_last_of('/'));
-	ProcessNode(scene->mRootNode, scene);
+	ProcessNode(scene->mRootNode, scene, nullptr);
 
 #ifdef DETAILED_LOGGING
 	std::cout << "------------------ENDED MODEL INITIALIZATION" << std::endl;
 #endif
 }
 
-void Model::ProcessNode(aiNode* node, const aiScene* scene) noexcept
+void Model::ProcessNode(aiNode* node, const aiScene* scene, Transform* parent) noexcept
 {
 #ifdef DETAILED_LOGGING
 	std::cout << "---STARTING PROCESS NODE" << std::endl;
 #endif
+	auto nodeTransform = aiMatrix4x4ToGlm(&(node->mTransformation));
+	glm::vec3 position;
+	position.x = nodeTransform[0][3];
+	position.y = nodeTransform[1][3];
+	position.z = nodeTransform[2][3];
+	glm::vec3 scale;
+	scale.x = glm::length(glm::vec3(nodeTransform[0][0], nodeTransform[1][0], nodeTransform[2][0]));
+	scale.y = glm::length(glm::vec3(nodeTransform[0][1], nodeTransform[1][1], nodeTransform[2][1]));
+	scale.z = glm::length(glm::vec3(nodeTransform[0][2], nodeTransform[1][2], nodeTransform[2][2]));
+	glm::mat4 rotation(1.0f);
+	rotation[0][0] = nodeTransform[0][0] / scale.x;
+	rotation[1][0] = nodeTransform[1][0] / scale.x;
+	rotation[2][0] = nodeTransform[2][0] / scale.x;
+	rotation[0][1] = nodeTransform[0][1] / scale.y;
+	rotation[1][1] = nodeTransform[1][1] / scale.y;
+	rotation[2][1] = nodeTransform[2][1] / scale.y;
+	rotation[0][2] = nodeTransform[0][2] / scale.z;
+	rotation[1][2] = nodeTransform[1][2] / scale.z;
+	rotation[2][2] = nodeTransform[2][2] / scale.z;
+
+	float sy = sqrt(rotation[0][0] * rotation[0][0] + rotation[1][0] * rotation[1][0]);
+	glm::vec3 eulerAngles;
+
+	if (sy >= 1e-6)
+	{
+		eulerAngles.x = atan2(rotation[2][1], rotation[2][2]);
+		eulerAngles.y = atan2(-rotation[2][0], sy);
+		eulerAngles.z = atan2(rotation[1][0], rotation[0][0]);
+	}
+	else
+	{
+		eulerAngles.x = atan2(-rotation[1][2], rotation[1][1]);
+		eulerAngles.y = atan2(-rotation[2][0], sy);
+		eulerAngles.z = 0;
+	}
+
+	auto object = std::make_unique<GameObject>(node->mName.C_Str());
+	object->AddComponent(std::make_unique<Transform>(object.get()));
+	object->GetComponent<Transform>().value()->AddShaderToUpdate(std::make_unique<Shader>(shader));
+	object->GetComponent<Transform>().value()->SetPosition(position);
+	object->GetComponent<Transform>().value()->SetEulerAngles(eulerAngles);
+	//object->GetComponent<Transform>().value()->SetScale(scale);
+	object->GetComponent<Transform>().value()->SetParent(parent);
+	object->AddComponent(std::make_unique<MeshRenderer>(object.get(), shader));
+
 	for (unsigned i = 0; i < node->mNumMeshes; i++)
 	{
-		meshes.push_back(
-			ProcessMesh(
-				scene->mMeshes[node->mMeshes[i]],
-				scene
-			)
+		auto mesh = ProcessMesh(
+			scene->mMeshes[node->mMeshes[i]],
+			scene
 		);
+
+		object->GetComponent<MeshRenderer>().value()->AddMesh(std::move(mesh));
 	}
 
 	for (unsigned i = 0; i < node->mNumChildren; i++)
-		ProcessNode(node->mChildren[i], scene);
+		ProcessNode(node->mChildren[i], scene, object->GetComponent<Transform>().value());
+
+	meshObjects.push_back(std::move(object));
 
 #ifdef DETAILED_LOGGING
 	std::cout << "---ENDED PROCESS NODE" << std::endl;
@@ -230,4 +275,10 @@ unsigned Model::TextureFromFile(const char* path, const std::string& directory, 
 #endif
 
 	return textureID;
+}
+
+void Model::MoveToScene(Scene& scene)
+{
+	for (auto& object : meshObjects)
+		scene.MoveSceneObject(std::move(object));
 }

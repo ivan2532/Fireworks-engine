@@ -6,6 +6,41 @@ GameObject::GameObject(const std::string& n) noexcept
 {
 }
 
+GameObject::GameObject(const GameObject& rhs) noexcept
+	:
+	name(rhs.name)
+{
+	components.resize(rhs.components.size());
+	for (unsigned i = 0; i < rhs.components.size(); i++)
+		components[i].reset(rhs.components[i].get());
+}
+
+GameObject& GameObject::operator=(const GameObject& rhs) noexcept
+{
+	name = rhs.name;
+
+	components.resize(rhs.components.size());
+	for (unsigned i = 0; i < rhs.components.size(); i++)
+		components[i].reset(rhs.components[i].get());
+
+	return *this;
+}
+
+GameObject::GameObject(GameObject&& rhs) noexcept
+	:
+	name(std::move(rhs.name)),
+	components(std::move(rhs.components))
+{
+}
+
+GameObject& GameObject::operator=(GameObject&& rhs) noexcept
+{
+	name = std::move(rhs.name);
+	components = std::move(rhs.components);
+
+	return *this;
+}
+
 std::string GameObject::GetName() const noexcept
 {
 	return name;
