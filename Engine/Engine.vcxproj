@@ -144,7 +144,9 @@
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="ModelRenderer.cpp" />
+    <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="TestScene.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
@@ -171,7 +173,9 @@
     <ClInclude Include="Model.hpp" />
     <ClInclude Include="ModelRenderer.hpp" />
     <ClInclude Include="OpenGLIncludes.hpp" />
+    <ClInclude Include="Scene.hpp" />
     <ClInclude Include="Shader.hpp" />
+    <ClInclude Include="TestScene.hpp" />
     <ClInclude Include="Transform.hpp" />
     <ClInclude Include="Window.hpp" />
   </ItemGroup>

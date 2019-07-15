@@ -12,7 +12,7 @@ class Transform : public Component
 	friend class Camera;
 public:
 	Transform(GameObject* go) noexcept;
-	~Transform() noexcept;
+	Transform() = default;
 	Transform(const Transform&) noexcept;
 	Transform& operator=(const Transform&) noexcept;
 	Transform(Transform&&) noexcept;

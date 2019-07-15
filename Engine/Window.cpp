@@ -180,6 +180,11 @@ void Window::MakeWindow(bool r, bool lc) noexcept
 	glEnable(GL_DEPTH_TEST);
 
 #ifdef DETAILED_LOGGING
+	std::cout << "Enabling v-sync." << std::endl;
+#endif
+	//INSERT V-SYNC HERE
+
+#ifdef DETAILED_LOGGING
 	std::cout << "Locking cursor if needed." << std::endl;
 #endif
 	if (lc)

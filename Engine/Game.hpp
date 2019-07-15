@@ -6,6 +6,7 @@
 #include "Shader.hpp"
 #include "GameObject.hpp"
 #include "ComponentIncludes.hpp"
+#include "Scene.hpp"
 
 class Game
 {
@@ -26,10 +27,11 @@ private:
 	float lastFrame = 0.0f;
 	Window wnd;
 	//User variables here
-	GameObject cameraObject;
 	ImGuiManager imGuiManager;
-	Shader unlitTextureShader;
-	GameObject ballObject;
+	//Shader unlitTextureShader;
+	//GameObject cameraObject;
+	//GameObject ballObject;
+	std::unique_ptr<Scene> activeScene;
 public:
 	static float deltaTime;
 };

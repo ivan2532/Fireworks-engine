@@ -1,5 +1,15 @@
 #include "GameObject.hpp"
-#include "Component.hpp"
+
+GameObject::GameObject(const std::string& n) noexcept
+	:
+	name(n)
+{
+}
+
+std::string GameObject::GetName() const noexcept
+{
+	return name;
+}
 
 void GameObject::Update() noexcept
 {

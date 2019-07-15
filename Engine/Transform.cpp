@@ -48,11 +48,6 @@ Transform::Transform(GameObject* go) noexcept
 {
 }
 
-Transform::~Transform() noexcept
-{
-	parent.release();
-}
-
 Transform::Transform(const Transform& rhs) noexcept
 	:
 	Component(rhs.gameObject),

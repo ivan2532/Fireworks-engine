@@ -1,6 +1,7 @@
 #include "Game.hpp"
 #include "OpenGLIncludes.hpp"
 #include "imguiIncludes.hpp"
+#include "TestScene.hpp"
 
 float Game::deltaTime = 0.0f;
 
@@ -9,7 +10,10 @@ Game::Game() noexcept
 	//wnd(800u, 600u, "Test", false)
 	:
 	wnd(true),
-	unlitTextureShader("UnlitTextureVS.glsl", "UnlitTextureFS.glsl")
+	activeScene(std::make_unique<TestScene>(wnd))
+	//unlitTextureShader("UnlitTextureVS.glsl", "UnlitTextureFS.glsl"),
+	//cameraObject("Camera"),
+	//ballObject("Material ball")
 {
 	glfwSetWindowUserPointer(wnd.GetWindow(), (void*)this);
 
@@ -21,7 +25,7 @@ Game::Game() noexcept
 	ImGui_ImplGlfw_InitForOpenGL(wnd.GetWindow(), true);
 	ImGui_ImplOpenGL3_Init("#version 460");
 
-	ballObject.AddComponent(std::make_unique<Transform>(&ballObject));
+	/*ballObject.AddComponent(std::make_unique<Transform>(&ballObject));
 	ballObject.GetComponent<Transform>().value()->AddShaderToUpdate(std::make_unique<Shader>(unlitTextureShader));
 	ballObject.AddComponent(std::make_unique<ModelRenderer>(&ballObject, "Material_ball/material_ball.obj", unlitTextureShader));
 
@@ -36,7 +40,7 @@ Game::Game() noexcept
 	if (transComponent.has_value())
 	{
 		transComponent.value()->Translate(0.0f, 0.0f, 0.0f);
-	}
+	}*/
 }
 
 Game::~Game() noexcept
@@ -75,9 +79,10 @@ void Game::Update() noexcept
 {
 	ProcessInput();
 	RenderFrame();
+	activeScene->Update();
 
-	ballObject.Update();
-	cameraObject.Update();
+	//ballObject.Update();
+	//cameraObject.Update();
 }
 
 void Game::EndFrame(Window& wnd) noexcept
@@ -96,13 +101,14 @@ void Game::ProcessInput() noexcept
 
 void Game::MouseUpdate(double x, double y) noexcept
 {
-	cameraObject.GetComponent<FPCameraMovement>().value()->MouseCallback(static_cast<float>(x), static_cast<float>(y));
+	activeScene->MouseCallback(static_cast<float>(x), static_cast<float>(y));
+	//cameraObject.GetComponent<FPCameraMovement>().value()->MouseCallback(static_cast<float>(x), static_cast<float>(y));
 }
 
 void Game::RenderFrame() noexcept
 {
 	//TEST
-	unlitTextureShader.SetVec3("lightPos", glm::vec3(sin(glfwGetTime()) * 5.0f, sin(glfwGetTime()) * 2.5f, 8.0f));
+	/*unlitTextureShader.SetVec3("lightPos", glm::vec3(sin(glfwGetTime()) * 5.0f, sin(glfwGetTime()) * 2.5f, 8.0f));
 	unlitTextureShader.SetVec4("pointLight.lightColor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 	unlitTextureShader.SetFloat("pointLight.ambientStrength", 0.1f);
 	unlitTextureShader.SetFloat("pointLight.shininess", 32.0f);
@@ -110,7 +116,7 @@ void Game::RenderFrame() noexcept
 	unlitTextureShader.SetFloat("pointLight.intensity", 2.0f);
 	unlitTextureShader.SetFloat("pointLight.attenuation_const", 1.0f);
 	unlitTextureShader.SetFloat("pointLight.attenuation_linear", 0.045f);
-	unlitTextureShader.SetFloat("pointLight.attenuation_quadratic", 0.0075f);
+	unlitTextureShader.SetFloat("pointLight.attenuation_quadratic", 0.0075f);*/
 	//TEST
 }
 

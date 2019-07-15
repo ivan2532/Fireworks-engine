@@ -7,7 +7,7 @@
 class Camera : public Component
 {
 public:
-	Camera(GameObject* go, float screenWidth, float screenHeight, float fov = 90.0f) noexcept;
+	Camera(GameObject* go, float screenWidth, float screenHeight, float fov = 70.0f) noexcept;
 public:
 	void Update() noexcept override;
 private:

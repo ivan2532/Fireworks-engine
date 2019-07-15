@@ -1,19 +1,22 @@
 #pragma once
+#include "Component.hpp"
+#include <string>
 #include <vector>
 #include <memory>
 #include <optional>
 
-class Component;
-
 class GameObject
 {
 public:
-	GameObject() = default;
+	GameObject(const std::string& name) noexcept;
+public:
+	std::string GetName() const noexcept;
 	void Update() noexcept;
 	void AddComponent(std::unique_ptr<Component> component) noexcept;
 	template<class T>
 	std::optional<T*> GetComponent() const noexcept;
 private:
+	std::string name;
 	std::vector<std::unique_ptr<Component>> components;
 };
 
