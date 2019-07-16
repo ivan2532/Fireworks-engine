@@ -8,11 +8,11 @@
 #include "ComponentIncludes.hpp"
 #include "Scene.hpp"
 
-class Game
+class Engine
 {
 public:
-	Game() noexcept;
-	~Game() noexcept;
+	Engine() noexcept;
+	~Engine() noexcept;
 	void Go() noexcept;
 	//User functions here
 	void MouseUpdate(double x, double y) noexcept;

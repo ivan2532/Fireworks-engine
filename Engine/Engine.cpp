@@ -1,11 +1,11 @@
-#include "Game.hpp"
+#include "Engine.hpp"
 #include "OpenGLIncludes.hpp"
 #include "imguiIncludes.hpp"
 #include "TestScene.hpp"
 
-float Game::deltaTime = 0.0f;
+float Engine::deltaTime = 0.0f;
 
-Game::Game() noexcept
+Engine::Engine() noexcept
 	//:
 	//wnd(800u, 600u, "Test", false)
 	:
@@ -23,13 +23,13 @@ Game::Game() noexcept
 	ImGui_ImplOpenGL3_Init("#version 460");
 }
 
-Game::~Game() noexcept
+Engine::~Engine() noexcept
 {
 	ImGui_ImplGlfw_Shutdown();
 	ImGui_ImplOpenGL3_Shutdown();
 }
 
-void Game::Go() noexcept
+void Engine::Go() noexcept
 {
 	while (!wnd.ShouldClose())
 	{
@@ -39,7 +39,7 @@ void Game::Go() noexcept
 	}
 }
 
-void Game::BeginFrame() noexcept
+void Engine::BeginFrame() noexcept
 {
 	glClearColor(0.0f, 0.137f, 0.219f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -53,13 +53,13 @@ void Game::BeginFrame() noexcept
 	ImGui::NewFrame();
 }
 
-void Game::Update() noexcept
+void Engine::Update() noexcept
 {
 	ProcessInput();
 	activeScene->Update();
 }
 
-void Game::EndFrame(Window& wnd) noexcept
+void Engine::EndFrame(Window& wnd) noexcept
 {
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -67,18 +67,18 @@ void Game::EndFrame(Window& wnd) noexcept
 	wnd.EndFrame();
 }
 
-void Game::ProcessInput() noexcept
+void Engine::ProcessInput() noexcept
 {
 	if (wnd.GetKey(GLFW_KEY_ESCAPE))
 		wnd.Close();
 }
 
-void Game::MouseUpdate(double x, double y) noexcept
+void Engine::MouseUpdate(double x, double y) noexcept
 {
 	activeScene->OnMouseMove(static_cast<float>(x), static_cast<float>(y));
 }
 
 void CursorMoveCallback(GLFWwindow* wnd, double x, double y)
 {
-	reinterpret_cast<Game*>(glfwGetWindowUserPointer(wnd))->MouseUpdate(x, y);
+	reinterpret_cast<Engine*>(glfwGetWindowUserPointer(wnd))->MouseUpdate(x, y);
 }

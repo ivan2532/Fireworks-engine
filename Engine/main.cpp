@@ -1,8 +1,8 @@
-#include "Game.hpp"
+#include "Engine.hpp"
 
 int main()
 {
-	Game game;
+	Engine game;
 	game.Go();
 
 	return 0;

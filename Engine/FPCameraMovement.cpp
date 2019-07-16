@@ -2,7 +2,7 @@
 #include "glmIncludes.hpp"
 #include "GLFW/glfw3.h"
 #include "Window.hpp"
-#include "Game.hpp"
+#include "Engine.hpp"
 #include <iostream>
 
 FPCameraMovement::FPCameraMovement(GameObject* go, Window& window, float mSpeed, float lSens) noexcept
@@ -44,18 +44,18 @@ void FPCameraMovement::Update() noexcept
 {
 	if (wnd.GetKey(GLFW_KEY_W))
 	{
-		transform->Translate(transform->GetForward() * movementSpeed * Game::deltaTime);
+		transform->Translate(transform->GetForward() * movementSpeed * Engine::deltaTime);
 	}
 	if (wnd.GetKey(GLFW_KEY_A))
 	{
-		transform->Translate(-transform->GetRight() * movementSpeed * Game::deltaTime);
+		transform->Translate(-transform->GetRight() * movementSpeed * Engine::deltaTime);
 	}
 	if (wnd.GetKey(GLFW_KEY_S))
 	{
-		transform->Translate(-transform->GetForward() * movementSpeed * Game::deltaTime);
+		transform->Translate(-transform->GetForward() * movementSpeed * Engine::deltaTime);
 	}
 	if (wnd.GetKey(GLFW_KEY_D))
 	{
-		transform->Translate(transform->GetRight() * movementSpeed * Game::deltaTime);
+		transform->Translate(transform->GetRight() * movementSpeed * Engine::deltaTime);
 	}
 }
