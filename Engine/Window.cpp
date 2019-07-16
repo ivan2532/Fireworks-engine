@@ -175,6 +175,11 @@ void Window::MakeWindow(bool r, bool lc) noexcept
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
 #ifdef DETAILED_LOGGING
+	std::cout << "Enabling face culling." << std::endl;
+#endif
+	glEnable(GL_CULL_FACE);
+
+#ifdef DETAILED_LOGGING
 	std::cout << "Enabling depth buffer." << std::endl;
 #endif
 	glEnable(GL_DEPTH_TEST);
