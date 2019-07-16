@@ -44,9 +44,9 @@ void Model::ProcessNode(aiNode* node, const aiScene* scene, Transform* parent) n
 #endif
 	auto nodeTransform = aiMatrix4x4ToGlm(&(node->mTransformation));
 	glm::vec3 position;
-	position.x = nodeTransform[0][3];
-	position.y = nodeTransform[1][3];
-	position.z = nodeTransform[2][3];
+	position.x = nodeTransform[3][0];
+	position.y = nodeTransform[3][1];
+	position.z = nodeTransform[3][2];
 	glm::vec3 scale;
 	scale.x = glm::length(glm::vec3(nodeTransform[0][0], nodeTransform[1][0], nodeTransform[2][0]));
 	scale.y = glm::length(glm::vec3(nodeTransform[0][1], nodeTransform[1][1], nodeTransform[2][1]));
@@ -67,7 +67,7 @@ void Model::ProcessNode(aiNode* node, const aiScene* scene, Transform* parent) n
 
 	if (sy >= 1e-6)
 	{
-		eulerAngles.x = atan2(rotation[2][1], rotation[2][2]);
+		eulerAngles.x = -atan2(rotation[2][1], rotation[2][2]);
 		eulerAngles.y = atan2(-rotation[2][0], sy);
 		eulerAngles.z = atan2(rotation[1][0], rotation[0][0]);
 	}
@@ -77,6 +77,10 @@ void Model::ProcessNode(aiNode* node, const aiScene* scene, Transform* parent) n
 		eulerAngles.y = atan2(-rotation[2][0], sy);
 		eulerAngles.z = 0;
 	}
+
+	eulerAngles.x = glm::degrees(eulerAngles.x);
+	eulerAngles.y = glm::degrees(eulerAngles.y);
+	eulerAngles.z = glm::degrees(eulerAngles.z);
 
 	auto object = std::make_unique<GameObject>(node->mName.C_Str());
 	object->AddComponent(std::make_unique<Transform>(object.get()));

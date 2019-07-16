@@ -33,9 +33,9 @@ void Transform::UpdateTransform() noexcept
 
 	transform = glm::mat4(1.0f);
 	transform = glm::scale(transform, scale);
-	transform = glm::rotate(transform, eulerAngles.x, glm::vec3(1.0f, 0.0f, 0.0f));
-	transform = glm::rotate(transform, eulerAngles.y, glm::vec3(0.0f, 1.0f, 0.0f));
-	transform = glm::rotate(transform, eulerAngles.z, glm::vec3(0.0f, 0.0f, 1.0f));
+	transform = glm::rotate(transform, glm::radians(eulerAngles.x), glm::vec3(1.0f, 0.0f, 0.0f));
+	transform = glm::rotate(transform, glm::radians(eulerAngles.y), glm::vec3(0.0f, 1.0f, 0.0f));
+	transform = glm::rotate(transform, glm::radians(eulerAngles.z), glm::vec3(0.0f, 0.0f, 1.0f));
 	transform = glm::translate(transform, position);
 	transform = parentTransform * transform;
 }
