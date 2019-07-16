@@ -3,6 +3,7 @@
 #include "stb_image.h"
 #include "Shader.hpp"
 #include "Scene.hpp"
+#include "Math.hpp"
 #include <iostream>
 
 #define DETAILED_LOGGING
@@ -42,52 +43,21 @@ void Model::ProcessNode(aiNode* node, const aiScene* scene, Transform* parent) n
 #ifdef DETAILED_LOGGING
 	std::cout << "---STARTING PROCESS NODE" << std::endl;
 #endif
-	auto nodeTransform = aiMatrix4x4ToGlm(&(node->mTransformation));
+	auto nodeTransform = Math::AiMatrix4x4ToGlm(&(node->mTransformation));
+
 	glm::vec3 position;
-	position.x = nodeTransform[3][0];
-	position.y = nodeTransform[3][1];
-	position.z = nodeTransform[3][2];
 	glm::vec3 scale;
-	scale.x = glm::length(glm::vec3(nodeTransform[0][0], nodeTransform[1][0], nodeTransform[2][0]));
-	scale.y = glm::length(glm::vec3(nodeTransform[0][1], nodeTransform[1][1], nodeTransform[2][1]));
-	scale.z = glm::length(glm::vec3(nodeTransform[0][2], nodeTransform[1][2], nodeTransform[2][2]));
 	glm::mat4 rotation(1.0f);
-	rotation[0][0] = nodeTransform[0][0] / scale.x;
-	rotation[1][0] = nodeTransform[1][0] / scale.x;
-	rotation[2][0] = nodeTransform[2][0] / scale.x;
-	rotation[0][1] = nodeTransform[0][1] / scale.y;
-	rotation[1][1] = nodeTransform[1][1] / scale.y;
-	rotation[2][1] = nodeTransform[2][1] / scale.y;
-	rotation[0][2] = nodeTransform[0][2] / scale.z;
-	rotation[1][2] = nodeTransform[1][2] / scale.z;
-	rotation[2][2] = nodeTransform[2][2] / scale.z;
 
-	float sy = sqrt(rotation[0][0] * rotation[0][0] + rotation[1][0] * rotation[1][0]);
-	glm::vec3 eulerAngles;
-
-	if (sy >= 1e-6)
-	{
-		eulerAngles.x = -atan2(rotation[2][1], rotation[2][2]);
-		eulerAngles.y = atan2(-rotation[2][0], sy);
-		eulerAngles.z = atan2(rotation[1][0], rotation[0][0]);
-	}
-	else
-	{
-		eulerAngles.x = atan2(-rotation[1][2], rotation[1][1]);
-		eulerAngles.y = atan2(-rotation[2][0], sy);
-		eulerAngles.z = 0;
-	}
-
-	eulerAngles.x = glm::degrees(eulerAngles.x);
-	eulerAngles.y = glm::degrees(eulerAngles.y);
-	eulerAngles.z = glm::degrees(eulerAngles.z);
+	Math::DecomposeTransform(nodeTransform, &position, &scale, &rotation);
+	glm::vec3 eulerAngles = Math::EulerAnglesFromRotation(rotation);
 
 	auto object = std::make_unique<GameObject>(node->mName.C_Str());
 	object->AddComponent(std::make_unique<Transform>(object.get()));
 	object->GetComponent<Transform>().value()->AddShaderToUpdate(std::make_unique<Shader>(shader));
 	object->GetComponent<Transform>().value()->SetPosition(position);
 	object->GetComponent<Transform>().value()->SetEulerAngles(eulerAngles);
-	//object->GetComponent<Transform>().value()->SetScale(scale);
+	object->GetComponent<Transform>().value()->SetScale(scale);
 	object->GetComponent<Transform>().value()->SetParent(parent);
 	object->AddComponent(std::make_unique<MeshRenderer>(object.get(), shader));
 
