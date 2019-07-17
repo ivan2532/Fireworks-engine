@@ -18,6 +18,12 @@ void Camera::Update() noexcept
 	UpdateShaders();
 }
 
+void Camera::OnWindowResize(int width, int height) noexcept
+{
+	screenWidth = width;
+	screenHeight = height;
+}
+
 void Camera::UpdateViewMatrix() noexcept
 {
 	viewMatrix = glm::lookAt(transform->GetPosition(), transform->GetPosition() + transform->GetForward(), transform->GetUp());

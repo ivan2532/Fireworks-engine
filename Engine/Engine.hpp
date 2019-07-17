@@ -14,9 +14,11 @@ public:
 	Engine() noexcept;
 	~Engine() noexcept;
 	void Go() noexcept;
-	//User functions here
-	void MouseUpdate(double x, double y) noexcept;
+public:
+	void OnMouseMove(double x, double y) noexcept;
+	void OnWindowResize(int width, int height) noexcept;
 private:
+	void SetCallbacks() noexcept;
 	void BeginFrame() noexcept;
 	void Update() noexcept;
 	void EndFrame(Window& wnd) noexcept;
@@ -33,3 +35,4 @@ public:
 };
 
 void CursorMoveCallback(GLFWwindow* wnd, double x, double y);
+void FramebufferSizeCallback(GLFWwindow* wnd, int width, int height);

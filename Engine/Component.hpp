@@ -12,6 +12,7 @@ public:
 	virtual void Update() noexcept = 0;
 private:
 	virtual void OnMouseMove(float x, float y) noexcept;
+	virtual void OnWindowResize(int width, int height) noexcept;
 protected:
 	GameObject* gameObject;
 };

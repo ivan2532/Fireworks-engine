@@ -12,12 +12,7 @@ Engine::Engine() noexcept
 	wnd(true),
 	activeScene(std::make_unique<TestScene>(wnd))
 {
-	glfwSetWindowUserPointer(wnd.GetWindow(), (void*)this);
-
-	glfwSetCursorPosCallback(
-		wnd.GetWindow(),
-		CursorMoveCallback
-	);
+	SetCallbacks();
 
 	ImGui_ImplGlfw_InitForOpenGL(wnd.GetWindow(), true);
 	ImGui_ImplOpenGL3_Init("#version 460");
@@ -37,6 +32,21 @@ void Engine::Go() noexcept
 		Update();
 		EndFrame(wnd);
 	}
+}
+
+void Engine::SetCallbacks() noexcept
+{
+	glfwSetWindowUserPointer(wnd.GetWindow(), (void*)this);
+
+	glfwSetCursorPosCallback(
+		wnd.GetWindow(),
+		CursorMoveCallback
+	);
+
+	glfwSetFramebufferSizeCallback(
+		wnd.GetWindow(),
+		FramebufferSizeCallback
+	);
 }
 
 void Engine::BeginFrame() noexcept
@@ -73,12 +83,23 @@ void Engine::ProcessInput() noexcept
 		wnd.Close();
 }
 
-void Engine::MouseUpdate(double x, double y) noexcept
+void Engine::OnMouseMove(double x, double y) noexcept
 {
 	activeScene->OnMouseMove(static_cast<float>(x), static_cast<float>(y));
 }
 
+void Engine::OnWindowResize(int width, int height) noexcept
+{
+	activeScene->OnWindowResize(width, height);
+}
+
 void CursorMoveCallback(GLFWwindow* wnd, double x, double y)
 {
-	reinterpret_cast<Engine*>(glfwGetWindowUserPointer(wnd))->MouseUpdate(x, y);
+	reinterpret_cast<Engine*>(glfwGetWindowUserPointer(wnd))->OnMouseMove(x, y);
+}
+
+void FramebufferSizeCallback(GLFWwindow* wnd, int width, int height)
+{
+	reinterpret_cast<Engine*>(glfwGetWindowUserPointer(wnd))->OnWindowResize(width, height);
+	glViewport(0, 0, width, height);
 }

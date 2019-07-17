@@ -32,6 +32,15 @@ void Scene::OnMouseMove(float x, float y) noexcept
 	}
 }
 
+void Scene::OnWindowResize(int width, int height) noexcept
+{
+	for (auto& object : sceneObjects)
+	{
+		for (auto& component : object->components)
+			component->OnWindowResize(width, height);
+	}
+}
+
 void Scene::Update() noexcept
 {
 	for (auto& object : sceneObjects)

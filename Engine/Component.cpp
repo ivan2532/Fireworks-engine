@@ -15,3 +15,7 @@ GameObject* Component::GetObject() const noexcept
 void Component::OnMouseMove(float x, float y) noexcept
 {
 }
+
+void Component::OnWindowResize(int width, int height) noexcept
+{
+}

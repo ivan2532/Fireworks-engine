@@ -10,6 +10,8 @@ public:
 	Camera(GameObject* go, float screenWidth, float screenHeight, float fov = 70.0f) noexcept;
 public:
 	void Update() noexcept override;
+public:
+	void OnWindowResize(int width, int height) noexcept override;
 private:
 	void UpdateViewMatrix() noexcept;
 	void UpdateShaders() noexcept;
