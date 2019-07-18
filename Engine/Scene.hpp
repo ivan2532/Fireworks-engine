@@ -6,6 +6,7 @@
 
 class Scene
 {
+	friend class Editor;
 public:
 	Scene(const std::string& name) noexcept;
 public:

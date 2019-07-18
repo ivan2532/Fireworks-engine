@@ -10,10 +10,8 @@ TestScene::TestScene(Window& w) noexcept
 	textureShader("UnlitTextureVS.glsl", "UnlitTextureFS.glsl"),
 	testModel("TrexModelByJoel3d_FBX/TrexByJoel3d.fbx", textureShader)
 {
-	auto ballObject = AddSceneObject("Material Ball");
-	ballObject->AddComponent(std::make_unique<Transform>(ballObject));
-	//ballObject->GetComponent<Transform>().value()->AddShaderToUpdate(std::make_unique<Shader>(textureShader));
-	//ballObject->AddComponent(std::make_unique<ModelRenderer>(ballObject, "Material_ball/material_ball.obj", textureShader));
+	//auto ballObject = AddSceneObject("Material Ball");
+	//ballObject->AddComponent(std::make_unique<Transform>(ballObject));
 
 	testModel.MoveToScene(*this);
 

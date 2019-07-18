@@ -7,9 +7,11 @@
 #include "GameObject.hpp"
 #include "ComponentIncludes.hpp"
 #include "Scene.hpp"
+#include "Editor.hpp"
 
 class Engine
 {
+	friend Editor;
 public:
 	Engine() noexcept;
 	~Engine() noexcept;
@@ -27,6 +29,7 @@ private:
 private:
 	float lastFrame = 0.0f;
 	Window wnd;
+	Editor editor;
 	//User variables here
 	ImGuiManager imGuiManager;
 	std::unique_ptr<Scene> activeScene;

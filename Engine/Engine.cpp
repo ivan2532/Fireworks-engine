@@ -9,7 +9,8 @@ Engine::Engine() noexcept
 	//:
 	//wnd(800u, 600u, "Test", false)
 	:
-	wnd(true),
+	wnd(false),
+	editor(*this),
 	activeScene(std::make_unique<TestScene>(wnd))
 {
 	SetCallbacks();
@@ -65,6 +66,7 @@ void Engine::BeginFrame() noexcept
 
 void Engine::Update() noexcept
 {
+	editor.DrawGUI();
 	ProcessInput();
 	activeScene->Update();
 }

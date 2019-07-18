@@ -1,5 +1,7 @@
 #include "Transform.hpp"
 #include "Shader.hpp"
+#include "imguiIncludes.hpp"
+#include "GameObject.hpp"
 
 void Transform::Update() noexcept
 {
@@ -240,4 +242,15 @@ void Transform::SetParent(Transform* p) noexcept
 void Transform::AddShaderToUpdate(std::unique_ptr<Shader> shader) noexcept
 {
 	shadersToUpdate.push_back(std::move(shader));
+}
+
+void Transform::DrawHierarchy() const noexcept
+{
+	if (ImGui::TreeNode( gameObject->GetName().c_str() ) )
+	{
+		for (auto& child : children)
+			child->DrawHierarchy();
+
+		ImGui::TreePop();
+	}
 }
