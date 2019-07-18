@@ -219,6 +219,11 @@ void Transform::Scale(glm::vec3 value) noexcept
 	updateAxes = true;
 }
 
+Transform* Transform::GetChild(int i) const noexcept
+{
+	return children[i].get();
+}
+
 Transform* Transform::GetParent() const noexcept
 {
 	return parent.get();
@@ -227,6 +232,9 @@ Transform* Transform::GetParent() const noexcept
 void Transform::SetParent(Transform* p) noexcept
 {
 	parent.reset(p);
+
+	if (parent)
+		parent->children.push_back(std::unique_ptr<Transform>(this));
 }
 
 void Transform::AddShaderToUpdate(std::unique_ptr<Shader> shader) noexcept

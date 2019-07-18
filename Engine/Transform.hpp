@@ -43,6 +43,8 @@ public:
 	void Scale(float x, float y, float z) noexcept;
 	void Scale(glm::vec3 value) noexcept;
 
+	Transform* GetChild(int i) const noexcept;
+
 	Transform* GetParent() const noexcept;
 	void SetParent(Transform* parent) noexcept;
 
@@ -60,7 +62,10 @@ private:
 	glm::vec3 right;
 	glm::vec3 up;
 	glm::mat4 transform;
+
 	std::unique_ptr<Transform> parent;
+	std::vector<std::unique_ptr<Transform>> children;
+
 	//Shaders
 	std::vector<std::unique_ptr<Shader>> shadersToUpdate;
 
