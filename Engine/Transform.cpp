@@ -2,6 +2,7 @@
 #include "Shader.hpp"
 #include "imguiIncludes.hpp"
 #include "GameObject.hpp"
+#include "Editor.hpp"
 
 void Transform::Update() noexcept
 {
@@ -244,12 +245,31 @@ void Transform::AddShaderToUpdate(std::unique_ptr<Shader> shader) noexcept
 	shadersToUpdate.push_back(std::move(shader));
 }
 
-void Transform::DrawHierarchy() const noexcept
+void Transform::DrawHierarchy(Editor& editor, int& nodeIndexCount) const noexcept
 {
-	if (ImGui::TreeNode( gameObject->GetName().c_str() ) )
+	const int currentIndex = nodeIndexCount;
+	nodeIndexCount++;
+
+	auto nodeFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
+
+	if (children.size() == 0)
+		nodeFlags |= ImGuiTreeNodeFlags_Leaf;
+
+	if (currentIndex == editor.GetSelectedHierarchy())
+		nodeFlags |= ImGuiTreeNodeFlags_Selected;
+
+	bool open = ImGui::TreeNodeEx((void*)(intptr_t)currentIndex, nodeFlags, gameObject->GetName().c_str());
+
+	if (ImGui::IsItemClicked())
+	{
+		editor.SetSelectedHierarchy(currentIndex);
+		editor.SetSelectedObject(gameObject);
+	}
+
+	if (open)
 	{
 		for (auto& child : children)
-			child->DrawHierarchy();
+			child->DrawHierarchy(editor, nodeIndexCount);
 
 		ImGui::TreePop();
 	}

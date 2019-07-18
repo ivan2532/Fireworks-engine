@@ -6,6 +6,7 @@
 
 class GameObject;
 class Shader;
+class Editor;
 
 class Transform : public Component
 {
@@ -50,7 +51,7 @@ public:
 
 	void AddShaderToUpdate(std::unique_ptr<Shader> shader) noexcept;
 public: //GUI
-	void DrawHierarchy() const noexcept;
+	void DrawHierarchy(Editor& editor, int& nodeIndexCount) const noexcept;
 public:
 	void Update() noexcept override;
 private:
