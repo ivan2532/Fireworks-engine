@@ -15,12 +15,12 @@ TestScene::TestScene(Window& w) noexcept
 
 	testModel.MoveToScene(*this);
 
-	auto cameraObject = AddSceneObject("Camera");
+	auto cameraObject = AddSceneObject("SceneCamera");
 	cameraObject->AddComponent(std::make_unique<Transform>(cameraObject));
 	cameraObject->GetComponent<Transform>().value()->Translate(0.0f, 0.0f, 20.0f);
 	cameraObject->GetComponent<Transform>().value()->AddShaderToUpdate(std::make_unique<Shader>(textureShader));
 	cameraObject->AddComponent(std::make_unique<Camera>(cameraObject, static_cast<float>(wnd.GetWidth()), static_cast<float>(wnd.GetHeight())));
-	cameraObject->AddComponent(std::make_unique<FPCameraMovement>(cameraObject, wnd, 7.0f, 0.0f));
+	cameraObject->AddComponent(std::make_unique<SceneCameraController>(cameraObject, wnd, 7.0f, 0.25f));
 }
 
 void TestScene::Update() noexcept

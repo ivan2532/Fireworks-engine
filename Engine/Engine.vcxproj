@@ -148,6 +148,7 @@
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="ModelRenderer.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="SceneCameraController.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="TestScene.cpp" />
     <ClCompile Include="Transform.cpp" />

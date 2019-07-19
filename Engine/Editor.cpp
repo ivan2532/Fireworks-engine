@@ -27,7 +27,7 @@ void Editor::DrawHierarchyUI() noexcept
 		{
 			auto transform = engine.activeScene->sceneObjects[i]->GetComponent<Transform>().value();
 
-			if (transform->GetParent() == nullptr)
+			if (transform->GetParent() == nullptr && !engine.activeScene->sceneObjects[i]->GetComponent<SceneCameraController>().has_value())
 			{
 				transform->DrawHierarchy(*this, nodeIndexCount);
 			}

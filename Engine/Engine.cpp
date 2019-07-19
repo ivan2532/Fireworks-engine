@@ -6,10 +6,8 @@
 float Engine::deltaTime = 0.0f;
 
 Engine::Engine() noexcept
-	//:
-	//wnd(800u, 600u, "Test", false)
 	:
-	wnd(false, true),
+	wnd(1920u, 1080u, "Fireworks engine", false, true, false, true),
 	editor(*this),
 	activeScene(std::make_unique<TestScene>(wnd))
 {
@@ -52,7 +50,7 @@ void Engine::SetCallbacks() noexcept
 
 void Engine::BeginFrame() noexcept
 {
-	glClearColor(0.0f, 0.137f, 0.219f, 1.0f);
+	glClearColor(0.2f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	float curTime = (float)glfwGetTime();

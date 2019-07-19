@@ -7,9 +7,8 @@ class Window;
 class SceneCameraController : public Component
 {
 public:
-	FPCameraMovement(GameObject* go, Window& window, float mSpeed = 7.0f, float lSens = 0.2f) noexcept;
+	SceneCameraController(GameObject* go, Window& window, float mSpeed = 7.0f, float lSens = 0.2f) noexcept;
 public:
-	void DrawInspector() noexcept override;
 	void OnMouseMove(float x, float y) noexcept override;
 public:
 	void Update() noexcept override;
@@ -19,7 +18,6 @@ private:
 	float movementSpeed;
 	float lookSensitivity;
 private: //Input helpers
-	bool firstMouse = true;
-	float lastMouseX;
-	float lastMouseY;
+	bool dragging = false;
+	float dragX, dragY;
 };
