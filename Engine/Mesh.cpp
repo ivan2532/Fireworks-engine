@@ -3,10 +3,11 @@
 #include "glad/glad.h"
 #include <iostream>
 
-#define DETAILED_LOGGING
+//#define DETAILED_LOGGING
 
-Mesh::Mesh(std::vector<Vertex> v, std::vector<unsigned> i, std::vector<Texture> t) noexcept
+Mesh::Mesh(const std::string& n, std::vector<Vertex> v, std::vector<unsigned> i, std::vector<Texture> t) noexcept
 	:
+	name(n),
 	vertices(std::move(v)),
 	indices(std::move(i)),
 	textures(std::move(t))
@@ -101,6 +102,11 @@ void Mesh::Draw(Shader& shader) const noexcept
 	glBindVertexArray(vertexArrayID);
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr);
 	glBindVertexArray(0);
+}
+
+std::string Mesh::GetName() const noexcept
+{
+	return name;
 }
 
 void Mesh::InitMesh() noexcept

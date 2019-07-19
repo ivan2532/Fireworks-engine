@@ -20,7 +20,7 @@ TestScene::TestScene(Window& w) noexcept
 	cameraObject->GetComponent<Transform>().value()->Translate(0.0f, 0.0f, 20.0f);
 	cameraObject->GetComponent<Transform>().value()->AddShaderToUpdate(std::make_unique<Shader>(textureShader));
 	cameraObject->AddComponent(std::make_unique<Camera>(cameraObject, static_cast<float>(wnd.GetWidth()), static_cast<float>(wnd.GetHeight())));
-	cameraObject->AddComponent(std::make_unique<FPCameraMovement>(cameraObject, wnd, 7.0f, 0.125f));
+	cameraObject->AddComponent(std::make_unique<FPCameraMovement>(cameraObject, wnd, 7.0f, 0.0f));
 }
 
 void TestScene::Update() noexcept

@@ -9,7 +9,7 @@ Engine::Engine() noexcept
 	//:
 	//wnd(800u, 600u, "Test", false)
 	:
-	wnd(false),
+	wnd(false, true),
 	editor(*this),
 	activeScene(std::make_unique<TestScene>(wnd))
 {

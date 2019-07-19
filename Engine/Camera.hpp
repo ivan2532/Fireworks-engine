@@ -11,7 +11,10 @@ public:
 public:
 	void Update() noexcept override;
 public:
+	void DrawInspector() noexcept override;
 	void OnWindowResize(int width, int height) noexcept override;
+	float GetFOV() const noexcept;
+	void SetFOV(float value) noexcept;
 private:
 	void UpdateViewMatrix() noexcept;
 	void UpdateShaders() noexcept;

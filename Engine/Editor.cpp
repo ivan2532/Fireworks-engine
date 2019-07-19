@@ -14,6 +14,7 @@ Editor::Editor(Engine& eng) noexcept
 void Editor::DrawGUI() noexcept
 {
 	DrawHierarchyUI();
+	DrawInspectorUI();
 }
 
 void Editor::DrawHierarchyUI() noexcept
@@ -53,4 +54,20 @@ GameObject* Editor::GetSelectedObject() const noexcept
 void Editor::SetSelectedObject(GameObject* value) noexcept
 {
 	selectedObject = value;
+}
+
+void Editor::DrawInspectorUI() noexcept
+{
+	//ImGui::ShowDemoWindow();
+	if (ImGui::Begin("Inspector"))
+	{
+		if (selectedObject)
+		{
+			for (auto& component : selectedObject->components)
+			{
+				component->DrawInspector();
+			}
+		}
+	}
+	ImGui::End();
 }

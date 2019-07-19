@@ -15,6 +15,8 @@ public:
 	void AddMesh(std::unique_ptr<Mesh> m) noexcept;
 public:
 	void Update() noexcept override;
+public:
+	void DrawInspector() noexcept override;
 private:
 	std::vector<std::unique_ptr<Mesh>> meshes;
 	Shader& shader;

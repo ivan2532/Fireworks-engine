@@ -31,13 +31,14 @@ struct Texture
 class Mesh
 {
 public:
-	Mesh(std::vector<Vertex> vertices, std::vector<unsigned> indices, std::vector<Texture> textures) noexcept;
+	Mesh(const std::string& name, std::vector<Vertex> vertices, std::vector<unsigned> indices, std::vector<Texture> textures) noexcept;
 	~Mesh() = default;
 	Mesh(const Mesh&) noexcept;
 	Mesh& operator=(const Mesh&) noexcept;
 	Mesh(Mesh&&) noexcept;
 	Mesh& operator=(Mesh&&) noexcept;
 	void Draw(Shader& shader) const noexcept;
+	std::string GetName() const noexcept;
 private:
 	void InitMesh() noexcept;
 public:
@@ -45,6 +46,7 @@ public:
 	std::vector<unsigned> indices;
 	std::vector<Texture> textures;
 private:
+	std::string name;
 	unsigned vertexBufferID;
 	unsigned elementBufferID;
 	unsigned vertexArrayID;

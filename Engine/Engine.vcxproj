@@ -181,6 +181,7 @@
     <ClInclude Include="ModelRenderer.hpp" />
     <ClInclude Include="OpenGLIncludes.hpp" />
     <ClInclude Include="Scene.hpp" />
+    <ClInclude Include="SceneCameraController.hpp" />
     <ClInclude Include="Shader.hpp" />
     <ClInclude Include="TestScene.hpp" />
     <ClInclude Include="Transform.hpp" />

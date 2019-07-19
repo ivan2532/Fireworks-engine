@@ -10,6 +10,37 @@ void Transform::Update() noexcept
 	UpdateShaders(); //First call UpdateTransform() !!!!!
 }
 
+void Transform::DrawInspector() noexcept
+{
+	if (ImGui::CollapsingHeader("Transform"))
+	{
+		float posInput[3] = { position.x, position.y, position.z };
+		float rotInput[3] = { eulerAngles.x, eulerAngles.y, eulerAngles.z };
+		float scaleInput[3] = { scale.x, scale.y, scale.z };
+
+		ImGui::Text("Position: ");
+		ImGui::SameLine();
+		if (ImGui::InputFloat3("##input_pos", posInput))
+		{
+			SetPosition(posInput[0], posInput[1], posInput[2]);
+		}
+
+		ImGui::Text("Rotation: ");
+		ImGui::SameLine();
+		if (ImGui::InputFloat3("##input_rot", rotInput))
+		{
+			SetEulerAngles(rotInput[0], rotInput[1], rotInput[2]);
+		}
+
+		ImGui::Text("Scale: ");
+		ImGui::SameLine();
+		if (ImGui::InputFloat3("##input_scale", scaleInput))
+		{
+			SetScale(scaleInput[0], scaleInput[1], scaleInput[2]);
+		}
+	}
+}
+
 void Transform::UpdateTransform() noexcept
 {
 	glm::mat4 parentTransform(1.0f);

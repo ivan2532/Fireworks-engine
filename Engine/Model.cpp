@@ -6,7 +6,7 @@
 #include "Math.hpp"
 #include <iostream>
 
-#define DETAILED_LOGGING
+//#define DETAILED_LOGGING
 
 Model::Model(std::string path, Shader& s) noexcept
 	:
@@ -59,16 +59,20 @@ void Model::ProcessNode(aiNode* node, const aiScene* scene, Transform* parent) n
 	object->GetComponent<Transform>().value()->SetEulerAngles(eulerAngles);
 	object->GetComponent<Transform>().value()->SetScale(scale);
 	object->GetComponent<Transform>().value()->SetParent(parent);
-	object->AddComponent(std::make_unique<MeshRenderer>(object.get(), shader));
 
-	for (unsigned i = 0; i < node->mNumMeshes; i++)
+	if (node->mNumMeshes > 0)
 	{
-		auto mesh = ProcessMesh(
-			scene->mMeshes[node->mMeshes[i]],
-			scene
-		);
+		object->AddComponent(std::make_unique<MeshRenderer>(object.get(), shader));
 
-		object->GetComponent<MeshRenderer>().value()->AddMesh(std::move(mesh));
+		for (unsigned i = 0; i < node->mNumMeshes; i++)
+		{
+			auto mesh = ProcessMesh(
+				scene->mMeshes[node->mMeshes[i]],
+				scene
+			);
+
+			object->GetComponent<MeshRenderer>().value()->AddMesh(std::move(mesh));
+		}
 	}
 
 	for (unsigned i = 0; i < node->mNumChildren; i++)
@@ -147,7 +151,7 @@ std::unique_ptr<Mesh> Model::ProcessMesh(aiMesh* mesh, const aiScene* scene) noe
 			textures.insert(textures.end(), normalTextures.begin(), normalTextures.end());
 	}
 
-	return std::make_unique<Mesh>(vertices, indices, textures);
+	return std::make_unique<Mesh>(mesh->mName.C_Str(), vertices, indices, textures);
 }
 
 std::vector<Texture> Model::LoadMaterialTextures(aiMaterial* material, aiTextureType type, TextureType typeName) noexcept

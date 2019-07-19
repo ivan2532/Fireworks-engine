@@ -12,6 +12,10 @@ GameObject* Component::GetObject() const noexcept
 	return gameObject;
 }
 
+void Component::DrawInspector() noexcept
+{
+}
+
 void Component::OnMouseMove(float x, float y) noexcept
 {
 }

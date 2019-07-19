@@ -17,6 +17,20 @@ FPCameraMovement::FPCameraMovement(GameObject* go, Window& window, float mSpeed,
 {
 }
 
+void FPCameraMovement::DrawInspector() noexcept
+{
+	if (ImGui::CollapsingHeader("FPCameraMovement"))
+	{
+		ImGui::Text("Movement speed");
+		ImGui::SameLine();
+		ImGui::InputFloat("##input_mov_speed", &movementSpeed);
+
+		ImGui::Text("Look sensitivity");
+		ImGui::SameLine();
+		ImGui::InputFloat("##input_look_sens", &lookSensitivity);
+	}
+}
+
 void FPCameraMovement::OnMouseMove(float x, float y) noexcept
 {
 	if (firstMouse)

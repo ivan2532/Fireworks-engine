@@ -212,6 +212,9 @@
     <ClInclude Include="Editor.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SceneCameraController.hpp">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="UnlitTextureVS.glsl">

@@ -50,11 +50,12 @@ public:
 	void SetParent(Transform* parent) noexcept;
 
 	void AddShaderToUpdate(std::unique_ptr<Shader> shader) noexcept;
-public: //GUI
+public:
 	void DrawHierarchy(Editor& editor, int& nodeIndexCount) const noexcept;
 public:
 	void Update() noexcept override;
 private:
+	void DrawInspector() noexcept override;
 	void UpdateTransform() noexcept;
 	void UpdateShaders() noexcept;
 private:

@@ -8,6 +8,7 @@
 class GameObject
 {
 	friend class Scene;
+	friend class Editor;
 public:
 	GameObject(const std::string& name) noexcept;
 	~GameObject() = default;

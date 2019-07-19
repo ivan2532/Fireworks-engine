@@ -3,9 +3,9 @@
 #include "GLFW/glfw3.h"
 #include <iostream>
 
-#define DETAILED_LOGGING
+//#define DETAILED_LOGGING
 
-Window::Window(bool lc) noexcept
+Window::Window(bool lc, bool max) noexcept
 {
 	char input = 0; //Used for handling Y/N
 
@@ -22,7 +22,7 @@ Window::Window(bool lc) noexcept
 		fullscreen = testWndFullscreen;
 		resizable = true;
 
-		MakeWindow(resizable, lc);
+		MakeWindow(resizable, lc, max);
 
 		return;
 	}
@@ -56,10 +56,10 @@ Window::Window(bool lc) noexcept
 	else
 		resizable = false;
 
-	MakeWindow(resizable, lc);
+	MakeWindow(resizable, lc, max);
 }
 
-Window::Window(unsigned w, unsigned h, std::string t, bool fs, bool r, bool lc) noexcept
+Window::Window(unsigned w, unsigned h, std::string t, bool fs, bool r, bool lc, bool max) noexcept
 	:
 	width(w),
 	height(h),
@@ -67,7 +67,7 @@ Window::Window(unsigned w, unsigned h, std::string t, bool fs, bool r, bool lc) 
 	fullscreen(fs),
 	resizable(r)
 {
-	MakeWindow(resizable, lc);
+	MakeWindow(resizable, lc, max);
 }
 
 Window::~Window() noexcept
@@ -100,7 +100,7 @@ void Window::EndFrame() noexcept
 	glfwPollEvents();
 }
 
-void Window::MakeWindow(bool r, bool lc) noexcept
+void Window::MakeWindow(bool r, bool lc, bool max) noexcept
 {
 #ifdef DETAILED_LOGGING
 	std::cout << std::endl << "------------------STARTING WINDOW CREATION" << std::endl;
@@ -123,6 +123,16 @@ void Window::MakeWindow(bool r, bool lc) noexcept
 	std::cout << "Setting OpenGL profile." << std::endl;
 #endif
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+	if (!fullscreen && max)
+	{
+		glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
+
+		const auto videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+
+		width = videoMode->width;
+		height = videoMode->height;
+	}
 
 #ifdef DETAILED_LOGGING
 	std::cout << "Creating window." << std::endl;

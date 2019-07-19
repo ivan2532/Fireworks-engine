@@ -1,4 +1,6 @@
 #include "MeshRenderer.hpp"
+#include "imguiIncludes.hpp"
+#include <sstream>
 
 MeshRenderer::MeshRenderer(GameObject* go, Shader& s)
 	:
@@ -16,4 +18,17 @@ void MeshRenderer::Update() noexcept
 {
 	for(auto& mesh : meshes)
 		mesh->Draw(shader);
+}
+
+void MeshRenderer::DrawInspector() noexcept
+{
+	if (ImGui::CollapsingHeader("Mesh renderer"))
+	{
+		for (auto& mesh : meshes)
+		{
+			std::ostringstream sstream;
+			sstream << "Mesh name: " << mesh->GetName() << std::endl << "Faces: " << mesh->indices.size() / 3;
+			ImGui::Text(sstream.str().c_str());
+		}
+	}
 }

@@ -4,7 +4,7 @@
 
 class Window;
 
-class FPCameraMovement : public Component
+class SceneCameraController : public Component
 {
 public:
 	FPCameraMovement(GameObject* go, Window& window, float mSpeed = 7.0f, float lSens = 0.2f) noexcept;
