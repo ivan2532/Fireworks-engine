@@ -46,6 +46,11 @@ std::string GameObject::GetName() const noexcept
 	return name;
 }
 
+void GameObject::SetName(const std::string& value) noexcept
+{
+	name = value;
+}
+
 void GameObject::Update() noexcept
 {
 	for (auto& component : components)

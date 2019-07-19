@@ -18,6 +18,7 @@ public:
 	GameObject& operator=(GameObject&&) noexcept;
 public:
 	std::string GetName() const noexcept;
+	void SetName(const std::string&) noexcept;
 	void Update() noexcept;
 	void AddComponent(std::unique_ptr<Component> component) noexcept;
 	template<class T>

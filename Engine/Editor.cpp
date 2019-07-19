@@ -1,5 +1,6 @@
 #include "Editor.hpp"
 #include "Engine.hpp"
+#include "GLFW/glfw3.h"
 #include <iostream>
 
 Editor::Editor(Engine& eng) noexcept
@@ -63,6 +64,24 @@ void Editor::DrawInspectorUI() noexcept
 	{
 		if (selectedObject)
 		{
+			char buf[64] = {};
+			std::string goName = selectedObject->GetName();
+
+			for (size_t i = 0; i < goName.size() && i < 64; i++)
+			{
+				buf[i] = goName[i];
+			}
+
+			ImGui::Text("Game object name \n(press ENTER to apply new name): ");
+			if (ImGui::InputText("##go_name_input", buf, sizeof(buf)))
+			{
+				if(engine.wnd.GetKey(GLFW_KEY_ENTER))
+					selectedObject->SetName(buf);
+			}
+
+			ImGui::Spacing();
+
+			ImGui::Text("Components: ");
 			for (auto& component : selectedObject->components)
 			{
 				component->DrawInspector();
