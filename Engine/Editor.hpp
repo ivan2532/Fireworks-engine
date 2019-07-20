@@ -17,6 +17,8 @@ public:
 	void SetSelectedObject(GameObject* value) noexcept;
 	//Inspector
 	void DrawInspectorUI() noexcept;
+	//Asset explorer
+	void DrawAssetExplorerUI() noexcept;
 private:
 	Engine& engine;
 	//Hierarchy variables

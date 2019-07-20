@@ -36,7 +36,7 @@ out vec4 color;
 
 vec4 CalculatePointLight(PointLight light, vec3 viewPos, vec3 lightPos, vec3 fragmentPos)
 {
-	vec4 diffuseTexelColor = texture(tex_diffuse1, texCoord);
+	vec4 diffuseTexelColor = texture(tex_diffuse1, texCoord);//vec4(1.0f, 1.0f, 1.0f, 1.0f);
 	vec4 ambientColor = light.lightColor * light.ambientStrength * diffuseTexelColor;
 
 	float lightDistance = length(lightPos - fragmentPos);
@@ -51,7 +51,7 @@ vec4 CalculatePointLight(PointLight light, vec3 viewPos, vec3 lightPos, vec3 fra
 	vec3 reflection = reflect(-lightDirection, normal);
 	vec3 viewDirection = normalize(viewPos - fragmentPos);
 	float specularStrength = pow(max(dot(viewDirection,  reflection), 0.0f), light.shininess);
-	vec4 specularColor = light.lightColor * light.specularStrength * specularStrength * texture(tex_specular1, texCoord);
+	vec4 specularColor = light.lightColor * light.specularStrength * specularStrength * /*vec4(1.0f, 1.0f, 1.0f, 1.0f)*/texture(tex_specular1, texCoord);
 
 	return (ambientColor + diffuseColor + specularColor);
 }

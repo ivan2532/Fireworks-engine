@@ -16,6 +16,7 @@ void Editor::DrawGUI() noexcept
 {
 	DrawHierarchyUI();
 	DrawInspectorUI();
+	DrawAssetExplorerUI();
 }
 
 void Editor::DrawHierarchyUI() noexcept
@@ -87,6 +88,50 @@ void Editor::DrawInspectorUI() noexcept
 				component->DrawInspector();
 			}
 		}
+	}
+	ImGui::End();
+}
+
+void Editor::DrawAssetExplorerUI() noexcept
+{
+	ImGui::ShowDemoWindow();
+	if (ImGui::Begin("Asset explorer"))
+	{
+		/*if (ImGui::BeginTabBar("View"))
+		{
+			if (ImGui::BeginTabItem("Filter explorer"))
+			{
+				ImGui::Text("Filters");
+				ImGui::EndTabItem();
+			}
+
+			if (ImGui::BeginTabItem("File explorer"))
+			{
+				ImGui::Text("Files");
+				ImGui::EndTabItem();
+			}
+			ImGui::EndTabBar();
+		}*/
+		ImGui::BeginChild("Filter explorer", ImVec2(ImGui::GetWindowWidth() / 5, 0), true);
+		ImGui::Text("Filters");
+		if (ImGui::TreeNode("Root"))
+		{
+			for (int i = 0; i < 10; i++)
+			{
+				if (ImGui::TreeNode((void*)(intptr_t)i, "Filter %d", i))
+				{
+					ImGui::TreePop();
+				}
+			}
+			ImGui::TreePop();
+		}
+		ImGui::EndChild();
+
+		ImGui::SameLine();
+
+		ImGui::BeginChild("File explorer", ImVec2(0, 0), true);
+		ImGui::Text("Files");
+		ImGui::EndChild();
 	}
 	ImGui::End();
 }
