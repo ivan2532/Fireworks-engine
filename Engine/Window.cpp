@@ -1,6 +1,7 @@
 #include "Window.hpp"
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
+#include "imguiIncludes.hpp"
 #include <iostream>
 
 //#define DETAILED_LOGGING
@@ -212,6 +213,9 @@ void Window::MakeWindow(bool r, bool lc, bool max) noexcept
 
 bool Window::GetKey(int key) noexcept
 {
+	if (ImGui::GetIO().WantCaptureKeyboard)
+		return false;
+
 	return glfwGetKey(wnd, key);
 }
 
@@ -233,4 +237,64 @@ void Window::LockCursor() noexcept
 void Window::UnlockCursor() noexcept
 {
 	glfwSetInputMode(wnd, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+}
+
+void Window::MakeFramebuffer(unsigned width, unsigned height) noexcept
+{
+	bufferWidth = width;
+	bufferHeight = height;
+	glViewport(0, 0, bufferWidth, bufferHeight);
+
+	glGenFramebuffers(1u, &frameBuffer);
+	BindFramebuffer();
+
+	glGenTextures(1u, &colorBuffer);
+	glBindTexture(GL_TEXTURE_2D, colorBuffer);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, bufferWidth, bufferHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	glGenTextures(1u, &depthBuffer);
+	glBindTexture(GL_TEXTURE_2D, depthBuffer);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, bufferWidth, bufferHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorBuffer, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthBuffer, 0);
+
+	UnbindFramebuffer();
+}
+
+unsigned Window::GetBufferWidth() const noexcept
+{
+	return bufferWidth;
+}
+
+unsigned Window::GetBufferHeight() const noexcept
+{
+	return bufferHeight;
+}
+
+void Window::BindFramebuffer() noexcept
+{
+	glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+}
+
+void Window::UnbindFramebuffer() noexcept
+{
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		std::cout << std::endl << std::endl <<  "ERROR: Framebuffer incomplete!" << std::endl << std::endl;
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+unsigned Window::GetColorBuffer() noexcept
+{
+	return colorBuffer;
 }

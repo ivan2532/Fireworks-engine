@@ -20,6 +20,8 @@ public:
 	void DrawInspectorUI() noexcept;
 	//Asset explorer
 	void DrawAssetExplorerUI() noexcept;
+	//Scene view
+	void DrawSceneView() noexcept;
 private:
 	Engine& engine;
 	//Hierarchy variables

@@ -18,8 +18,6 @@ void Editor::DrawDockSpace() noexcept
 	bool opt_fullscreen = opt_fullscreen_persistant;
 	static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
 
-	// We are using the ImGuiWindowFlags_NoDocking flag to make the parent window not dockable into,
-	// because it would be confusing to have two docking targets within each others.
 	ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDocking;
 	if (opt_fullscreen)
 	{
@@ -33,15 +31,9 @@ void Editor::DrawDockSpace() noexcept
 		window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
 	}
 
-	// When using ImGuiDockNodeFlags_PassthruCentralNode, DockSpace() will render our background and handle the pass-thru hole, so we ask Begin() to not render a background.
 	if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
 		window_flags |= ImGuiWindowFlags_NoBackground;
 
-	// Important: note that we proceed even if Begin() returns false (aka window is collapsed).
-	// This is because we want to keep our DockSpace() active. If a DockSpace() is inactive, 
-	// all active windows docked into it will lose their parent and become undocked.
-	// We cannot preserve the docking relationship between an active window and an inactive docking, otherwise 
-	// any change of dockspace/settings would lead to windows being stuck in limbo and never being visible.
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 	ImGui::Begin("Dockspace", (bool*)0, window_flags);
 	ImGui::PopStyleVar();
@@ -49,7 +41,6 @@ void Editor::DrawDockSpace() noexcept
 	if (opt_fullscreen)
 		ImGui::PopStyleVar(2);
 
-	// DockSpace
 	ImGuiIO& io = ImGui::GetIO();
 	if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
 	{
@@ -66,6 +57,7 @@ void Editor::DrawGUI() noexcept
 	DrawHierarchyUI();
 	DrawInspectorUI();
 	DrawAssetExplorerUI();
+	DrawSceneView();
 }
 
 void Editor::DrawHierarchyUI() noexcept
@@ -141,7 +133,6 @@ void Editor::DrawInspectorUI() noexcept
 
 void Editor::DrawAssetExplorerUI() noexcept
 {
-	ImGui::ShowDemoWindow();
 	if (ImGui::Begin("Asset explorer"))
 	{
 		ImGui::BeginChild("Filter explorer", ImVec2(ImGui::GetWindowWidth() / 5, 0), true);
@@ -164,6 +155,34 @@ void Editor::DrawAssetExplorerUI() noexcept
 		ImGui::BeginChild("File explorer", ImVec2(0, 0), true);
 		ImGui::Text("Files");
 		ImGui::EndChild();
+	}
+	ImGui::End();
+}
+
+void Editor::DrawSceneView() noexcept
+{
+	engine.wnd.UnbindFramebuffer();
+	
+	if (ImGui::Begin("Scene view"))
+	{
+		auto windowSize = ImGui::GetWindowSize();
+		auto bufferWidth = engine.wnd.GetBufferWidth();
+		auto bufferHeight = engine.wnd.GetBufferHeight();
+		
+		if (windowSize.x != bufferWidth || windowSize.y != bufferHeight)
+		{
+			engine.wnd.MakeFramebuffer(windowSize.x, windowSize.y);
+		}
+
+		ImVec2 topLeft(ImGui::GetItemRectMin().x, ImGui::GetItemRectMin().y);
+		ImVec2 bottomRight(ImGui::GetItemRectMin().x + engine.wnd.GetBufferWidth(), ImGui::GetItemRectMin().y + engine.wnd.GetBufferHeight());
+
+		ImGui::GetWindowDrawList()->AddImage(
+			(void*)(intptr_t)engine.wnd.GetColorBuffer(),
+			topLeft,
+			bottomRight,
+			ImVec2(0, 1), ImVec2(1, 0)
+		);
 	}
 	ImGui::End();
 }

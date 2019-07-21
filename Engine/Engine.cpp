@@ -11,6 +11,7 @@ Engine::Engine() noexcept
 	editor(*this),
 	activeScene(std::make_unique<TestScene>(wnd))
 {
+	wnd.MakeFramebuffer(800u, 600u);
 	SetCallbacks();
 
 	ImGui_ImplGlfw_InitForOpenGL(wnd.GetWindow(), true);
@@ -48,11 +49,14 @@ void Engine::SetCallbacks() noexcept
 	);
 }
 
+void Engine::ClearBuffers() noexcept
+{
+	glClearColor(0.0f, 0.0f, 0.1f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
 void Engine::BeginFrame() noexcept
 {
-	glClearColor(0.2f, 0.0f, 0.0f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 	float curTime = (float)glfwGetTime();
 	deltaTime = curTime - lastFrame;
 	lastFrame = curTime;
@@ -60,13 +64,16 @@ void Engine::BeginFrame() noexcept
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
+
+	wnd.BindFramebuffer(); //Unbound in editor draw scene view
+	ClearBuffers();
 }
 
 void Engine::Update() noexcept
 {
-	editor.DrawGUI();
 	ProcessInput();
 	activeScene->Update();
+	editor.DrawGUI();
 }
 
 void Engine::EndFrame(Window& wnd) noexcept

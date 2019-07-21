@@ -21,6 +21,12 @@ public:
 	void Close() noexcept;
 	void LockCursor() noexcept;
 	void UnlockCursor() noexcept;
+	void MakeFramebuffer(unsigned width, unsigned height) noexcept;
+	unsigned GetBufferWidth() const noexcept;
+	unsigned GetBufferHeight() const noexcept;
+	void BindFramebuffer() noexcept;
+	void UnbindFramebuffer() noexcept;
+	unsigned GetColorBuffer() noexcept;
 private:
 	static constexpr unsigned testWndWidth = 800u;
 	static constexpr unsigned testWndHeight = 600u;
@@ -31,4 +37,8 @@ private:
 	std::string title;
 	bool fullscreen;
 	bool resizable;
+	unsigned bufferWidth = 0, bufferHeight = 0;
+	unsigned frameBuffer = 0;
+	unsigned colorBuffer = 0;
+	unsigned depthBuffer = 0;
 };

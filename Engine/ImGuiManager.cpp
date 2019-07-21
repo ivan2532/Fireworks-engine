@@ -5,8 +5,9 @@ ImGuiManager::ImGuiManager()
 {
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
-	ImGui::StyleColorsLight();
+	ImGui::StyleColorsDark();
 	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+	ImGui::GetIO().ConfigWindowsMoveFromTitleBarOnly = true;
 }
 
 ImGuiManager::~ImGuiManager()

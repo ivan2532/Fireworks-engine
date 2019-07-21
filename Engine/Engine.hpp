@@ -21,6 +21,7 @@ public:
 	void OnWindowResize(int width, int height) noexcept;
 private:
 	void SetCallbacks() noexcept;
+	void ClearBuffers() noexcept;
 	void BeginFrame() noexcept;
 	void Update() noexcept;
 	void EndFrame(Window& wnd) noexcept;
