@@ -94,8 +94,17 @@ void Editor::DrawInspectorUI() noexcept
 
 void Editor::DrawAssetExplorerUI() noexcept
 {
-	ImGui::ShowDemoWindow();
-	if (ImGui::Begin("Asset explorer"))
+	ImGui::SetNextWindowPos(ImVec2(0, 0));
+	ImGui::SetNextWindowSize(ImVec2(200, 100));
+	// I set size...
+
+	auto flags =
+		ImGuiWindowFlags_NoResize |
+		ImGuiWindowFlags_NoCollapse |
+		ImGuiWindowFlags_NoMove;
+
+	//::ShowDemoWindow();
+	if (ImGui::Begin("Asset explorer", (bool*) 0, flags))
 	{
 		/*if (ImGui::BeginTabBar("View"))
 		{
