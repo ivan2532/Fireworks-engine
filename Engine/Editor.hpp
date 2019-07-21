@@ -8,6 +8,7 @@ class Editor
 {
 public:
 	Editor(Engine& engine) noexcept;
+	void DrawDockSpace() noexcept;
 	void DrawGUI() noexcept;
 	//Hierarchy
 	void DrawHierarchyUI() noexcept;

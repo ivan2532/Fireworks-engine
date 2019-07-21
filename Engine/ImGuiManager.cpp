@@ -6,6 +6,7 @@ ImGuiManager::ImGuiManager()
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGui::StyleColorsLight();
+	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 }
 
 ImGuiManager::~ImGuiManager()
