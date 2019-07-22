@@ -22,6 +22,8 @@ public:
 	void DrawAssetExplorerUI() noexcept;
 	//Scene view
 	void DrawSceneView() noexcept;
+	//Menu
+	void DrawMenu() noexcept;
 private:
 	Engine& engine;
 	//Hierarchy variables
@@ -30,4 +32,9 @@ private:
 	int selectedHierarchy;
 	bool sceneViewFocused = false;
 	bool gameViewFocused = false;
+	//Gizmo variables
+	int transformationMode = 0; // 0 - translation, 1 - rotation, 2 - scale
+	unsigned translateImage, rotateImage, scaleImage;
+	//Paddings
+	float dockspacePadding = 0.0f;
 };

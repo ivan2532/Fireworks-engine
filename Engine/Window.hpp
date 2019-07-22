@@ -13,7 +13,9 @@ public:
 public:
 	GLFWwindow* GetWindow() const noexcept;
 	unsigned GetWidth() const noexcept;
+	void SetWidth(int value) noexcept;
 	unsigned GetHeight() const noexcept;
+	void SetHeight(int value) noexcept;
 	void EndFrame() noexcept;
 	void MakeWindow(bool resizable, bool lockCursor, bool maximize) noexcept;
 	bool GetKey(int glfwKey, bool respectCapture = true) noexcept;
@@ -37,7 +39,8 @@ private:
 	std::string title;
 	bool fullscreen;
 	bool resizable;
-	unsigned bufferWidth = 0, bufferHeight = 0;
+	unsigned bufferWidth = 0;
+	unsigned bufferHeight = 0;
 	unsigned frameBuffer = 0;
 	unsigned colorBuffer = 0;
 	unsigned depthBuffer = 0;

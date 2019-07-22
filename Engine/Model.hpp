@@ -9,8 +9,6 @@
 #include <vector>
 #include <memory>
 
-#define STB_IMAGE_IMPLEMENTATION
-
 class Scene;
 class Shader;
 
@@ -24,7 +22,6 @@ private:
 	void ProcessNode(aiNode *node, const aiScene *scene, Transform* parent) noexcept;
 	std::unique_ptr<Mesh> ProcessMesh(aiMesh* mesh, const aiScene* scene) noexcept;
 	std::vector<Texture> LoadMaterialTextures(aiMaterial* material, aiTextureType type, TextureType typeName) noexcept;
-	unsigned TextureFromFile(const char* path, const std::string& directory, bool gamma = false);
 private:
 	std::vector<std::unique_ptr<GameObject>> meshObjects;
 	std::string directory; //For textures

@@ -1,6 +1,7 @@
 #include "Editor.hpp"
 #include "Engine.hpp"
 #include "GLFW/glfw3.h"
+#include "ImageLoader.h"
 #include <iostream>
 
 Editor::Editor(Engine& eng) noexcept
@@ -8,7 +9,10 @@ Editor::Editor(Engine& eng) noexcept
 	engine(eng),
 	selectedObject(nullptr),
 	nodeIndexCount(0),
-	selectedHierarchy(-1)
+	selectedHierarchy(-1),
+	translateImage(ImageLoader::TextureFromFile("TranslationButton.png", "EditorIcons")),
+	rotateImage(ImageLoader::TextureFromFile("RotationButton.png", "EditorIcons")),
+	scaleImage(ImageLoader::TextureFromFile("ScaleButton.png", "EditorIcons"))
 {
 }
 
@@ -34,7 +38,7 @@ void Editor::DrawDockSpace() noexcept
 	if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
 		window_flags |= ImGuiWindowFlags_NoBackground;
 
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, dockspacePadding));
 	ImGui::Begin("Dockspace", (bool*)0, window_flags);
 	ImGui::PopStyleVar();
 
@@ -53,6 +57,7 @@ void Editor::DrawDockSpace() noexcept
 
 void Editor::DrawGUI() noexcept
 {
+	//Capture input
 	if (sceneViewFocused || gameViewFocused)
 	{
 		ImGui::CaptureKeyboardFromApp(false);
@@ -64,6 +69,7 @@ void Editor::DrawGUI() noexcept
 		ImGui::CaptureMouseFromApp(true);
 	}
 
+	DrawMenu();
 	DrawDockSpace();
 	DrawHierarchyUI();
 	DrawInspectorUI();
@@ -198,5 +204,145 @@ void Editor::DrawSceneView() noexcept
 
 		sceneViewFocused = ImGui::IsWindowFocused();
 	}
+	ImGui::End();
+}
+
+void Editor::DrawMenu() noexcept
+{
+	if (ImGui::BeginMainMenuBar())
+	{
+		if (ImGui::BeginMenu("File"))
+		{
+			if (ImGui::MenuItem("New Scene", "Ctrl + N"))
+			{
+
+			}
+
+			if (ImGui::MenuItem("New Project", "Ctrl + Shift + N"))
+			{
+
+			}
+
+			ImGui::Spacing();
+			ImGui::Separator();
+			ImGui::Spacing();
+
+			if (ImGui::MenuItem("Open Scene", "Ctrl + O"))
+			{
+
+			}
+
+			if (ImGui::MenuItem("Open Project", "Ctrl + Shift + O"))
+			{
+
+			}
+
+			ImGui::Spacing();
+			ImGui::Separator();
+			ImGui::Spacing();
+
+			if (ImGui::MenuItem("Save scene", "Ctrl + S"))
+			{
+
+			}
+
+			if (ImGui::MenuItem("Save Project", "Ctrl + Shift + S"))
+			{
+
+			}
+
+			ImGui::Spacing();
+			ImGui::Separator();
+			ImGui::Spacing();
+
+			if (ImGui::MenuItem("Quit"))
+			{
+				glfwTerminate();
+				exit(0);
+			}
+
+			ImGui::EndMenu();
+		}
+
+		dockspacePadding = ImGui::GetWindowSize().y;
+
+		ImGui::EndMainMenuBar();
+	}
+
+	auto style = ImGui::GetStyle();
+
+	auto transformPanelFlags =
+		ImGuiWindowFlags_NoDocking |
+		ImGuiWindowFlags_NoTitleBar |
+		ImGuiWindowFlags_NoCollapse |
+		ImGuiWindowFlags_NoResize |
+		ImGuiWindowFlags_NoMove |
+		ImGuiWindowFlags_NoNavFocus |
+		ImGuiWindowFlags_NoBackground |
+		ImGuiWindowFlags_NoScrollbar |
+		ImGuiWindowFlags_NoScrollWithMouse;
+
+	float buttonSize = (float)engine.wnd.GetWidth() / (float)engine.wnd.GetHeight() * 15.0f;
+
+	ImGui::SetNextWindowPos(ImVec2(0, dockspacePadding));
+	ImGui::SetNextWindowSize(ImVec2(engine.wnd.GetWidth(), buttonSize + style.ItemSpacing.y * 2 + style.WindowPadding.y * 2 + style.FramePadding.y));
+	ImGui::Begin("Transform panel", (bool*)0, transformPanelFlags);
+
+	bool pushedColor1 = false;
+	if (transformationMode == 0)
+	{
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.1f, 0.1f, 0.1f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.1f, 0.1f, 0.1f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.1f, 0.1f, 0.1f, 1.0f));
+		pushedColor1 = true;
+	}
+	if (ImGui::ImageButton((void*)(intptr_t)translateImage, ImVec2(buttonSize, buttonSize)))
+	{
+		transformationMode = 0;
+	}
+	if (pushedColor1 && transformationMode == 0)
+	{
+		ImGui::PopStyleColor(3);
+	}
+
+	ImGui::SameLine();
+
+	bool pushedColor2 = false;
+	if (transformationMode == 1)
+	{
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.1f, 0.1f, 0.1f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.1f, 0.1f, 0.1f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.1f, 0.1f, 0.1f, 1.0f));
+		pushedColor2 = true;
+	}
+	if (ImGui::ImageButton((void*)(intptr_t)rotateImage, ImVec2(buttonSize, buttonSize)))
+	{
+		transformationMode = 1;
+	}
+	if (pushedColor2 && transformationMode == 1)
+	{
+		ImGui::PopStyleColor(3);
+	}
+
+	ImGui::SameLine();
+
+	bool pushedColor3 = false;
+	if (transformationMode == 2)
+	{
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.1f, 0.1f, 0.1f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.1f, 0.1f, 0.1f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.1f, 0.1f, 0.1f, 1.0f));
+		pushedColor3 = true;
+	}
+	if (ImGui::ImageButton((void*)(intptr_t)scaleImage, ImVec2(buttonSize, buttonSize)))
+	{
+		transformationMode = 2;
+	}
+	if (pushedColor3 && transformationMode == 2)
+	{
+		ImGui::PopStyleColor(3);
+	}
+
+	dockspacePadding += buttonSize + style.ItemSpacing.y * 2 + style.WindowPadding.y * 2 + style.FramePadding.y;
 	ImGui::End();
 }

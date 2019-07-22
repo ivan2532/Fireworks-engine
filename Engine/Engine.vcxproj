@@ -133,6 +133,7 @@
     <ClCompile Include="FPCameraMovement.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="ImageLoader.cpp" />
     <ClCompile Include="ImGuiManager.cpp" />
     <ClCompile Include="imgui\imgui.cpp" />
     <ClCompile Include="imgui\imgui_demo.cpp" />
@@ -163,6 +164,7 @@
     <ClInclude Include="Engine.hpp" />
     <ClInclude Include="GameObject.hpp" />
     <ClInclude Include="glmIncludes.hpp" />
+    <ClInclude Include="ImageLoader.h" />
     <ClInclude Include="imguiIncludes.hpp" />
     <ClInclude Include="ImGuiManager.hpp" />
     <ClInclude Include="imgui\imconfig.h" />

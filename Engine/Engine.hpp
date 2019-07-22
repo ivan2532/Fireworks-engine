@@ -12,6 +12,7 @@
 class Engine
 {
 	friend Editor;
+	friend Window;
 public:
 	Engine() noexcept;
 	~Engine() noexcept;

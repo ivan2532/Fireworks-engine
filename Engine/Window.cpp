@@ -90,9 +90,19 @@ unsigned Window::GetWidth() const noexcept
 	return width;
 }
 
+void Window::SetWidth(int value) noexcept
+{
+	width = value;
+}
+
 unsigned Window::GetHeight() const noexcept
 {
 	return height;
+}
+
+void Window::SetHeight(int value) noexcept
+{
+	height = value;
 }
 
 void Window::EndFrame() noexcept

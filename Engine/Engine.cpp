@@ -103,6 +103,8 @@ void Engine::OnMouseMove(double x, double y) noexcept
 
 void Engine::OnWindowResize(int width, int height) noexcept
 {
+	wnd.SetWidth(width);
+	wnd.SetHeight(height);
 	activeScene->OnWindowResize(width, height);
 }
 
