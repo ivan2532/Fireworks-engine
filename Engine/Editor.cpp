@@ -53,6 +53,17 @@ void Editor::DrawDockSpace() noexcept
 
 void Editor::DrawGUI() noexcept
 {
+	if (sceneViewFocused || gameViewFocused)
+	{
+		ImGui::CaptureKeyboardFromApp(false);
+		ImGui::CaptureMouseFromApp(false);
+	}
+	else
+	{
+		ImGui::CaptureKeyboardFromApp(true);
+		ImGui::CaptureMouseFromApp(true);
+	}
+
 	DrawDockSpace();
 	DrawHierarchyUI();
 	DrawInspectorUI();
@@ -115,7 +126,7 @@ void Editor::DrawInspectorUI() noexcept
 			ImGui::Text("Game object name \n(press ENTER to apply new name): ");
 			if (ImGui::InputText("##go_name_input", buf, sizeof(buf)))
 			{
-				if(engine.wnd.GetKey(GLFW_KEY_ENTER))
+				if(engine.wnd.GetKey(GLFW_KEY_ENTER, false))
 					selectedObject->SetName(buf);
 			}
 
@@ -172,6 +183,7 @@ void Editor::DrawSceneView() noexcept
 		if (windowSize.x != bufferWidth || windowSize.y != bufferHeight)
 		{
 			engine.wnd.MakeFramebuffer(windowSize.x, windowSize.y);
+			engine.sceneViewAspectRatio = static_cast<float>(windowSize.x) / static_cast<float>(windowSize.y);
 		}
 
 		ImVec2 topLeft(ImGui::GetItemRectMin().x, ImGui::GetItemRectMin().y);
@@ -183,6 +195,8 @@ void Editor::DrawSceneView() noexcept
 			bottomRight,
 			ImVec2(0, 1), ImVec2(1, 0)
 		);
+
+		sceneViewFocused = ImGui::IsWindowFocused();
 	}
 	ImGui::End();
 }

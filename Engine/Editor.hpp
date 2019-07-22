@@ -28,4 +28,6 @@ private:
 	GameObject* selectedObject;
 	int nodeIndexCount;
 	int selectedHierarchy;
+	bool sceneViewFocused = false;
+	bool gameViewFocused = false;
 };

@@ -211,9 +211,9 @@ void Window::MakeWindow(bool r, bool lc, bool max) noexcept
 #endif
 }
 
-bool Window::GetKey(int key) noexcept
+bool Window::GetKey(int key, bool respectCapture) noexcept
 {
-	if (ImGui::GetIO().WantCaptureKeyboard)
+	if (respectCapture && ImGui::GetIO().WantCaptureKeyboard)
 		return false;
 
 	return glfwGetKey(wnd, key);

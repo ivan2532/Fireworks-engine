@@ -4,6 +4,7 @@
 #include "TestScene.hpp"
 
 float Engine::deltaTime = 0.0f;
+float Engine::sceneViewAspectRatio = 4.0f / 3.0f;
 
 Engine::Engine() noexcept
 	:
@@ -12,6 +13,8 @@ Engine::Engine() noexcept
 	activeScene(std::make_unique<TestScene>(wnd))
 {
 	wnd.MakeFramebuffer(800u, 600u);
+	sceneViewAspectRatio = 800.0f / 600.0f;
+
 	SetCallbacks();
 
 	ImGui_ImplGlfw_InitForOpenGL(wnd.GetWindow(), true);
@@ -86,12 +89,15 @@ void Engine::EndFrame(Window& wnd) noexcept
 
 void Engine::ProcessInput() noexcept
 {
-	if (wnd.GetKey(GLFW_KEY_ESCAPE))
+	if (wnd.GetKey(GLFW_KEY_ESCAPE, false))
 		wnd.Close();
 }
 
 void Engine::OnMouseMove(double x, double y) noexcept
 {
+	if (ImGui::GetIO().WantCaptureMouse)
+		return;
+
 	activeScene->OnMouseMove(static_cast<float>(x), static_cast<float>(y));
 }
 

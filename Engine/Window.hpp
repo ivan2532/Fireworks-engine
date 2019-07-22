@@ -16,7 +16,7 @@ public:
 	unsigned GetHeight() const noexcept;
 	void EndFrame() noexcept;
 	void MakeWindow(bool resizable, bool lockCursor, bool maximize) noexcept;
-	bool GetKey(int glfwKey) noexcept;
+	bool GetKey(int glfwKey, bool respectCapture = true) noexcept;
 	bool ShouldClose() const noexcept;
 	void Close() noexcept;
 	void LockCursor() noexcept;

@@ -36,6 +36,7 @@ private:
 	std::unique_ptr<Scene> activeScene;
 public:
 	static float deltaTime;
+	static float sceneViewAspectRatio;
 };
 
 void CursorMoveCallback(GLFWwindow* wnd, double x, double y);

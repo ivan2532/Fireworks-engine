@@ -1,14 +1,13 @@
 #include "Camera.hpp"
 #include "Shader.hpp"
+#include "Engine.hpp"
 #include "imguiIncludes.hpp"
 
-Camera::Camera(GameObject* go, float sWidth, float sHeight, float f) noexcept
+Camera::Camera(GameObject* go, float f) noexcept
 	:
 	Component(go),
 	transform(gameObject->GetComponent<Transform>().value()),
 	viewMatrix(1.0f),
-	screenWidth(sWidth),
-	screenHeight(sHeight),
 	fov(f)
 {
 }
@@ -31,12 +30,6 @@ void Camera::DrawInspector() noexcept
 	}
 }
 
-void Camera::OnWindowResize(int width, int height) noexcept
-{
-	screenWidth = width;
-	screenHeight = height;
-}
-
 float Camera::GetFOV() const noexcept
 {
 	return fov;
@@ -57,6 +50,6 @@ void Camera::UpdateShaders() noexcept
 	for (auto& shader : transform->shadersToUpdate)
 	{
 		shader->SetVec3("viewPos", transform->GetPosition());
-		shader->SetMat4x4("viewProj", glm::perspective(glm::radians(fov), screenWidth / screenHeight, 0.1f, 1000.0f) * viewMatrix);
+		shader->SetMat4x4("viewProj", glm::perspective(glm::radians(fov), Engine::sceneViewAspectRatio, 0.1f, 1000.0f) * viewMatrix);
 	}
 }
