@@ -12,7 +12,7 @@ Camera::Camera(Engine& rEngine, GameObject* go, float f) noexcept
 	fov(f)
 {
 	projectionMatrix = glm::perspective(glm::radians(fov), engine.editor.GetSceneViewAspectRatio(), 0.1f, 1000.0f);
-	engine.SetCamera(*this);
+	engine.SetCamera(this);
 }
 
 void Camera::Update() noexcept

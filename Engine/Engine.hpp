@@ -25,7 +25,7 @@ public:
 public:
 	void OnMouseMove(double x, double y) noexcept;
 	void OnWindowResize(int width, int height) noexcept;
-	void SetCamera(Camera& camera) noexcept;
+	void SetCamera(Camera* camera) noexcept;
 private:
 	void SetCallbacks() noexcept;
 	void ClearBuffers() noexcept;
@@ -39,7 +39,7 @@ private:
 	Window wnd;
 	Editor editor;
 	ImGuiManager imGuiManager;
-	std::unique_ptr<Camera> activeCamera;
+	Camera* activeCamera;
 	std::unique_ptr<Scene> activeScene;
 	//User variables here
 public:

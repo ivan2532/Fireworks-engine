@@ -12,7 +12,6 @@ Engine::Engine() noexcept
 	editor(*this),
 	activeScene(std::make_unique<TestScene>(*this, wnd))
 {
-	std::cout << "Engine constructor!";
 	wnd.MakeFramebuffer(800u, 600u);
 
 	SetCallbacks();
@@ -70,6 +69,7 @@ void Engine::BeginFrame() noexcept
 
 	ImGuizmo::BeginFrame();
 
+
 	wnd.BindFramebuffer(); //Unbound in editor draw scene view
 	ClearBuffers();
 }
@@ -95,9 +95,9 @@ void Engine::ProcessInput() noexcept
 		wnd.Close();
 }
 
-void Engine::SetCamera(Camera& camera) noexcept
+void Engine::SetCamera(Camera* camera) noexcept
 {
-	activeCamera = std::make_unique<Camera>(camera);
+	activeCamera = camera;
 }
 
 void Engine::OnMouseMove(double x, double y) noexcept

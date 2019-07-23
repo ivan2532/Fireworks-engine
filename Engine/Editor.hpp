@@ -44,7 +44,7 @@ private:
 	bool gameViewFocused = false;
 	//Scene view variables
 	float sceneViewAspectRatio;
-	ImVec2 topLeftSceneView, bottomRightSceneView;
+	ImVec2 bottomLeftSceneView, topRightSceneView;
 	//Gizmo variables
 	unsigned translateImage, rotateImage, scaleImage;
 	ImGuizmo::OPERATION currentOperation = ImGuizmo::TRANSLATE;

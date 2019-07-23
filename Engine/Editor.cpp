@@ -31,6 +31,8 @@ void Editor::DrawDockSpace() noexcept
 		ImGuiViewport* viewport = ImGui::GetMainViewport();
 		ImGui::SetNextWindowPos(viewport->Pos);
 		ImGui::SetNextWindowSize(viewport->Size);
+		//ImGui::SetNextWindowPos(ImVec2(viewport->Pos.x, viewport->Pos.y - dockspacePadding));
+		//ImGui::SetNextWindowSize(ImVec2(viewport->Size.x, viewport->Size.y - dockspacePadding));
 		ImGui::SetNextWindowViewport(viewport->ID);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
@@ -72,12 +74,12 @@ void Editor::DrawGUI() noexcept
 		ImGui::CaptureMouseFromApp(true);
 	}
 
-	DrawMenu();
 	DrawDockSpace();
 	DrawHierarchyUI();
 	DrawInspectorUI();
 	DrawAssetExplorerUI();
 	DrawSceneView();
+	DrawMenu();
 }
 
 void Editor::DrawHierarchyUI() noexcept
@@ -195,13 +197,13 @@ void Editor::DrawSceneView() noexcept
 			sceneViewAspectRatio = static_cast<float>(windowSize.x) / static_cast<float>(windowSize.y);
 		}
 
-		topLeftSceneView = ImVec2(ImGui::GetItemRectMin().x, ImGui::GetItemRectMin().y);
-		bottomRightSceneView = ImVec2(ImGui::GetItemRectMin().x + engine.wnd.GetBufferWidth(), ImGui::GetItemRectMin().y + engine.wnd.GetBufferHeight());
+		bottomLeftSceneView = ImVec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
+		topRightSceneView = ImVec2(bottomLeftSceneView.x + ImGui::GetWindowSize().x, bottomLeftSceneView.y + ImGui::GetWindowSize().y);
 
 		ImGui::GetWindowDrawList()->AddImage(
 			(void*)(intptr_t)engine.wnd.GetColorBuffer(),
-			topLeftSceneView,
-			bottomRightSceneView,
+			bottomLeftSceneView,
+			topRightSceneView,
 			ImVec2(0, 1), ImVec2(1, 0)
 		);
 
@@ -214,7 +216,9 @@ void Editor::DrawSceneView() noexcept
 
 void Editor::DrawMenu() noexcept
 {
-	if (ImGui::BeginMainMenuBar())
+	float menuPadding = 0.0f;
+
+	if(ImGui::BeginMainMenuBar())
 	{
 		if (ImGui::BeginMenu("File"))
 		{
@@ -269,8 +273,7 @@ void Editor::DrawMenu() noexcept
 			ImGui::EndMenu();
 		}
 
-		dockspacePadding = ImGui::GetWindowSize().y;
-
+		menuPadding = ImGui::GetWindowSize().y;
 		ImGui::EndMainMenuBar();
 	}
 
@@ -289,7 +292,7 @@ void Editor::DrawMenu() noexcept
 
 	float buttonSize = (float)engine.wnd.GetWidth() / (float)engine.wnd.GetHeight() * 15.0f;
 
-	ImGui::SetNextWindowPos(ImVec2(0, dockspacePadding));
+	ImGui::SetNextWindowPos(ImVec2(0, menuPadding));
 	ImGui::SetNextWindowSize(ImVec2(engine.wnd.GetWidth(), buttonSize + style.ItemSpacing.y * 2 + style.WindowPadding.y * 2 + style.FramePadding.y));
 	ImGui::Begin("Transform panel", (bool*)0, transformPanelFlags);
 
@@ -348,17 +351,27 @@ void Editor::DrawMenu() noexcept
 		ImGui::PopStyleColor(3);
 	}
 
-	dockspacePadding += buttonSize + style.ItemSpacing.y * 2 + style.WindowPadding.y * 2 + style.FramePadding.y;
+	dockspacePadding = menuPadding + buttonSize + style.ItemSpacing.y * 2 + style.WindowPadding.y * 2 + style.FramePadding.y;
 	ImGui::End();
 }
 
 void Editor::DrawGizmo() noexcept
 {
-	ImGuizmo::SetRect(bottomRightSceneView.x, bottomRightSceneView.y, topLeftSceneView.x, topLeftSceneView.y);
+	ImGuiStyle style = ImGui::GetStyle();
+
+	Float4x4 view = Math::Glm4x4ToArray(engine.activeCamera->GetViewMatrix());
+	Float4x4 projection = Math::Glm4x4ToArray(engine.activeCamera->GetProjectionMatrix());
+
+	ImGuizmo::SetRect(
+		bottomLeftSceneView.x,
+		bottomLeftSceneView.y,
+		topRightSceneView.x - bottomLeftSceneView.x,
+		topRightSceneView.y - bottomLeftSceneView.y - style.FramePadding.y * 2 - 15.0f
+	);
 
 	ImGuizmo::Manipulate(
-		Math::Glm4x4ToArray(&(engine.activeCamera->GetViewMatrix())),
-		Math::Glm4x4ToArray(&(engine.activeCamera->GetProjectionMatrix())),
+		view.data,
+		projection.data,
 		currentOperation,
 		currentMode,
 		gizmoMatrix

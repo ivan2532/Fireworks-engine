@@ -739,16 +739,24 @@ namespace ImGuizmo
    {
       ImGuiIO& io = ImGui::GetIO();
 
-      const ImU32 flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoBringToFrontOnFocus;
+	  const ImU32 flags =
+		  ImGuiWindowFlags_NoTitleBar |
+		  ImGuiWindowFlags_NoResize |
+		  ImGuiWindowFlags_NoScrollbar |
+		  ImGuiWindowFlags_NoInputs |
+		  ImGuiWindowFlags_NoSavedSettings |
+		  ImGuiWindowFlags_NoFocusOnAppearing |
+		  ImGuiWindowFlags_NoBringToFrontOnFocus;
+
       ImGui::SetNextWindowSize(io.DisplaySize);
       ImGui::SetNextWindowPos(ImVec2(0, 0));
       
       ImGui::PushStyleColor(ImGuiCol_WindowBg, 0);
       ImGui::PushStyleColor(ImGuiCol_Border, 0);
       ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-     
-      ImGui::Begin("gizmo", NULL, flags);
-      gContext.mDrawList = ImGui::GetWindowDrawList();
+
+	  ImGui::Begin("gizmo", (bool*)0, flags);
+      gContext.mDrawList = ImGui::GetForegroundDrawList(); //CHANGE
       ImGui::End();
       ImGui::PopStyleVar();
       ImGui::PopStyleColor(2);
@@ -953,6 +961,7 @@ namespace ImGuizmo
    {
       ImDrawList* drawList = gContext.mDrawList;
 
+	  drawList->PushClipRect(ImVec2(gContext.mX, gContext.mY), ImVec2(gContext.mXMax, gContext.mYMax));
       // colors
       ImU32 colors[7];
       ComputeColors(colors, type, ROTATE);
@@ -1019,21 +1028,25 @@ namespace ImGuizmo
          drawList->AddText(ImVec2(destinationPosOnScreen.x + 15, destinationPosOnScreen.y + 15), 0xFF000000, tmps);
          drawList->AddText(ImVec2(destinationPosOnScreen.x + 14, destinationPosOnScreen.y + 14), 0xFFFFFFFF, tmps);
       }
+	  drawList->PopClipRect();
    }
 
    static void DrawHatchedAxis(const vec_t& axis)
    {
+	   gContext.mDrawList->PushClipRect(ImVec2(gContext.mX, gContext.mY), ImVec2(gContext.mXMax, gContext.mYMax));
       for (int j = 1; j < 10; j++)
       {
          ImVec2 baseSSpace2 = worldToPos(axis * 0.05f * (float)(j * 2) * gContext.mScreenFactor, gContext.mMVP);
          ImVec2 worldDirSSpace2 = worldToPos(axis * 0.05f * (float)(j * 2 + 1) * gContext.mScreenFactor, gContext.mMVP);
          gContext.mDrawList->AddLine(baseSSpace2, worldDirSSpace2, 0x80000000, 6.f);
       }
+	  gContext.mDrawList->PopClipRect();
    }
 
    static void DrawScaleGizmo(int type)
    {
       ImDrawList* drawList = gContext.mDrawList;
+	  drawList->PushClipRect(ImVec2(gContext.mX, gContext.mY), ImVec2(gContext.mXMax, gContext.mYMax));
 
       // colors
       ImU32 colors[7];
@@ -1093,6 +1106,7 @@ namespace ImGuizmo
          drawList->AddText(ImVec2(destinationPosOnScreen.x + 15, destinationPosOnScreen.y + 15), 0xFF000000, tmps);
          drawList->AddText(ImVec2(destinationPosOnScreen.x + 14, destinationPosOnScreen.y + 14), 0xFFFFFFFF, tmps);
       }
+	  drawList->PopClipRect();
    }
 
 
@@ -1101,6 +1115,8 @@ namespace ImGuizmo
       ImDrawList* drawList = gContext.mDrawList;
       if (!drawList)
           return;
+
+	  drawList->PushClipRect(ImVec2(gContext.mX, gContext.mY), ImVec2(gContext.mXMax, gContext.mYMax));
 
       // colors
       ImU32 colors[7];
@@ -1174,6 +1190,8 @@ namespace ImGuizmo
          drawList->AddText(ImVec2(destinationPosOnScreen.x + 15, destinationPosOnScreen.y + 15), 0xFF000000, tmps);
          drawList->AddText(ImVec2(destinationPosOnScreen.x + 14, destinationPosOnScreen.y + 14), 0xFFFFFFFF, tmps);
       }
+
+	  drawList->PopClipRect();
    }
 
    static bool CanActivate()
@@ -1188,6 +1206,7 @@ namespace ImGuizmo
        ImGuiIO& io = ImGui::GetIO();
        ImDrawList* drawList = gContext.mDrawList;
 
+	   gContext.mDrawList->PushClipRect(ImVec2(gContext.mX, gContext.mY), ImVec2(gContext.mXMax, gContext.mYMax));
        // compute best projection axis
        vec_t axesWorldDirections[3];
        vec_t bestAxisWorldDirection = { 0.0f, 0.0f, 0.0f, 0.0f };
@@ -1423,6 +1442,7 @@ namespace ImGuizmo
            if( gContext.mbUsingBounds )
                break;
        }
+	   gContext.mDrawList->PopClipRect();
    }
 
    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
