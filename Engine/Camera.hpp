@@ -4,21 +4,27 @@
 #include "glmIncludes.hpp"
 #include "GameObject.hpp"
 
+class Engine;
+
 class Camera : public Component
 {
 public:
-	Camera(GameObject* go, float fov = 70.0f) noexcept;
+	Camera(Engine& rEngine, GameObject* go, float fov = 70.0f) noexcept;
 public:
 	void Update() noexcept override;
 public:
 	void DrawInspector() noexcept override;
 	float GetFOV() const noexcept;
 	void SetFOV(float value) noexcept;
+	glm::mat4 GetViewMatrix() const noexcept;
+	glm::mat4 GetProjectionMatrix() const noexcept;
 private:
-	void UpdateViewMatrix() noexcept;
+	void UpdateMatrices() noexcept;
 	void UpdateShaders() noexcept;
 private:
+	Engine& engine;
 	Transform* transform;
 	glm::mat4 viewMatrix;
+	glm::mat4 projectionMatrix;
 	float fov; //In degrees!
 };

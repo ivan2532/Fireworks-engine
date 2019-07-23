@@ -135,6 +135,7 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="ImageLoader.cpp" />
     <ClCompile Include="ImGuiManager.cpp" />
+    <ClCompile Include="ImGuizmo\ImGuizmo.cpp" />
     <ClCompile Include="imgui\imgui.cpp" />
     <ClCompile Include="imgui\imgui_demo.cpp" />
     <ClCompile Include="imgui\imgui_draw.cpp" />
@@ -167,6 +168,7 @@
     <ClInclude Include="ImageLoader.h" />
     <ClInclude Include="imguiIncludes.hpp" />
     <ClInclude Include="ImGuiManager.hpp" />
+    <ClInclude Include="ImGuizmo\ImGuizmo.h" />
     <ClInclude Include="imgui\imconfig.h" />
     <ClInclude Include="imgui\imgui.h" />
     <ClInclude Include="imgui\imgui_impl_glfw.h" />

@@ -1,13 +1,19 @@
 #pragma once
 #include "imguiIncludes.hpp"
 #include "GameObject.hpp"
+#include "ImGuizmo/ImGuizmo.h"
 
 class Engine;
 
 class Editor
 {
 public:
-	Editor(Engine& engine) noexcept;
+	Editor(Engine&) noexcept;
+	Editor(const Editor&) = delete;
+	Editor& operator=(const Editor&) = delete;
+	Editor(Editor&&) = delete;
+	Editor&& operator=(Editor&&) = delete;
+public:
 	void DrawDockSpace() noexcept;
 	void DrawGUI() noexcept;
 	//Hierarchy
@@ -24,6 +30,10 @@ public:
 	void DrawSceneView() noexcept;
 	//Menu
 	void DrawMenu() noexcept;
+	//Gizmo
+	void DrawGizmo() noexcept;
+public:
+	float GetSceneViewAspectRatio() const noexcept;
 private:
 	Engine& engine;
 	//Hierarchy variables
@@ -32,9 +42,19 @@ private:
 	int selectedHierarchy;
 	bool sceneViewFocused = false;
 	bool gameViewFocused = false;
+	//Scene view variables
+	float sceneViewAspectRatio;
+	ImVec2 topLeftSceneView, bottomRightSceneView;
 	//Gizmo variables
-	int transformationMode = 0; // 0 - translation, 1 - rotation, 2 - scale
 	unsigned translateImage, rotateImage, scaleImage;
+	ImGuizmo::OPERATION currentOperation = ImGuizmo::TRANSLATE;
+	ImGuizmo::MODE currentMode = ImGuizmo::LOCAL;
+	float gizmoMatrix[16] = {
+		1, 0, 0, 0,
+		0, 1, 0, 0,
+		0, 0, 1, 0,
+		0, 0, 0, 1,
+	};
 	//Paddings
 	float dockspacePadding = 0.0f;
 };

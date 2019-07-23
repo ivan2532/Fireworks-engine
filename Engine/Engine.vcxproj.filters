@@ -46,6 +46,9 @@
     <Filter Include="Source Files\Core">
       <UniqueIdentifier>{0a39e095-33d6-4046-a3cf-c1ed7837dc19}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ImGuizmo">
+      <UniqueIdentifier>{cd3a986b-eb6f-4f28-a330-beb6490ce96d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -125,6 +128,9 @@
     </ClCompile>
     <ClCompile Include="ImageLoader.cpp">
       <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGuizmo\ImGuizmo.cpp">
+      <Filter>ImGuizmo</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -223,6 +229,9 @@
     </ClInclude>
     <ClInclude Include="ImageLoader.h">
       <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGuizmo\ImGuizmo.h">
+      <Filter>ImGuizmo</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

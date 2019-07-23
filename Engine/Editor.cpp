@@ -2,17 +2,20 @@
 #include "Engine.hpp"
 #include "GLFW/glfw3.h"
 #include "ImageLoader.h"
+#include "glmIncludes.hpp"
+#include "Math.hpp"
 #include <iostream>
 
-Editor::Editor(Engine& eng) noexcept
+Editor::Editor(Engine& rEngine) noexcept
 	:
-	engine(eng),
+	engine(rEngine),
 	selectedObject(nullptr),
 	nodeIndexCount(0),
 	selectedHierarchy(-1),
 	translateImage(ImageLoader::TextureFromFile("TranslationButton.png", "EditorIcons")),
 	rotateImage(ImageLoader::TextureFromFile("RotationButton.png", "EditorIcons")),
-	scaleImage(ImageLoader::TextureFromFile("ScaleButton.png", "EditorIcons"))
+	scaleImage(ImageLoader::TextureFromFile("ScaleButton.png", "EditorIcons")),
+	sceneViewAspectRatio(4.0f / 3.0f)
 {
 }
 
@@ -189,22 +192,24 @@ void Editor::DrawSceneView() noexcept
 		if (windowSize.x != bufferWidth || windowSize.y != bufferHeight)
 		{
 			engine.wnd.MakeFramebuffer(windowSize.x, windowSize.y);
-			engine.sceneViewAspectRatio = static_cast<float>(windowSize.x) / static_cast<float>(windowSize.y);
+			sceneViewAspectRatio = static_cast<float>(windowSize.x) / static_cast<float>(windowSize.y);
 		}
 
-		ImVec2 topLeft(ImGui::GetItemRectMin().x, ImGui::GetItemRectMin().y);
-		ImVec2 bottomRight(ImGui::GetItemRectMin().x + engine.wnd.GetBufferWidth(), ImGui::GetItemRectMin().y + engine.wnd.GetBufferHeight());
+		topLeftSceneView = ImVec2(ImGui::GetItemRectMin().x, ImGui::GetItemRectMin().y);
+		bottomRightSceneView = ImVec2(ImGui::GetItemRectMin().x + engine.wnd.GetBufferWidth(), ImGui::GetItemRectMin().y + engine.wnd.GetBufferHeight());
 
 		ImGui::GetWindowDrawList()->AddImage(
 			(void*)(intptr_t)engine.wnd.GetColorBuffer(),
-			topLeft,
-			bottomRight,
+			topLeftSceneView,
+			bottomRightSceneView,
 			ImVec2(0, 1), ImVec2(1, 0)
 		);
 
 		sceneViewFocused = ImGui::IsWindowFocused();
 	}
 	ImGui::End();
+
+	DrawGizmo();
 }
 
 void Editor::DrawMenu() noexcept
@@ -289,7 +294,7 @@ void Editor::DrawMenu() noexcept
 	ImGui::Begin("Transform panel", (bool*)0, transformPanelFlags);
 
 	bool pushedColor1 = false;
-	if (transformationMode == 0)
+	if (currentOperation == ImGuizmo::TRANSLATE)
 	{
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.1f, 0.1f, 0.1f, 1.0f));
 		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.1f, 0.1f, 0.1f, 1.0f));
@@ -298,9 +303,9 @@ void Editor::DrawMenu() noexcept
 	}
 	if (ImGui::ImageButton((void*)(intptr_t)translateImage, ImVec2(buttonSize, buttonSize)))
 	{
-		transformationMode = 0;
+		currentOperation == ImGuizmo::TRANSLATE;
 	}
-	if (pushedColor1 && transformationMode == 0)
+	if (pushedColor1 && currentOperation == ImGuizmo::TRANSLATE)
 	{
 		ImGui::PopStyleColor(3);
 	}
@@ -308,7 +313,7 @@ void Editor::DrawMenu() noexcept
 	ImGui::SameLine();
 
 	bool pushedColor2 = false;
-	if (transformationMode == 1)
+	if (currentOperation == ImGuizmo::ROTATE)
 	{
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.1f, 0.1f, 0.1f, 1.0f));
 		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.1f, 0.1f, 0.1f, 1.0f));
@@ -317,9 +322,9 @@ void Editor::DrawMenu() noexcept
 	}
 	if (ImGui::ImageButton((void*)(intptr_t)rotateImage, ImVec2(buttonSize, buttonSize)))
 	{
-		transformationMode = 1;
+		currentOperation == ImGuizmo::ROTATE;
 	}
-	if (pushedColor2 && transformationMode == 1)
+	if (pushedColor2 && currentOperation == ImGuizmo::ROTATE)
 	{
 		ImGui::PopStyleColor(3);
 	}
@@ -327,7 +332,7 @@ void Editor::DrawMenu() noexcept
 	ImGui::SameLine();
 
 	bool pushedColor3 = false;
-	if (transformationMode == 2)
+	if (currentOperation == ImGuizmo::SCALE)
 	{
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.1f, 0.1f, 0.1f, 1.0f));
 		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.1f, 0.1f, 0.1f, 1.0f));
@@ -336,13 +341,31 @@ void Editor::DrawMenu() noexcept
 	}
 	if (ImGui::ImageButton((void*)(intptr_t)scaleImage, ImVec2(buttonSize, buttonSize)))
 	{
-		transformationMode = 2;
+		currentOperation == ImGuizmo::SCALE;
 	}
-	if (pushedColor3 && transformationMode == 2)
+	if (pushedColor3 && currentOperation == ImGuizmo::SCALE)
 	{
 		ImGui::PopStyleColor(3);
 	}
 
 	dockspacePadding += buttonSize + style.ItemSpacing.y * 2 + style.WindowPadding.y * 2 + style.FramePadding.y;
 	ImGui::End();
+}
+
+void Editor::DrawGizmo() noexcept
+{
+	ImGuizmo::SetRect(bottomRightSceneView.x, bottomRightSceneView.y, topLeftSceneView.x, topLeftSceneView.y);
+
+	ImGuizmo::Manipulate(
+		Math::Glm4x4ToArray(&(engine.activeCamera->GetViewMatrix())),
+		Math::Glm4x4ToArray(&(engine.activeCamera->GetProjectionMatrix())),
+		currentOperation,
+		currentMode,
+		gizmoMatrix
+	);
+}
+
+float Editor::GetSceneViewAspectRatio() const noexcept
+{
+	return sceneViewAspectRatio;
 }

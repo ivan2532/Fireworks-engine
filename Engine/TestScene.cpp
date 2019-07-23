@@ -3,23 +3,20 @@
 #include "Window.hpp"
 #include "GLFW/glfw3.h"
 
-TestScene::TestScene(Window& w) noexcept
+TestScene::TestScene(Engine& rEngine, Window& w) noexcept
 	:
-	Scene("Test scene"),
+	Scene(rEngine, "Test scene"),
 	wnd(w),
 	textureShader("UnlitTextureVS.glsl", "UnlitTextureFS.glsl"),
 	testModel("Material_ball/material_ball.obj", textureShader)
 {
-	//auto ballObject = AddSceneObject("Material Ball");
-	//ballObject->AddComponent(std::make_unique<Transform>(ballObject));
-
 	testModel.MoveToScene(*this);
 
 	auto cameraObject = AddSceneObject("SceneCamera");
 	cameraObject->AddComponent(std::make_unique<Transform>(cameraObject));
 	cameraObject->GetComponent<Transform>().value()->Translate(0.0f, 0.0f, 20.0f);
 	cameraObject->GetComponent<Transform>().value()->AddShaderToUpdate(std::make_unique<Shader>(textureShader));
-	cameraObject->AddComponent(std::make_unique<Camera>(cameraObject));
+	cameraObject->AddComponent(std::make_unique<Camera>(engine, cameraObject));
 	cameraObject->AddComponent(std::make_unique<SceneCameraController>(cameraObject, wnd, 7.0f, 0.25f));
 }
 

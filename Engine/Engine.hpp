@@ -13,31 +13,37 @@ class Engine
 {
 	friend Editor;
 	friend Window;
+	friend Camera;
 public:
 	Engine() noexcept;
 	~Engine() noexcept;
+	Engine(const Engine&) = delete;
+	Engine& operator=(const Engine&) = delete;
+	Engine(Engine&&) = delete;
+	Engine&& operator=(Engine&&) = delete;
 	void Go() noexcept;
 public:
 	void OnMouseMove(double x, double y) noexcept;
 	void OnWindowResize(int width, int height) noexcept;
+	void SetCamera(Camera& camera) noexcept;
 private:
 	void SetCallbacks() noexcept;
 	void ClearBuffers() noexcept;
 	void BeginFrame() noexcept;
 	void Update() noexcept;
 	void EndFrame(Window& wnd) noexcept;
-	//User functions here
 	void ProcessInput() noexcept;
+	//User functions here
 private:
 	float lastFrame = 0.0f;
 	Window wnd;
 	Editor editor;
-	//User variables here
 	ImGuiManager imGuiManager;
+	std::unique_ptr<Camera> activeCamera;
 	std::unique_ptr<Scene> activeScene;
+	//User variables here
 public:
 	static float deltaTime;
-	static float sceneViewAspectRatio;
 };
 
 void CursorMoveCallback(GLFWwindow* wnd, double x, double y);

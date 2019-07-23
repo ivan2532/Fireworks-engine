@@ -2,18 +2,18 @@
 #include "OpenGLIncludes.hpp"
 #include "imguiIncludes.hpp"
 #include "TestScene.hpp"
+#include <iostream>
 
 float Engine::deltaTime = 0.0f;
-float Engine::sceneViewAspectRatio = 4.0f / 3.0f;
 
 Engine::Engine() noexcept
 	:
 	wnd(1920u, 1080u, "Fireworks engine", false, true, false, true),
 	editor(*this),
-	activeScene(std::make_unique<TestScene>(wnd))
+	activeScene(std::make_unique<TestScene>(*this, wnd))
 {
+	std::cout << "Engine constructor!";
 	wnd.MakeFramebuffer(800u, 600u);
-	sceneViewAspectRatio = 800.0f / 600.0f;
 
 	SetCallbacks();
 
@@ -68,6 +68,8 @@ void Engine::BeginFrame() noexcept
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
 
+	ImGuizmo::BeginFrame();
+
 	wnd.BindFramebuffer(); //Unbound in editor draw scene view
 	ClearBuffers();
 }
@@ -91,6 +93,11 @@ void Engine::ProcessInput() noexcept
 {
 	if (wnd.GetKey(GLFW_KEY_ESCAPE, false))
 		wnd.Close();
+}
+
+void Engine::SetCamera(Camera& camera) noexcept
+{
+	activeCamera = std::make_unique<Camera>(camera);
 }
 
 void Engine::OnMouseMove(double x, double y) noexcept

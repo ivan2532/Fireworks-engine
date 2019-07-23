@@ -1,7 +1,9 @@
 #include "Scene.hpp"
+#include "Engine.hpp"
 
-Scene::Scene(const std::string& n) noexcept
+Scene::Scene(Engine& rEngine, const std::string& n) noexcept
 	:
+	engine(rEngine),
 	name(n),
 	sceneObjects()
 {

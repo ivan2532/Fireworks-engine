@@ -3,18 +3,21 @@
 #include "Engine.hpp"
 #include "imguiIncludes.hpp"
 
-Camera::Camera(GameObject* go, float f) noexcept
+Camera::Camera(Engine& rEngine, GameObject* go, float f) noexcept
 	:
 	Component(go),
+	engine(rEngine),
 	transform(gameObject->GetComponent<Transform>().value()),
 	viewMatrix(1.0f),
 	fov(f)
 {
+	projectionMatrix = glm::perspective(glm::radians(fov), engine.editor.GetSceneViewAspectRatio(), 0.1f, 1000.0f);
+	engine.SetCamera(*this);
 }
 
 void Camera::Update() noexcept
 {
-	UpdateViewMatrix();
+	UpdateMatrices();
 	UpdateShaders();
 }
 
@@ -40,8 +43,19 @@ void Camera::SetFOV(float value) noexcept
 	fov = value;
 }
 
-void Camera::UpdateViewMatrix() noexcept
+glm::mat4 Camera::GetViewMatrix() const noexcept
 {
+	return viewMatrix;
+}
+
+glm::mat4 Camera::GetProjectionMatrix() const noexcept
+{
+	return projectionMatrix;
+}
+
+void Camera::UpdateMatrices() noexcept
+{
+	projectionMatrix = glm::perspective(glm::radians(fov), engine.editor.GetSceneViewAspectRatio(), 0.1f, 1000.0f);
 	viewMatrix = glm::lookAt(transform->GetPosition(), transform->GetPosition() + transform->GetForward(), transform->GetUp());
 }
 
@@ -50,6 +64,6 @@ void Camera::UpdateShaders() noexcept
 	for (auto& shader : transform->shadersToUpdate)
 	{
 		shader->SetVec3("viewPos", transform->GetPosition());
-		shader->SetMat4x4("viewProj", glm::perspective(glm::radians(fov), Engine::sceneViewAspectRatio, 0.1f, 1000.0f) * viewMatrix);
+		shader->SetMat4x4("viewProj", projectionMatrix * viewMatrix);
 	}
 }
