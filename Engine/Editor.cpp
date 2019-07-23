@@ -21,34 +21,27 @@ Editor::Editor(Engine& rEngine) noexcept
 
 void Editor::DrawDockSpace() noexcept
 {
-	static bool opt_fullscreen_persistant = true;
-	bool opt_fullscreen = opt_fullscreen_persistant;
 	static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
 
 	ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDocking;
-	if (opt_fullscreen)
-	{
-		ImGuiViewport* viewport = ImGui::GetMainViewport();
-		ImGui::SetNextWindowPos(viewport->Pos);
-		ImGui::SetNextWindowSize(viewport->Size);
-		//ImGui::SetNextWindowPos(ImVec2(viewport->Pos.x, viewport->Pos.y - dockspacePadding));
-		//ImGui::SetNextWindowSize(ImVec2(viewport->Size.x, viewport->Size.y - dockspacePadding));
-		ImGui::SetNextWindowViewport(viewport->ID);
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-		window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
-		window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
-	}
+
+	ImGuiViewport* viewport = ImGui::GetMainViewport();
+	ImGui::SetNextWindowPos(ImVec2(viewport->Pos.x, viewport->Pos.y + dockspacePadding));
+	ImGui::SetNextWindowSize(ImVec2(viewport->Size.x, viewport->Size.y - dockspacePadding));
+	ImGui::SetNextWindowViewport(viewport->ID);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+	window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+	window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
 
 	if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
 		window_flags |= ImGuiWindowFlags_NoBackground;
 
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, dockspacePadding));
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 	ImGui::Begin("Dockspace", (bool*)0, window_flags);
 	ImGui::PopStyleVar();
 
-	if (opt_fullscreen)
-		ImGui::PopStyleVar(2);
+	ImGui::PopStyleVar(2);
 
 	ImGuiIO& io = ImGui::GetIO();
 	if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
@@ -57,6 +50,11 @@ void Editor::DrawDockSpace() noexcept
 		ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 	}
 
+	ImGui::End();
+
+	ImGui::SetNextWindowPos(ImVec2(viewport->Pos.x, viewport->Pos.y));
+	ImGui::SetNextWindowSize(ImVec2(viewport->Size.x, viewport->Size.y));
+	ImGui::Begin("BackgroundFiller", (bool*)0, window_flags);
 	ImGui::End();
 }
 
@@ -364,9 +362,9 @@ void Editor::DrawGizmo() noexcept
 
 	ImGuizmo::SetRect(
 		bottomLeftSceneView.x,
-		bottomLeftSceneView.y,
+		bottomLeftSceneView.y + style.FramePadding.y * 2 + 15.0f,
 		topRightSceneView.x - bottomLeftSceneView.x,
-		topRightSceneView.y - bottomLeftSceneView.y - style.FramePadding.y * 2 - 15.0f
+		topRightSceneView.y - bottomLeftSceneView.y
 	);
 
 	ImGuizmo::Manipulate(
