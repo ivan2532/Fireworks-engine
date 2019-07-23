@@ -4,6 +4,7 @@
 #include "ImGuizmo/ImGuizmo.h"
 
 class Engine;
+class Transform;
 
 class Editor
 {
@@ -37,7 +38,7 @@ public:
 private:
 	Engine& engine;
 	//Hierarchy variables
-	GameObject* selectedObject;
+	GameObject* selectedObject = nullptr;
 	int nodeIndexCount;
 	int selectedHierarchy;
 	bool sceneViewFocused = false;
@@ -55,6 +56,8 @@ private:
 		0, 0, 1, 0,
 		0, 0, 0, 1,
 	};
+	Transform* gizmoTransform = nullptr;
+	bool drawGizmo = false;
 	//Paddings
 	float dockspacePadding = 0.0f;
 };

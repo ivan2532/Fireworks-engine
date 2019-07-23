@@ -3,6 +3,7 @@
 #include "imguiIncludes.hpp"
 #include "GameObject.hpp"
 #include "Editor.hpp"
+#include "Math.hpp"
 
 void Transform::Update() noexcept
 {
@@ -66,11 +67,11 @@ void Transform::UpdateTransform() noexcept
 	}
 
 	transform = glm::mat4(1.0f);
+	transform = glm::translate(transform, position);
 	transform = glm::scale(transform, scale);
 	transform = glm::rotate(transform, glm::radians(eulerAngles.x), glm::vec3(1.0f, 0.0f, 0.0f));
 	transform = glm::rotate(transform, glm::radians(eulerAngles.y), glm::vec3(0.0f, 1.0f, 0.0f));
 	transform = glm::rotate(transform, glm::radians(eulerAngles.z), glm::vec3(0.0f, 0.0f, 1.0f));
-	transform = glm::translate(transform, position);
 	transform = parentTransform * transform;
 }
 
@@ -157,7 +158,7 @@ void Transform::SetPosition(float x, float y, float z) noexcept
 	SetPosition(glm::vec3(x, y, z));
 }
 
-void Transform::SetPosition(glm::vec3 value) noexcept
+void Transform::SetPosition(const glm::vec3& value) noexcept
 {
 	position = value;
 	updateAxes = true;
@@ -173,7 +174,7 @@ void Transform::SetEulerAngles(float x, float y, float z) noexcept
 	SetEulerAngles(glm::vec3(x, y, z));
 }
 
-void Transform::SetEulerAngles(glm::vec3 value) noexcept
+void Transform::SetEulerAngles(const glm::vec3& value) noexcept
 {
 	eulerAngles = value;
 	updateAxes = true;
@@ -189,7 +190,7 @@ void Transform::SetScale(float x, float y, float z) noexcept
 	SetScale(glm::vec3(x, y, z));
 }
 
-void Transform::SetScale(glm::vec3 value) noexcept
+void Transform::SetScale(const glm::vec3& value) noexcept
 {
 	scale = value;
 	updateAxes = true;
@@ -215,6 +216,20 @@ glm::vec3 Transform::GetUp() const noexcept
 	return up;
 }
 
+void Transform::SetTransformation(const glm::mat4& transformation) noexcept
+{
+	glm::vec3 t; //Translation
+	glm::vec3 s; //Scale
+	glm::mat4 r; //Rotation
+
+	Math::DecomposeTransform(transformation, &t, &s, &r);
+	glm::vec3 euler = Math::EulerAnglesFromRotation(r);
+
+	SetPosition(t);
+	SetEulerAngles(euler);
+	SetScale(s);
+}
+
 glm::mat4 Transform::GetTransformation() const noexcept
 {
 	return transform;
@@ -225,7 +240,7 @@ void Transform::Translate(float x, float y, float z) noexcept
 	Translate(glm::vec3(x, y, z));
 }
 
-void Transform::Translate(glm::vec3 value) noexcept
+void Transform::Translate(const glm::vec3& value) noexcept
 {
 	position += value;
 	updateAxes = true;
@@ -236,7 +251,7 @@ void Transform::Rotate(float x, float y, float z) noexcept
 	Rotate(glm::vec3(x, y, z));
 }
 
-void Transform::Rotate(glm::vec3 value) noexcept
+void Transform::Rotate(const glm::vec3& value) noexcept
 {
 	eulerAngles += value;
 	updateAxes = true;
@@ -247,7 +262,7 @@ void Transform::Scale(float x, float y, float z) noexcept
 	Scale(glm::vec3(x, y, z));
 }
 
-void Transform::Scale(glm::vec3 value) noexcept
+void Transform::Scale(const glm::vec3& value) noexcept
 {
 	scale += value;
 	updateAxes = true;

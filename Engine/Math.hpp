@@ -32,12 +32,19 @@ public:
 		result.data[4]  = value[1][0]; result.data[5]  = value[1][1];  result.data[6]  = value[1][2]; result.data[7]  = value[1][3];
 		result.data[8]  = value[2][0]; result.data[9]  = value[2][1];  result.data[10] = value[2][2]; result.data[11] = value[2][3];
 		result.data[12] = value[3][0]; result.data[13] = value[3][1];  result.data[14] = value[3][2]; result.data[15] = value[3][3];
-		/*
-		result.data[0]  = value[0][0]; result.data[1]  = value[1][0];  result.data[2]  = value[2][0]; result.data[3]  = value[3][0];
-		result.data[4]  = value[0][1]; result.data[5]  = value[1][1];  result.data[6]  = value[2][1]; result.data[7]  = value[3][1];
-		result.data[8]  = value[0][2]; result.data[9]  = value[1][2];  result.data[10] = value[2][2]; result.data[11] = value[3][2];
-		result.data[12] = value[0][3]; result.data[13] = value[1][3];  result.data[14] = value[2][3]; result.data[15] = value[3][3];
-		*/
+
+		return result;
+	}
+
+	static inline glm::mat4 ArrayToGlm4x4(float* value)
+	{
+		glm::mat4 result;
+
+		result[0][0] = value[0]; result[0][1]  = value[1];  result[0][2] = value[2];  result[0][3] = value[3];
+		result[1][0] = value[4]; result[1][1]  = value[5];  result[1][2] = value[6];  result[1][3] = value[7];
+		result[2][0] = value[8]; result[2][1]  = value[9];  result[2][2] = value[10]; result[2][3] = value[11];
+		result[3][0] = value[12]; result[3][1] = value[13]; result[3][2] = value[14]; result[3][3] = value[15];
+
 		return result;
 	}
 };

@@ -9,7 +9,6 @@
 Editor::Editor(Engine& rEngine) noexcept
 	:
 	engine(rEngine),
-	selectedObject(nullptr),
 	nodeIndexCount(0),
 	selectedHierarchy(-1),
 	translateImage(ImageLoader::TextureFromFile("TranslationButton.png", "EditorIcons")),
@@ -116,6 +115,19 @@ GameObject* Editor::GetSelectedObject() const noexcept
 void Editor::SetSelectedObject(GameObject* value) noexcept
 {
 	selectedObject = value;
+
+	gizmoTransform =
+		selectedObject->GetComponent<Transform>().has_value() ?
+		selectedObject->GetComponent<Transform>().value() : nullptr;
+
+	if (gizmoTransform != nullptr)
+	{
+		drawGizmo = true;
+	}
+	else
+	{
+		drawGizmo = false;
+	}
 }
 
 void Editor::DrawInspectorUI() noexcept
@@ -304,9 +316,9 @@ void Editor::DrawMenu() noexcept
 	}
 	if (ImGui::ImageButton((void*)(intptr_t)translateImage, ImVec2(buttonSize, buttonSize)))
 	{
-		currentOperation == ImGuizmo::TRANSLATE;
+		currentOperation = ImGuizmo::TRANSLATE;
 	}
-	if (pushedColor1 && currentOperation == ImGuizmo::TRANSLATE)
+	if (pushedColor1)
 	{
 		ImGui::PopStyleColor(3);
 	}
@@ -323,9 +335,9 @@ void Editor::DrawMenu() noexcept
 	}
 	if (ImGui::ImageButton((void*)(intptr_t)rotateImage, ImVec2(buttonSize, buttonSize)))
 	{
-		currentOperation == ImGuizmo::ROTATE;
+		currentOperation = ImGuizmo::ROTATE;
 	}
-	if (pushedColor2 && currentOperation == ImGuizmo::ROTATE)
+	if (pushedColor2)
 	{
 		ImGui::PopStyleColor(3);
 	}
@@ -342,9 +354,9 @@ void Editor::DrawMenu() noexcept
 	}
 	if (ImGui::ImageButton((void*)(intptr_t)scaleImage, ImVec2(buttonSize, buttonSize)))
 	{
-		currentOperation == ImGuizmo::SCALE;
+		currentOperation = ImGuizmo::SCALE;
 	}
-	if (pushedColor3 && currentOperation == ImGuizmo::SCALE)
+	if (pushedColor3)
 	{
 		ImGui::PopStyleColor(3);
 	}
@@ -355,6 +367,21 @@ void Editor::DrawMenu() noexcept
 
 void Editor::DrawGizmo() noexcept
 {
+	if (!drawGizmo)
+		return;
+
+	if (!ImGuizmo::IsUsing())
+	{
+		Float4x4 matrix = Math::Glm4x4ToArray(gizmoTransform->GetTransformation());
+
+		for (int i = 0; i < 16; i++)
+			gizmoMatrix[i] = matrix.data[i];
+	}
+	else
+	{
+		gizmoTransform->SetTransformation(Math::ArrayToGlm4x4(gizmoMatrix));
+	}
+
 	ImGuiStyle style = ImGui::GetStyle();
 
 	Float4x4 view = Math::Glm4x4ToArray(engine.activeCamera->GetViewMatrix());
@@ -364,7 +391,7 @@ void Editor::DrawGizmo() noexcept
 		bottomLeftSceneView.x,
 		bottomLeftSceneView.y + style.FramePadding.y * 2 + 15.0f,
 		topRightSceneView.x - bottomLeftSceneView.x,
-		topRightSceneView.y - bottomLeftSceneView.y
+		topRightSceneView.y - bottomLeftSceneView.y - style.FramePadding.y * 2 - 15.0f
 	);
 
 	ImGuizmo::Manipulate(
