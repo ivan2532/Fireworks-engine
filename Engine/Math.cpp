@@ -1,6 +1,7 @@
 #include "Math.hpp"
+#include <iostream>
 
-void Math::DecomposeTransform(glm::mat4 trans, glm::vec3* translation, glm::vec3* scale, glm::mat4* rotation)
+void Math::DecomposeTransform(const glm::mat4& trans, glm::vec3* translation, glm::vec3* scale, glm::mat4* rotation) noexcept
 {
 	translation->x = trans[3][0];
 	translation->y = trans[3][1];
@@ -21,24 +22,27 @@ void Math::DecomposeTransform(glm::mat4 trans, glm::vec3* translation, glm::vec3
 	(*rotation)[2][2] = trans[2][2] / scale->z;
 }
 
-glm::vec3 Math::EulerAnglesFromRotation(const glm::mat4& rotation)
+glm::mat4 Math::AssembleTransform(const glm::vec3& translation, const glm::vec3& scale, const glm::vec3& rotation) noexcept
 {
-	float sy = sqrt(rotation[0][0] * rotation[0][0] + rotation[1][0] * rotation[1][0]);
+	glm::mat4 result(1.0f);
+
+	result = glm::translate(result, translation);
+	result = glm::scale(result, scale);
+
+	result = glm::rotate(result, glm::radians(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f)); // X, Y, Z order (column-major)
+	result = glm::rotate(result, glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+	result = glm::rotate(result, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+
+	return result;
+}
+
+glm::vec3 Math::EulerAnglesFromRotation(const glm::mat4& rotation) noexcept
+{
 	glm::vec3 eulerAngles;
 
-	if (sy >= 1e-6)
-	{
-		eulerAngles.x = -atan2(rotation[2][1], rotation[2][2]);
-		eulerAngles.y = atan2(-rotation[2][0], sy);
-		eulerAngles.z = atan2(rotation[1][0], rotation[0][0]);
-	}
-	else
-	{
-		eulerAngles.x = -atan2(-rotation[1][2], rotation[1][1]);
-		eulerAngles.y = atan2(-rotation[2][0], sy);
-		eulerAngles.z = 0;
-	}
-
+	eulerAngles.x = atan2f(rotation[1][2], rotation[2][2]);
+	eulerAngles.y = atan2f(-rotation[0][2], sqrtf(rotation[1][2] * rotation[1][2] + rotation[2][2] * rotation[2][2]));
+	eulerAngles.z = atan2f(rotation[0][1], rotation[0][0]);
 	eulerAngles.x = glm::degrees(eulerAngles.x);
 	eulerAngles.y = glm::degrees(eulerAngles.y);
 	eulerAngles.z = glm::degrees(eulerAngles.z);

@@ -10,9 +10,12 @@ struct Float4x4
 class Math
 {
 public:
-	static void DecomposeTransform(glm::mat4 trans, glm::vec3* translation, glm::vec3* scale, glm::mat4* rotation);
-	static glm::vec3 EulerAnglesFromRotation(const glm::mat4& rotation);
-	static inline glm::mat4 AiMatrix4x4ToGlm(const aiMatrix4x4* value)
+	static void DecomposeTransform(const glm::mat4& trans, glm::vec3* translation, glm::vec3* scale, glm::mat4* rotation) noexcept;
+	static glm::mat4 AssembleTransform(const glm::vec3& translation, const glm::vec3& scale, const glm::vec3& rotation) noexcept;
+
+	static glm::vec3 EulerAnglesFromRotation(const glm::mat4& rotation) noexcept;
+
+	static inline glm::mat4 AiMatrix4x4ToGlm(const aiMatrix4x4* value) noexcept
 	{
 		glm::mat4 result;
 
@@ -24,7 +27,7 @@ public:
 		return result;
 	}
 
-	static inline Float4x4 Glm4x4ToArray(const glm::mat4& value)
+	static inline Float4x4 Glm4x4ToArray(const glm::mat4& value) noexcept
 	{
 		Float4x4 result;
 		
@@ -36,7 +39,7 @@ public:
 		return result;
 	}
 
-	static inline glm::mat4 ArrayToGlm4x4(float* value)
+	static inline glm::mat4 ArrayToGlm4x4(float* value) noexcept
 	{
 		glm::mat4 result;
 
