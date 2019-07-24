@@ -9,13 +9,21 @@
 Editor::Editor(Engine& rEngine) noexcept
 	:
 	engine(rEngine),
-	nodeIndexCount(0),
 	selectedHierarchy(-1),
 	translateImage(ImageLoader::TextureFromFile("TranslationButton.png", "EditorIcons")),
 	rotateImage(ImageLoader::TextureFromFile("RotationButton.png", "EditorIcons")),
 	scaleImage(ImageLoader::TextureFromFile("ScaleButton.png", "EditorIcons")),
 	sceneViewAspectRatio(4.0f / 3.0f)
 {
+	SpawnWindows();
+}
+
+void Editor::SpawnWindows() noexcept
+{
+	editorWindows.push_back(std::make_unique<HierarchyWindow>(*this));
+	editorWindows.push_back(std::make_unique<InspectorWindow>(*this));
+	editorWindows.push_back(std::make_unique<AssetExplorerWindow>(*this));
+	editorWindows.push_back(std::make_unique<SceneViewWindow>(*this));
 }
 
 void Editor::DrawDockSpace() noexcept
@@ -72,11 +80,16 @@ void Editor::DrawGUI() noexcept
 	}
 
 	DrawDockSpace();
-	DrawHierarchyUI();
-	DrawInspectorUI();
-	DrawAssetExplorerUI();
-	DrawSceneView();
 	DrawMenu();
+
+	for (auto& window : editorWindows)
+		window->Draw();
+
+	DrawGizmo();
+	//DrawHierarchyUI();
+	//DrawInspectorUI();
+	//DrawAssetExplorerUI();
+	//DrawSceneView();
 }
 
 void Editor::DrawHierarchyUI() noexcept
@@ -197,6 +210,15 @@ void Editor::DrawSceneView() noexcept
 	
 	if (ImGui::Begin("Scene view"))
 	{
+		if (ImGui::IsWindowHovered()) //Focus on right-click
+		{
+			if (engine.wnd.GetMouseButton(GLFW_MOUSE_BUTTON_RIGHT, false))
+			{
+				if(!sceneViewFocused)
+					ImGui::SetWindowFocus();
+			}
+		}
+
 		auto windowSize = ImGui::GetWindowSize();
 		auto bufferWidth = engine.wnd.GetBufferWidth();
 		auto bufferHeight = engine.wnd.GetBufferHeight();

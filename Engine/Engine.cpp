@@ -12,7 +12,7 @@ Engine::Engine() noexcept
 	editor(*this),
 	activeScene(std::make_unique<TestScene>(*this, wnd))
 {
-	wnd.MakeFramebuffer(800u, 600u);
+	//wnd.MakeFramebuffer(800u, 600u);
 
 	SetCallbacks();
 
@@ -98,6 +98,11 @@ void Engine::ProcessInput() noexcept
 void Engine::SetCamera(Camera* camera) noexcept
 {
 	activeCamera = camera;
+}
+
+Window* Engine::GetWindow() noexcept
+{
+	return &wnd;
 }
 
 void Engine::OnMouseMove(double x, double y) noexcept

@@ -229,6 +229,11 @@ bool Window::GetKey(int key, bool respectCapture) noexcept
 	return glfwGetKey(wnd, key);
 }
 
+bool Window::GetMouseButton(int glfwMouseButton, bool respectCapture) noexcept
+{
+	return glfwGetMouseButton(wnd, glfwMouseButton);
+}
+
 bool Window::ShouldClose() const noexcept
 {
 	return glfwWindowShouldClose(wnd);

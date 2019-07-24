@@ -2,18 +2,26 @@
 #include "imguiIncludes.hpp"
 #include "GameObject.hpp"
 #include "ImGuizmo/ImGuizmo.h"
+#include "EditorWindow.hpp"
+#include "EditorWindowIncludes.hpp"
+#include <memory>
 
 class Engine;
 class Transform;
 
 class Editor
 {
+	friend HierarchyWindow;
+	friend InspectorWindow;
+	friend SceneViewWindow;
 public:
 	Editor(Engine&) noexcept;
 	Editor(const Editor&) = delete;
 	Editor& operator=(const Editor&) = delete;
 	Editor(Editor&&) = delete;
 	Editor&& operator=(Editor&&) = delete;
+private:
+	void SpawnWindows() noexcept;
 public:
 	void DrawDockSpace() noexcept;
 	void DrawGUI() noexcept;
@@ -37,9 +45,10 @@ public:
 	float GetSceneViewAspectRatio() const noexcept;
 private:
 	Engine& engine;
+	std::vector<std::unique_ptr<EditorWindow>> editorWindows;
 	//Hierarchy variables
 	GameObject* selectedObject = nullptr;
-	int nodeIndexCount;
+	int nodeIndexCount = 0;
 	int selectedHierarchy;
 	bool sceneViewFocused = false;
 	bool gameViewFocused = false;

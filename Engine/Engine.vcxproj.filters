@@ -37,9 +37,6 @@
     <Filter Include="Header Files\Scenes">
       <UniqueIdentifier>{2832cef9-0e05-4873-b927-e87ef4142d57}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Scenes">
-      <UniqueIdentifier>{27430075-5fee-4f13-a6d2-0a148e4b203e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Core">
       <UniqueIdentifier>{c599b231-ec76-41f1-bd7b-ab3563610baa}</UniqueIdentifier>
     </Filter>
@@ -48,6 +45,21 @@
     </Filter>
     <Filter Include="ImGuizmo">
       <UniqueIdentifier>{cd3a986b-eb6f-4f28-a330-beb6490ce96d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Editor">
+      <UniqueIdentifier>{9ed20a96-cbac-4c08-a1f9-abbae433331b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Editor">
+      <UniqueIdentifier>{4e89ae7a-5319-4efa-85f9-21abf9be6b0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Editor\EditorWindows">
+      <UniqueIdentifier>{35b11cf8-f25f-4553-aa45-bef856471a9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Editor\EditorWindows">
+      <UniqueIdentifier>{4e4f463c-81c3-4a33-8240-ebb426c5b80f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Scenes">
+      <UniqueIdentifier>{27430075-5fee-4f13-a6d2-0a148e4b203e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -93,9 +105,6 @@
     <ClCompile Include="SceneCameraController.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
-    <ClCompile Include="Editor.cpp">
-      <Filter>Source Files\Core</Filter>
-    </ClCompile>
     <ClCompile Include="Engine.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
@@ -131,6 +140,24 @@
     </ClCompile>
     <ClCompile Include="ImGuizmo\ImGuizmo.cpp">
       <Filter>ImGuizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor.cpp">
+      <Filter>Source Files\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="EditorWindow.cpp">
+      <Filter>Source Files\Editor\EditorWindows</Filter>
+    </ClCompile>
+    <ClCompile Include="HierarchyWindow.cpp">
+      <Filter>Source Files\Editor\EditorWindows</Filter>
+    </ClCompile>
+    <ClCompile Include="InspectorWindow.cpp">
+      <Filter>Source Files\Editor\EditorWindows</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetExplorerWindow.cpp">
+      <Filter>Source Files\Editor\EditorWindows</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneViewWindow.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -185,9 +212,6 @@
     <ClInclude Include="SceneCameraController.hpp">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Editor.hpp">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
     <ClInclude Include="Engine.hpp">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
@@ -232,6 +256,27 @@
     </ClInclude>
     <ClInclude Include="ImGuizmo\ImGuizmo.h">
       <Filter>ImGuizmo</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor.hpp">
+      <Filter>Header Files\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorWindow.hpp">
+      <Filter>Header Files\Editor\EditorWindows</Filter>
+    </ClInclude>
+    <ClInclude Include="HierarchyWindow.hpp">
+      <Filter>Header Files\Editor\EditorWindows</Filter>
+    </ClInclude>
+    <ClInclude Include="EditorWindowIncludes.hpp">
+      <Filter>Header Files\Editor\EditorWindows</Filter>
+    </ClInclude>
+    <ClInclude Include="InspectorWindow.hpp">
+      <Filter>Header Files\Editor\EditorWindows</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetExplorerWindow.hpp">
+      <Filter>Header Files\Editor\EditorWindows</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneViewWindow.hpp">
+      <Filter>Header Files\Editor\EditorWindows</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

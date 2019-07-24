@@ -2906,7 +2906,6 @@ static void ShowDemoWindowMisc()
             ImGui::InputText("3 (tab skip)", buf, IM_ARRAYSIZE(buf));
             if (ImGui::IsItemActive()) has_focus = 3;
             ImGui::PopAllowKeyboardFocus();
-
             if (has_focus)
                 ImGui::Text("Item with focus: %d", has_focus);
             else

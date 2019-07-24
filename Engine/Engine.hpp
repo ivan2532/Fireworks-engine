@@ -14,6 +14,7 @@ class Engine
 	friend Editor;
 	friend Window;
 	friend Camera;
+	friend class HierarchyWindow;
 public:
 	Engine() noexcept;
 	~Engine() noexcept;
@@ -26,6 +27,7 @@ public:
 	void OnMouseMove(double x, double y) noexcept;
 	void OnWindowResize(int width, int height) noexcept;
 	void SetCamera(Camera* camera) noexcept;
+	Window* GetWindow() noexcept;
 private:
 	void SetCallbacks() noexcept;
 	void ClearBuffers() noexcept;

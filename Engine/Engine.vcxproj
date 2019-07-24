@@ -127,12 +127,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AssetExplorerWindow.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Editor.cpp" />
+    <ClCompile Include="EditorWindow.cpp" />
     <ClCompile Include="FPCameraMovement.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="HierarchyWindow.cpp" />
     <ClCompile Include="ImageLoader.cpp" />
     <ClCompile Include="ImGuiManager.cpp" />
     <ClCompile Include="ImGuizmo\ImGuizmo.cpp" />
@@ -142,6 +145,7 @@
     <ClCompile Include="imgui\imgui_impl_glfw.cpp" />
     <ClCompile Include="imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="imgui\imgui_widgets.cpp" />
+    <ClCompile Include="InspectorWindow.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Math.cpp" />
     <ClCompile Include="Mesh.cpp" />
@@ -150,21 +154,26 @@
     <ClCompile Include="ModelRenderer.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneCameraController.cpp" />
+    <ClCompile Include="SceneViewWindow.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="TestScene.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AssetExplorerWindow.hpp" />
     <ClInclude Include="assimpIncludes.hpp" />
     <ClInclude Include="Camera.hpp" />
     <ClInclude Include="Component.hpp" />
     <ClInclude Include="ComponentIncludes.hpp" />
     <ClInclude Include="Editor.hpp" />
+    <ClInclude Include="EditorWindow.hpp" />
+    <ClInclude Include="EditorWindowIncludes.hpp" />
     <ClInclude Include="FPCameraMovement.hpp" />
     <ClInclude Include="Engine.hpp" />
     <ClInclude Include="GameObject.hpp" />
     <ClInclude Include="glmIncludes.hpp" />
+    <ClInclude Include="HierarchyWindow.hpp" />
     <ClInclude Include="ImageLoader.h" />
     <ClInclude Include="imguiIncludes.hpp" />
     <ClInclude Include="ImGuiManager.hpp" />
@@ -177,6 +186,7 @@
     <ClInclude Include="imgui\imstb_rectpack.h" />
     <ClInclude Include="imgui\imstb_textedit.h" />
     <ClInclude Include="imgui\imstb_truetype.h" />
+    <ClInclude Include="InspectorWindow.hpp" />
     <ClInclude Include="Math.hpp" />
     <ClInclude Include="Mesh.hpp" />
     <ClInclude Include="MeshRenderer.hpp" />
@@ -185,6 +195,7 @@
     <ClInclude Include="OpenGLIncludes.hpp" />
     <ClInclude Include="Scene.hpp" />
     <ClInclude Include="SceneCameraController.hpp" />
+    <ClInclude Include="SceneViewWindow.hpp" />
     <ClInclude Include="Shader.hpp" />
     <ClInclude Include="TestScene.hpp" />
     <ClInclude Include="Transform.hpp" />

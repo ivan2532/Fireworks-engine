@@ -9,6 +9,7 @@ class Engine;
 class Scene
 {
 	friend class Editor;
+	friend class HierarchyWindow;
 public:
 	Scene(Engine& rEngine, const std::string& name) noexcept;
 public:
