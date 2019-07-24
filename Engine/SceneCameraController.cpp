@@ -21,7 +21,7 @@ void SceneCameraController::OnMouseMove(float x, float y) noexcept
 {
 	static glm::vec3 euler;
 
-	if (glfwGetMouseButton(wnd.GetWindow(), GLFW_MOUSE_BUTTON_RIGHT))
+	if (wnd.GetMouseButton(GLFW_MOUSE_BUTTON_RIGHT))
 	{
 		if (!dragging)
 		{

@@ -80,34 +80,12 @@ void Editor::DrawGUI() noexcept
 	}
 
 	DrawDockSpace();
-	DrawMenu();
+	DrawMenuBar();
 
 	for (auto& window : editorWindows)
 		window->Draw();
 
 	DrawGizmo();
-	//DrawHierarchyUI();
-	//DrawInspectorUI();
-	//DrawAssetExplorerUI();
-	//DrawSceneView();
-}
-
-void Editor::DrawHierarchyUI() noexcept
-{
-	nodeIndexCount = 0;
-	if (ImGui::Begin("Hierarchy"))
-	{
-		for (int i = 0; i < engine.activeScene->sceneObjects.size(); i++)
-		{
-			auto transform = engine.activeScene->sceneObjects[i]->GetComponent<Transform>().value();
-
-			if (transform->GetParent() == nullptr && !engine.activeScene->sceneObjects[i]->GetComponent<SceneCameraController>().has_value())
-			{
-				transform->DrawHierarchy(*this, nodeIndexCount);
-			}
-		}
-	}
-	ImGui::End();
 }
 
 int Editor::GetSelectedHierarchy() const noexcept
@@ -143,110 +121,7 @@ void Editor::SetSelectedObject(GameObject* value) noexcept
 	}
 }
 
-void Editor::DrawInspectorUI() noexcept
-{
-	if (ImGui::Begin("Inspector"))
-	{
-		if (selectedObject)
-		{
-			char buf[64] = {};
-			std::string goName = selectedObject->GetName();
-
-			for (size_t i = 0; i < goName.size() && i < 64; i++)
-			{
-				buf[i] = goName[i];
-			}
-
-			ImGui::Text("Game object name \n(press ENTER to apply new name): ");
-			if (ImGui::InputText("##go_name_input", buf, sizeof(buf)))
-			{
-				if(engine.wnd.GetKey(GLFW_KEY_ENTER, false))
-					selectedObject->SetName(buf);
-			}
-
-			ImGui::Spacing();
-
-			ImGui::Text("Components: ");
-			for (auto& component : selectedObject->components)
-			{
-				component->DrawInspector();
-			}
-		}
-	}
-	ImGui::End();
-}
-
-void Editor::DrawAssetExplorerUI() noexcept
-{
-	if (ImGui::Begin("Asset explorer"))
-	{
-		ImGui::BeginChild("Filter explorer", ImVec2(ImGui::GetWindowWidth() / 5, 0), true);
-		ImGui::Text("Filters");
-		if (ImGui::TreeNode("Root"))
-		{
-			for (int i = 0; i < 10; i++)
-			{
-				if (ImGui::TreeNode((void*)(intptr_t)i, "Filter %d", i))
-				{
-					ImGui::TreePop();
-				}
-			}
-			ImGui::TreePop();
-		}
-		ImGui::EndChild();
-
-		ImGui::SameLine();
-
-		ImGui::BeginChild("File explorer", ImVec2(0, 0), true);
-		ImGui::Text("Files");
-		ImGui::EndChild();
-	}
-	ImGui::End();
-}
-
-void Editor::DrawSceneView() noexcept
-{
-	engine.wnd.UnbindFramebuffer();
-	
-	if (ImGui::Begin("Scene view"))
-	{
-		if (ImGui::IsWindowHovered()) //Focus on right-click
-		{
-			if (engine.wnd.GetMouseButton(GLFW_MOUSE_BUTTON_RIGHT, false))
-			{
-				if(!sceneViewFocused)
-					ImGui::SetWindowFocus();
-			}
-		}
-
-		auto windowSize = ImGui::GetWindowSize();
-		auto bufferWidth = engine.wnd.GetBufferWidth();
-		auto bufferHeight = engine.wnd.GetBufferHeight();
-		
-		if (windowSize.x != bufferWidth || windowSize.y != bufferHeight)
-		{
-			engine.wnd.MakeFramebuffer(windowSize.x, windowSize.y);
-			sceneViewAspectRatio = static_cast<float>(windowSize.x) / static_cast<float>(windowSize.y);
-		}
-
-		bottomLeftSceneView = ImVec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
-		topRightSceneView = ImVec2(bottomLeftSceneView.x + ImGui::GetWindowSize().x, bottomLeftSceneView.y + ImGui::GetWindowSize().y);
-
-		ImGui::GetWindowDrawList()->AddImage(
-			(void*)(intptr_t)engine.wnd.GetColorBuffer(),
-			bottomLeftSceneView,
-			topRightSceneView,
-			ImVec2(0, 1), ImVec2(1, 0)
-		);
-
-		sceneViewFocused = ImGui::IsWindowFocused();
-	}
-	ImGui::End();
-
-	DrawGizmo();
-}
-
-void Editor::DrawMenu() noexcept
+void Editor::DrawMenuBar() noexcept
 {
 	float menuPadding = 0.0f;
 

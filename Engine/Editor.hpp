@@ -38,7 +38,7 @@ public:
 	//Scene view
 	void DrawSceneView() noexcept;
 	//Menu
-	void DrawMenu() noexcept;
+	void DrawMenuBar() noexcept;
 	//Gizmo
 	void DrawGizmo() noexcept;
 public:

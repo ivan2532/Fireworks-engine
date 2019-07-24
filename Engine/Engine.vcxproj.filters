@@ -102,9 +102,6 @@
     <ClCompile Include="TestScene.cpp">
       <Filter>Source Files\Scenes</Filter>
     </ClCompile>
-    <ClCompile Include="SceneCameraController.cpp">
-      <Filter>Source Files\Components</Filter>
-    </ClCompile>
     <ClCompile Include="Engine.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
@@ -159,6 +156,9 @@
     <ClCompile Include="SceneViewWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SceneCameraController.cpp">
+      <Filter>Source Files\Editor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Component.hpp">
@@ -208,9 +208,6 @@
     </ClInclude>
     <ClInclude Include="Scene.hpp">
       <Filter>Header Files\Scenes</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneCameraController.hpp">
-      <Filter>Header Files\Components</Filter>
     </ClInclude>
     <ClInclude Include="Engine.hpp">
       <Filter>Header Files\Core</Filter>
@@ -277,6 +274,9 @@
     </ClInclude>
     <ClInclude Include="SceneViewWindow.hpp">
       <Filter>Header Files\Editor\EditorWindows</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneCameraController.hpp">
+      <Filter>Header Files\Editor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
