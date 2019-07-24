@@ -228,7 +228,7 @@ void Editor::DrawMenu() noexcept
 {
 	float menuPadding = 0.0f;
 
-	if(ImGui::BeginMainMenuBar())
+	if (ImGui::BeginMainMenuBar())
 	{
 		if (ImGui::BeginMenu("File"))
 		{
@@ -361,6 +361,20 @@ void Editor::DrawMenu() noexcept
 		ImGui::PopStyleColor(3);
 	}
 
+	ImGui::SameLine();
+
+	if (ImGui::RadioButton("Local", (currentMode == ImGuizmo::LOCAL) ? true : false))
+	{
+		currentMode = ImGuizmo::LOCAL;
+	}
+
+	ImGui::SameLine();
+
+	if (ImGui::RadioButton("World", (currentMode == ImGuizmo::WORLD) ? true : false))
+	{
+		currentMode = ImGuizmo::WORLD;
+	}
+
 	dockspacePadding = menuPadding + buttonSize + style.ItemSpacing.y * 2 + style.WindowPadding.y * 2 + style.FramePadding.y;
 	ImGui::End();
 }
@@ -398,7 +412,7 @@ void Editor::DrawGizmo() noexcept
 		view.data,
 		projection.data,
 		currentOperation,
-		currentMode,
+		currentOperation == ImGuizmo::SCALE ? ImGuizmo::LOCAL : currentMode,
 		gizmoMatrix
 	);
 }
