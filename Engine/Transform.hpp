@@ -35,7 +35,7 @@ public:
 	glm::vec3 GetRight() const noexcept;
 	glm::vec3 GetUp() const noexcept;
 
-	void SetTransformation(const glm::mat4& transformation) noexcept;
+	void SetTransformation(glm::mat4 transformation, bool subtractParentTransform) noexcept;
 	glm::mat4 GetTransformation() const noexcept;
 
 	void Translate(float x, float y, float z) noexcept;
@@ -68,6 +68,7 @@ private:
 	glm::vec3 up;
 	glm::mat4 transform;
 
+	glm::mat4 accumulatedTransform = glm::mat4(1.0f);
 	std::unique_ptr<Transform> parent;
 	std::vector<std::unique_ptr<Transform>> children;
 

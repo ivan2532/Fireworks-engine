@@ -12,6 +12,11 @@ TestScene::TestScene(Engine& rEngine, Window& w) noexcept
 {
 	testModel.MoveToScene(*this);
 
+	auto transformTest = AddSceneObject("TestChild");
+	transformTest->AddComponent(std::make_unique<Transform>(transformTest));
+	transformTest->GetComponent<Transform>().value()->SetParent(sceneObjects.front()->GetComponent<Transform>().value());
+
+
 	auto cameraObject = AddSceneObject("SceneCamera");
 	cameraObject->AddComponent(std::make_unique<Transform>(cameraObject));
 	cameraObject->GetComponent<Transform>().value()->Translate(0.0f, 0.0f, 20.0f);

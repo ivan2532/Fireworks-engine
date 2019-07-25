@@ -39,15 +39,47 @@ void Transform::DrawInspector() noexcept
 		{
 			SetScale(scaleInput[0], scaleInput[1], scaleInput[2]);
 		}
+
+		/*glm::vec3 ap, ae, as;
+		glm::mat4 ar;
+		Math::DecomposeTransform(accumulatedTransform, &ap, &as, &ar);
+		ae = Math::EulerAnglesFromRotation(ar);
+
+		float aposInput[3] = { ap.x, ap.y, ap.z };
+		float arotInput[3] = { ae.x, ae.y, ae.z };
+		float ascaleInput[3] = { as.x, as.y, as.z };
+
+		ImGui::Text("Accumulated Transform (Debug):");
+
+		ImGui::Text("Position: ");
+		ImGui::SameLine();
+		if (ImGui::InputFloat3("##input_apos", aposInput))
+		{
+			//SetPosition(aposInput[0], aposInput[1], aposInput[2]);
+		}
+
+		ImGui::Text("Rotation: ");
+		ImGui::SameLine();
+		if (ImGui::InputFloat3("##input_arot", arotInput))
+		{
+			//SetEulerAngles(arotInput[0], arotInput[1], arotInput[2]);
+		}
+
+		ImGui::Text("Scale: ");
+		ImGui::SameLine();
+		if (ImGui::InputFloat3("##input_ascale", ascaleInput))
+		{
+			//SetScale(ascaleInput[0], ascaleInput[1], ascaleInput[2]);
+		}*/
 	}
 }
 
 void Transform::UpdateTransform() noexcept
 {
-	glm::mat4 parentTransform(1.0f);
+	accumulatedTransform = glm::mat4(1.0f);
 
 	if (parent)
-		parentTransform = parent->GetTransformation();
+		accumulatedTransform = parent->transform;
 
 	if (updateAxes)
 	{
@@ -59,15 +91,15 @@ void Transform::UpdateTransform() noexcept
 		right = glm::normalize(glm::cross(forward, worldUp));
 		up = glm::normalize(glm::cross(right, forward));
 
-		forward = parentTransform * glm::vec4(forward, 0.0f); //w = 0.0f PURE DIRECTIONAL VECTOR
-		right = parentTransform * glm::vec4(right, 0.0f);
-		up = parentTransform * glm::vec4(up, 0.0f);
+		forward = accumulatedTransform * glm::vec4(forward, 0.0f); //w = 0.0f PURE DIRECTIONAL VECTOR
+		right = accumulatedTransform * glm::vec4(right, 0.0f);
+		up = accumulatedTransform * glm::vec4(up, 0.0f);
 
 		updateAxes = false;
 	}
 
 	transform = Math::AssembleTransform(position, scale, eulerAngles);
-	transform = parentTransform * transform;
+	transform = accumulatedTransform * transform;
 }
 
 void Transform::UpdateShaders() noexcept
@@ -211,13 +243,23 @@ glm::vec3 Transform::GetUp() const noexcept
 	return up;
 }
 
-void Transform::SetTransformation(const glm::mat4& transformation) noexcept
+void Transform::SetTransformation(glm::mat4 transformation, bool subtractParentTransform) noexcept
 {
-	glm::vec3 t; //Translation
-	glm::vec3 s; //Scale
-	glm::mat4 r; //Rotation
+	if (!parent)
+		subtractParentTransform = false;
+
+	//p = parent
+	glm::vec3 t, pt; //Translation
+	glm::vec3 s, ps; //Scale
+	glm::mat4 r, pr; //Rotation
+
+	if (subtractParentTransform)
+	{
+		transformation = glm::inverse(accumulatedTransform) * transformation;
+	}
 
 	Math::DecomposeTransform(transformation, &t, &s, &r);
+
 	glm::vec3 euler = Math::EulerAnglesFromRotation(r);
 
 	SetPosition(t);

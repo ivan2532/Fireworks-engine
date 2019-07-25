@@ -23,20 +23,14 @@ public:
 private:
 	void SpawnWindows() noexcept;
 public:
+	bool Splitter(bool split_vertically, float thickness, float* size1, float* size2, float min_size1, float min_size2, float splitter_long_axis_size = -1.0f) noexcept;
+public:
 	void DrawDockSpace() noexcept;
 	void DrawGUI() noexcept;
-	//Hierarchy
-	void DrawHierarchyUI() noexcept;
 	int GetSelectedHierarchy() const noexcept;
 	void SetSelectedHierarchy(int value) noexcept;
 	GameObject* GetSelectedObject() const noexcept;
 	void SetSelectedObject(GameObject* value) noexcept;
-	//Inspector
-	void DrawInspectorUI() noexcept;
-	//Asset explorer
-	void DrawAssetExplorerUI() noexcept;
-	//Scene view
-	void DrawSceneView() noexcept;
 	//Menu
 	void DrawMenuBar() noexcept;
 	//Gizmo
@@ -46,15 +40,18 @@ public:
 private:
 	Engine& engine;
 	std::vector<std::unique_ptr<EditorWindow>> editorWindows;
+
 	//Hierarchy variables
 	GameObject* selectedObject = nullptr;
 	int nodeIndexCount = 0;
 	int selectedHierarchy;
 	bool sceneViewFocused = false;
 	bool gameViewFocused = false;
+
 	//Scene view variables
 	float sceneViewAspectRatio;
 	ImVec2 bottomLeftSceneView, topRightSceneView;
+
 	//Gizmo variables
 	unsigned translateImage, rotateImage, scaleImage;
 	ImGuizmo::OPERATION currentOperation = ImGuizmo::TRANSLATE;
@@ -67,6 +64,7 @@ private:
 	};
 	Transform* gizmoTransform = nullptr;
 	bool drawGizmo = false;
+
 	//Paddings
 	float dockspacePadding = 0.0f;
 };
