@@ -10,14 +10,10 @@
 
 Editor::Editor(Engine& rEngine) noexcept
 	:
-	engine(rEngine),
-	selectedHierarchy(-1),
-	translateImage(ImageLoader::TextureFromFile("TranslationButton.png", "EditorIcons")),
-	rotateImage(ImageLoader::TextureFromFile("RotationButton.png", "EditorIcons")),
-	scaleImage(ImageLoader::TextureFromFile("ScaleButton.png", "EditorIcons")),
-	sceneViewAspectRatio(4.0f / 3.0f)
+	engine(rEngine)
 {
 	SpawnWindows();
+	gizmoManager = std::make_unique<GizmoManager>(*this);
 }
 
 void Editor::SpawnWindows() noexcept
@@ -101,45 +97,13 @@ void Editor::DrawGUI() noexcept
 	for (auto& window : editorWindows)
 		window->Draw();
 
-	DrawGizmo();
-}
-
-int Editor::GetSelectedHierarchy() const noexcept
-{
-	return selectedHierarchy;
-}
-
-void Editor::SetSelectedHierarchy(int value) noexcept
-{
-	selectedHierarchy = value;
-}
-
-GameObject* Editor::GetSelectedObject() const noexcept
-{
-	return selectedObject;
-}
-
-void Editor::SetSelectedObject(GameObject* value) noexcept
-{
-	selectedObject = value;
-
-	gizmoTransform =
-		selectedObject->GetComponent<Transform>().has_value() ?
-		selectedObject->GetComponent<Transform>().value() : nullptr;
-
-	if (gizmoTransform != nullptr)
-	{
-		drawGizmo = true;
-	}
-	else
-	{
-		drawGizmo = false;
-	}
+	if(drawGizmo)
+		gizmoManager->DrawGizmo();
 }
 
 void Editor::DrawMenuBar() noexcept
 {
-	float menuPadding = 0.0f;
+	menuPadding = 0.0f;
 
 	if (ImGui::BeginMainMenuBar())
 	{
@@ -195,142 +159,24 @@ void Editor::DrawMenuBar() noexcept
 
 			ImGui::EndMenu();
 		}
+		
+		ImGui::Separator();
+
+		if (ImGui::BeginMenu("Window"))
+		{
+			for (auto& window : editorWindows)
+			{
+				if (ImGui::MenuItem(window->GetName().c_str(), (const char*)0, window->GetOpen()))
+				{
+					window->SetOpen(!window->GetOpen());
+				}
+			}
+
+			ImGui::EndMenu();
+		}
 
 		menuPadding = ImGui::GetWindowSize().y;
 		ImGui::EndMainMenuBar();
 	}
-
-	auto style = ImGui::GetStyle();
-
-	auto transformPanelFlags =
-		ImGuiWindowFlags_NoDocking |
-		ImGuiWindowFlags_NoTitleBar |
-		ImGuiWindowFlags_NoCollapse |
-		ImGuiWindowFlags_NoResize |
-		ImGuiWindowFlags_NoMove |
-		ImGuiWindowFlags_NoNavFocus |
-		ImGuiWindowFlags_NoBackground |
-		ImGuiWindowFlags_NoScrollbar |
-		ImGuiWindowFlags_NoScrollWithMouse;
-
-	float buttonSize = (float)engine.wnd.GetWidth() / (float)engine.wnd.GetHeight() * 15.0f;
-
-	ImGui::SetNextWindowPos(ImVec2(0, menuPadding));
-	ImGui::SetNextWindowSize(ImVec2(engine.wnd.GetWidth(), buttonSize + style.ItemSpacing.y * 2 + style.WindowPadding.y * 2 + style.FramePadding.y));
-	ImGui::Begin("Transform panel", (bool*)0, transformPanelFlags);
-
-	bool pushedColor1 = false;
-	if (currentOperation == ImGuizmo::TRANSLATE)
-	{
-		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.1f, 0.1f, 0.1f, 1.0f));
-		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.1f, 0.1f, 0.1f, 1.0f));
-		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.1f, 0.1f, 0.1f, 1.0f));
-		pushedColor1 = true;
-	}
-	if (ImGui::ImageButton((void*)(intptr_t)translateImage, ImVec2(buttonSize, buttonSize)))
-	{
-		currentOperation = ImGuizmo::TRANSLATE;
-	}
-	if (pushedColor1)
-	{
-		ImGui::PopStyleColor(3);
-	}
-
-	ImGui::SameLine();
-
-	bool pushedColor2 = false;
-	if (currentOperation == ImGuizmo::ROTATE)
-	{
-		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.1f, 0.1f, 0.1f, 1.0f));
-		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.1f, 0.1f, 0.1f, 1.0f));
-		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.1f, 0.1f, 0.1f, 1.0f));
-		pushedColor2 = true;
-	}
-	if (ImGui::ImageButton((void*)(intptr_t)rotateImage, ImVec2(buttonSize, buttonSize)))
-	{
-		currentOperation = ImGuizmo::ROTATE;
-	}
-	if (pushedColor2)
-	{
-		ImGui::PopStyleColor(3);
-	}
-
-	ImGui::SameLine();
-
-	bool pushedColor3 = false;
-	if (currentOperation == ImGuizmo::SCALE)
-	{
-		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.1f, 0.1f, 0.1f, 1.0f));
-		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.1f, 0.1f, 0.1f, 1.0f));
-		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.1f, 0.1f, 0.1f, 1.0f));
-		pushedColor3 = true;
-	}
-	if (ImGui::ImageButton((void*)(intptr_t)scaleImage, ImVec2(buttonSize, buttonSize)))
-	{
-		currentOperation = ImGuizmo::SCALE;
-	}
-	if (pushedColor3)
-	{
-		ImGui::PopStyleColor(3);
-	}
-
-	ImGui::SameLine();
-
-	if (ImGui::RadioButton("Local", (currentMode == ImGuizmo::LOCAL) ? true : false))
-	{
-		currentMode = ImGuizmo::LOCAL;
-	}
-
-	ImGui::SameLine();
-
-	if (ImGui::RadioButton("World", (currentMode == ImGuizmo::WORLD) ? true : false))
-	{
-		currentMode = ImGuizmo::WORLD;
-	}
-
-	dockspacePadding = menuPadding + buttonSize + style.ItemSpacing.y * 2 + style.WindowPadding.y * 2 + style.FramePadding.y;
-	ImGui::End();
-}
-
-void Editor::DrawGizmo() noexcept
-{
-	if (!drawGizmo)
-		return;
-
-	if (!ImGuizmo::IsUsing())
-	{
-		Float4x4 matrix = Math::Glm4x4ToArray(gizmoTransform->GetTransformation());
-
-		for (int i = 0; i < 16; i++)
-			gizmoMatrix[i] = matrix.data[i];
-	}
-	else
-	{
-		gizmoTransform->SetTransformation(Math::ArrayToGlm4x4(gizmoMatrix), true);
-	}
-
-	ImGuiStyle style = ImGui::GetStyle();
-
-	Float4x4 view = Math::Glm4x4ToArray(engine.activeCamera->GetViewMatrix());
-	Float4x4 projection = Math::Glm4x4ToArray(engine.activeCamera->GetProjectionMatrix());
-
-	ImGuizmo::SetRect(
-		bottomLeftSceneView.x,
-		bottomLeftSceneView.y + style.FramePadding.y * 2 + 15.0f,
-		topRightSceneView.x - bottomLeftSceneView.x,
-		topRightSceneView.y - bottomLeftSceneView.y - style.FramePadding.y * 2 - 15.0f
-	);
-
-	ImGuizmo::Manipulate(
-		view.data,
-		projection.data,
-		currentOperation,
-		currentOperation == ImGuizmo::SCALE ? ImGuizmo::LOCAL : currentMode,
-		gizmoMatrix
-	);
-}
-
-float Editor::GetSceneViewAspectRatio() const noexcept
-{
-	return sceneViewAspectRatio;
+	gizmoManager->DrawTransformationMenu();
 }

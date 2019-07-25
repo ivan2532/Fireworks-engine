@@ -8,6 +8,16 @@ EditorWindow::EditorWindow(Editor& rEditor, const std::string& rName) noexcept
 {
 }
 
+std::string EditorWindow::GetName() const noexcept
+{
+	return name;
+}
+
+bool EditorWindow::GetOpen() const noexcept
+{
+	return open;
+}
+
 void EditorWindow::SetOpen(bool value) noexcept
 {
 	open = value;

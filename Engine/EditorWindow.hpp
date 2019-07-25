@@ -10,9 +10,11 @@ public:
 public:
 	virtual void Draw() noexcept = 0;
 public:
+	std::string GetName() const noexcept;
+	bool GetOpen() const noexcept;
 	void SetOpen(bool value) noexcept;
 protected:
 	Editor& editor;
 	std::string name;
-	bool open;
+	bool open = true;
 };

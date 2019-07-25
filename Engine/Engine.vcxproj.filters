@@ -153,11 +153,14 @@
     <ClCompile Include="AssetExplorerWindow.cpp">
       <Filter>Source Files\Editor\EditorWindows</Filter>
     </ClCompile>
-    <ClCompile Include="SceneViewWindow.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="SceneCameraController.cpp">
       <Filter>Source Files\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="GizmoManager.cpp">
+      <Filter>Source Files\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneViewWindow.cpp">
+      <Filter>Source Files\Editor\EditorWindows</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -276,6 +279,9 @@
       <Filter>Header Files\Editor\EditorWindows</Filter>
     </ClInclude>
     <ClInclude Include="SceneCameraController.hpp">
+      <Filter>Header Files\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="GizmoManager.hpp">
       <Filter>Header Files\Editor</Filter>
     </ClInclude>
   </ItemGroup>

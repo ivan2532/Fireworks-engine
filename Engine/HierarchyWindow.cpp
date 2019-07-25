@@ -30,3 +30,13 @@ void HierarchyWindow::Draw() noexcept
 	}
 	ImGui::End();
 }
+
+int HierarchyWindow::GetSelectedHierarchy() const noexcept
+{
+	return selectedHierarchy;
+}
+
+void HierarchyWindow::SetSelectedHierarchy(int value) noexcept
+{
+	selectedHierarchy = value;
+}

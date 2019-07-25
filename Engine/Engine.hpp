@@ -28,6 +28,7 @@ public:
 	void OnWindowResize(int width, int height) noexcept;
 	void SetCamera(Camera* camera) noexcept;
 	Window* GetWindow() noexcept;
+	Camera* GetActiveCamera() const noexcept;
 private:
 	void SetCallbacks() noexcept;
 	void ClearBuffers() noexcept;

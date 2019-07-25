@@ -11,7 +11,13 @@ Camera::Camera(Engine& rEngine, GameObject* go, float f) noexcept
 	viewMatrix(1.0f),
 	fov(f)
 {
-	projectionMatrix = glm::perspective(glm::radians(fov), engine.editor.GetSceneViewAspectRatio(), 0.1f, 1000.0f);
+	projectionMatrix = glm::perspective(
+		glm::radians(fov),
+		engine.editor.GetEditorWindow<SceneViewWindow>().value()->GetSceneViewAspectRatio(),
+		0.1f,
+		1000.0f
+	);
+
 	engine.SetCamera(this);
 }
 
@@ -55,7 +61,12 @@ glm::mat4 Camera::GetProjectionMatrix() const noexcept
 
 void Camera::UpdateMatrices() noexcept
 {
-	projectionMatrix = glm::perspective(glm::radians(fov), engine.editor.GetSceneViewAspectRatio(), 0.1f, 1000.0f);
+	projectionMatrix = glm::perspective(
+		glm::radians(fov),
+		engine.editor.GetEditorWindow<SceneViewWindow>().value()->GetSceneViewAspectRatio(),
+		0.1f,
+		1000.0f
+	);
 	viewMatrix = glm::lookAt(transform->GetPosition(), transform->GetPosition() + transform->GetForward(), transform->GetUp());
 }
 

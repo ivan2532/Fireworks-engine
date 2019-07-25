@@ -4,6 +4,8 @@
 #include "GameObject.hpp"
 #include "Editor.hpp"
 #include "Math.hpp"
+#include "HierarchyWindow.hpp"
+#include "InspectorWindow.hpp"
 
 void Transform::Update() noexcept
 {
@@ -330,6 +332,7 @@ void Transform::AddShaderToUpdate(std::unique_ptr<Shader> shader) noexcept
 
 void Transform::DrawHierarchy(Editor& editor, int& nodeIndexCount) const noexcept
 {
+	auto hierarchyWindow = editor.GetEditorWindow<HierarchyWindow>().value();
 	const int currentIndex = nodeIndexCount;
 	nodeIndexCount++;
 
@@ -338,15 +341,15 @@ void Transform::DrawHierarchy(Editor& editor, int& nodeIndexCount) const noexcep
 	if (children.size() == 0)
 		nodeFlags |= ImGuiTreeNodeFlags_Leaf;
 
-	if (currentIndex == editor.GetSelectedHierarchy())
+	if (currentIndex == hierarchyWindow->GetSelectedHierarchy())
 		nodeFlags |= ImGuiTreeNodeFlags_Selected;
 
 	bool open = ImGui::TreeNodeEx((void*)(intptr_t)currentIndex, nodeFlags, gameObject->GetName().c_str());
 
 	if (ImGui::IsItemClicked())
 	{
-		editor.SetSelectedHierarchy(currentIndex);
-		editor.SetSelectedObject(gameObject);
+		hierarchyWindow->SetSelectedHierarchy(currentIndex);
+		editor.GetEditorWindow<InspectorWindow>().value()->SetSelectedObject(gameObject);
 	}
 
 	if (open)

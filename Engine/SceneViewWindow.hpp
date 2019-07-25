@@ -10,4 +10,11 @@ public:
 	SceneViewWindow(Editor& editor) noexcept;
 public:
 	void Draw() noexcept override;
+	ImVec2 GetBottomLeft() const noexcept;
+	ImVec2 GetTopRight() const noexcept;
+	void SetRect(const ImVec2& bottomLeft, const ImVec2& topRight) noexcept;
+	float GetSceneViewAspectRatio() const noexcept;
+private:
+	float sceneViewAspectRatio;
+	ImVec2 bottomLeftSceneView, topRightSceneView;
 };

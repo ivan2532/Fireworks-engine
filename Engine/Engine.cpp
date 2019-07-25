@@ -105,6 +105,11 @@ Window* Engine::GetWindow() noexcept
 	return &wnd;
 }
 
+Camera* Engine::GetActiveCamera() const noexcept
+{
+	return activeCamera;
+}
+
 void Engine::OnMouseMove(double x, double y) noexcept
 {
 	if (ImGui::GetIO().WantCaptureMouse)

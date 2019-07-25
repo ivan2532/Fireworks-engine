@@ -135,6 +135,7 @@
     <ClCompile Include="FPCameraMovement.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GizmoManager.cpp" />
     <ClCompile Include="HierarchyWindow.cpp" />
     <ClCompile Include="ImageLoader.cpp" />
     <ClCompile Include="ImGuiManager.cpp" />
@@ -172,6 +173,7 @@
     <ClInclude Include="FPCameraMovement.hpp" />
     <ClInclude Include="Engine.hpp" />
     <ClInclude Include="GameObject.hpp" />
+    <ClInclude Include="GizmoManager.hpp" />
     <ClInclude Include="glmIncludes.hpp" />
     <ClInclude Include="HierarchyWindow.hpp" />
     <ClInclude Include="ImageLoader.h" />
