@@ -4,6 +4,7 @@
 #include <vector>
 #include <memory>
 #include <optional>
+#include <utility>
 
 class GameObject
 {
@@ -21,13 +22,24 @@ public:
 	std::string GetName() const noexcept;
 	void SetName(const std::string&) noexcept;
 	void Update() noexcept;
-	void AddComponent(std::unique_ptr<Component> component) noexcept;
+
+	template<class T, typename... Args>
+	void AddComponent(Args&&... args) noexcept;
+
 	template<class T>
 	std::optional<T*> GetComponent() const noexcept;
 private:
 	std::string name;
 	std::vector<std::unique_ptr<Component>> components;
 };
+
+template<typename T, class ...Args>
+void GameObject::AddComponent(Args&&... args) noexcept
+{
+	components.push_back(std::move(std::make_unique<T>(std::forward<Args>(args)...)));
+	components.back()->SetObject(this);
+	components.back()->Initialize();
+}
 
 template<class T>
 std::optional<T*> GameObject::GetComponent() const noexcept

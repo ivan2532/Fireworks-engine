@@ -3,11 +3,9 @@
 #include "Engine.hpp"
 #include "imguiIncludes.hpp"
 
-Camera::Camera(Engine& rEngine, GameObject* go, float f) noexcept
+Camera::Camera(Engine& rEngine, float f) noexcept
 	:
-	Component(go),
 	engine(rEngine),
-	transform(gameObject->GetComponent<Transform>().value()),
 	viewMatrix(1.0f),
 	fov(f)
 {
@@ -59,8 +57,16 @@ glm::mat4 Camera::GetProjectionMatrix() const noexcept
 	return projectionMatrix;
 }
 
+void Camera::Initialize() noexcept
+{
+	transform = gameObject->GetComponent<Transform>().value();
+}
+
 void Camera::UpdateMatrices() noexcept
 {
+	if (transform == nullptr)
+		return;
+	
 	projectionMatrix = glm::perspective(
 		glm::radians(fov),
 		engine.editor.GetEditorWindow<SceneViewWindow>().value()->GetSceneViewAspectRatio(),
@@ -72,6 +78,9 @@ void Camera::UpdateMatrices() noexcept
 
 void Camera::UpdateShaders() noexcept
 {
+	if (transform == nullptr)
+		return;
+
 	for (auto& shader : transform->shadersToUpdate)
 	{
 		shader->SetVec3("viewPos", transform->GetPosition());

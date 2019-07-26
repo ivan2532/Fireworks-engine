@@ -9,7 +9,7 @@ class Shader;
 class ModelRenderer : public Component
 {
 public:
-	ModelRenderer(GameObject* go, std::string modelPath, Shader& shader);
+	ModelRenderer(std::string modelPath, Shader& shader);
 public:
 	void Update() noexcept override;
 private:

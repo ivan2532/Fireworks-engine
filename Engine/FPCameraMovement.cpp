@@ -5,9 +5,8 @@
 #include "Engine.hpp"
 #include <iostream>
 
-FPCameraMovement::FPCameraMovement(GameObject* go, Window& window, float mSpeed, float lSens) noexcept
+FPCameraMovement::FPCameraMovement(Window& window, float mSpeed, float lSens) noexcept
 	:
-	Component(go),
 	wnd(window),
 	transform(gameObject->GetComponent<Transform>().value()),
 	movementSpeed(mSpeed),

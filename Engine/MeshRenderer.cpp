@@ -2,9 +2,8 @@
 #include "imguiIncludes.hpp"
 #include <sstream>
 
-MeshRenderer::MeshRenderer(GameObject* go, Shader& s)
+MeshRenderer::MeshRenderer(Shader& s)
 	:
-	Component(go),
 	shader(s)
 {
 }

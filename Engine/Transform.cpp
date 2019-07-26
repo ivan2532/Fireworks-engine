@@ -112,9 +112,8 @@ void Transform::UpdateShaders() noexcept
 	}
 }
 
-Transform::Transform(GameObject* go) noexcept
+Transform::Transform() noexcept
 	:
-	Component(go),
 	position(0.0f, 0.0f, 0.0f),
 	eulerAngles(0.0f, 0.0f, 0.0f),
 	scale(1.0f, 1.0f, 1.0f),
@@ -125,17 +124,15 @@ Transform::Transform(GameObject* go) noexcept
 
 Transform::Transform(const Transform& rhs) noexcept
 	:
-	Component(rhs.gameObject),
 	position(rhs.position),
 	eulerAngles(rhs.eulerAngles),
 	scale(rhs.scale),
 	transform(rhs.transform),
-	parent((rhs.parent).get()),
-	updateAxes(rhs.updateAxes)
+	parent(rhs.parent),
+	updateAxes(rhs.updateAxes),
+	shadersToUpdate(rhs.shadersToUpdate)
 {
-	shadersToUpdate.resize(rhs.shadersToUpdate.size());
-	for (unsigned i = 0; i < rhs.shadersToUpdate.size(); i++)
-		shadersToUpdate[i].reset((rhs.shadersToUpdate[i].get()));
+	gameObject = rhs.gameObject;
 }
 
 Transform& Transform::operator=(const Transform& rhs) noexcept
@@ -145,19 +142,15 @@ Transform& Transform::operator=(const Transform& rhs) noexcept
 	eulerAngles = rhs.eulerAngles;
 	scale = rhs.scale;
 	transform = rhs.transform;
-	parent.reset((rhs.parent).get());
+	parent = rhs.parent;
 	updateAxes = rhs.updateAxes;
-
-	shadersToUpdate.resize(rhs.shadersToUpdate.size());
-	for (unsigned i = 0; i < rhs.shadersToUpdate.size(); i++)
-		shadersToUpdate[i].reset((rhs.shadersToUpdate[i].get()));
+	shadersToUpdate = rhs.shadersToUpdate;
 
 	return *this;
 }
 
 Transform::Transform(Transform&& rhs) noexcept
 	:
-	Component(std::move(rhs.gameObject)),
 	position(std::move(rhs.position)),
 	eulerAngles(std::move(rhs.eulerAngles)),
 	scale(std::move(rhs.scale)),
@@ -166,6 +159,7 @@ Transform::Transform(Transform&& rhs) noexcept
 	shadersToUpdate(std::move(rhs.shadersToUpdate)),
 	updateAxes(std::move(rhs.updateAxes))
 {
+	gameObject = std::move(rhs.gameObject);
 }
 
 Transform& Transform::operator=(Transform&& rhs) noexcept
@@ -251,9 +245,9 @@ void Transform::SetTransformation(glm::mat4 transformation, bool subtractParentT
 		subtractParentTransform = false;
 
 	//p = parent
-	glm::vec3 t, pt; //Translation
-	glm::vec3 s, ps; //Scale
-	glm::mat4 r, pr; //Rotation
+	glm::vec3 t, pt = glm::zero<glm::vec3>(); //Translation
+	glm::vec3 s, ps = glm::zero<glm::vec3>(); //Scale
+	glm::mat4 r, pr = glm::mat4(1.0f); //Rotation
 
 	if (subtractParentTransform)
 	{
@@ -309,25 +303,25 @@ void Transform::Scale(const glm::vec3& value) noexcept
 
 Transform* Transform::GetChild(int i) const noexcept
 {
-	return children[i].get();
+	return children[i];
 }
 
 Transform* Transform::GetParent() const noexcept
 {
-	return parent.get();
+	return parent;
 }
 
 void Transform::SetParent(Transform* p) noexcept
 {
-	parent.reset(p);
+	parent = p;
 
 	if (parent)
-		parent->children.push_back(std::unique_ptr<Transform>(this));
+		parent->children.push_back(this);
 }
 
-void Transform::AddShaderToUpdate(std::unique_ptr<Shader> shader) noexcept
+void Transform::AddShaderToUpdate(Shader* shader) noexcept
 {
-	shadersToUpdate.push_back(std::move(shader));
+	shadersToUpdate.push_back(shader);
 }
 
 void Transform::DrawHierarchy(Editor& editor, int& nodeIndexCount) const noexcept

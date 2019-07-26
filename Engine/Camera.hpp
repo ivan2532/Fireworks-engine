@@ -9,16 +9,18 @@ class Engine;
 class Camera : public Component
 {
 public:
-	Camera(Engine& rEngine, GameObject* go, float fov = 70.0f) noexcept;
+	Camera(Engine& rEngine, float fov = 70.0f) noexcept;
 public:
 	void Update() noexcept override;
 public:
 	void DrawInspector() noexcept override;
+public:
 	float GetFOV() const noexcept;
 	void SetFOV(float value) noexcept;
 	glm::mat4 GetViewMatrix() const noexcept;
 	glm::mat4 GetProjectionMatrix() const noexcept;
 private:
+	void Initialize() noexcept override;
 	void UpdateMatrices() noexcept;
 	void UpdateShaders() noexcept;
 private:

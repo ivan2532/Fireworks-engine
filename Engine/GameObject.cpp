@@ -12,7 +12,10 @@ GameObject::GameObject(const GameObject& rhs) noexcept
 {
 	components.resize(rhs.components.size());
 	for (unsigned i = 0; i < rhs.components.size(); i++)
+	{
 		components[i].reset(rhs.components[i].get());
+		components[i]->SetObject(this);
+	}
 }
 
 GameObject& GameObject::operator=(const GameObject& rhs) noexcept
@@ -21,7 +24,10 @@ GameObject& GameObject::operator=(const GameObject& rhs) noexcept
 
 	components.resize(rhs.components.size());
 	for (unsigned i = 0; i < rhs.components.size(); i++)
+	{
 		components[i].reset(rhs.components[i].get());
+		components[i]->SetObject(this);
+	}
 
 	return *this;
 }
@@ -31,12 +37,17 @@ GameObject::GameObject(GameObject&& rhs) noexcept
 	name(std::move(rhs.name)),
 	components(std::move(rhs.components))
 {
+	for (auto& c : components)
+		c->SetObject(this);
 }
 
 GameObject& GameObject::operator=(GameObject&& rhs) noexcept
 {
 	name = std::move(rhs.name);
 	components = std::move(rhs.components);
+
+	for (auto& c : components)
+		c->SetObject(this);
 
 	return *this;
 }
@@ -55,9 +66,4 @@ void GameObject::Update() noexcept
 {
 	for (auto& component : components)
 		component->Update();
-}
-
-void GameObject::AddComponent(std::unique_ptr<Component> component) noexcept
-{
-	components.push_back(std::move(component));
 }

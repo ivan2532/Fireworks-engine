@@ -2,7 +2,7 @@
 #include "GameObject.hpp"
 #include <iostream>
 
-ModelRenderer::ModelRenderer(GameObject* go, std::string modelPath, Shader& aShader)
+ModelRenderer::ModelRenderer(std::string modelPath, Shader& aShader)
 	:
 	Component(go),
 	model(modelPath, aShader),

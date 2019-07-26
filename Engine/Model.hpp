@@ -16,14 +16,14 @@ class Model
 {
 public:
 	Model(std::string path, Shader& shader) noexcept;
-	void MoveToScene(Scene&);
+	void AddToScene(Scene&);
 private:
 	void LoadMesh(std::string path) noexcept;
 	void ProcessNode(aiNode *node, const aiScene *scene, Transform* parent) noexcept;
 	std::unique_ptr<Mesh> ProcessMesh(aiMesh* mesh, const aiScene* scene) noexcept;
 	std::vector<Texture> LoadMaterialTextures(aiMaterial* material, aiTextureType type, TextureType typeName) noexcept;
 private:
-	std::vector<std::unique_ptr<GameObject>> meshObjects;
+	std::vector<GameObject> meshObjects;
 	std::string directory; //For textures
 	std::vector<Texture> loadedTextures;
 	Shader& shader;

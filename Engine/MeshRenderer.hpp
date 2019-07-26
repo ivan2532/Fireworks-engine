@@ -11,7 +11,7 @@ class Shader;
 class MeshRenderer : public Component
 {
 public:
-	MeshRenderer(GameObject* go, Shader& shader);
+	MeshRenderer(Shader& shader);
 	void AddMesh(std::unique_ptr<Mesh> m) noexcept;
 public:
 	void Update() noexcept override;

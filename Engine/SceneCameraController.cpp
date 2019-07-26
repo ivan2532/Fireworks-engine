@@ -5,11 +5,9 @@
 #include "Engine.hpp"
 #include <iostream>
 
-SceneCameraController::SceneCameraController(GameObject* go, Window& window, float mSpeed, float lSens) noexcept
+SceneCameraController::SceneCameraController(Window& window, float mSpeed, float lSens) noexcept
 	:
-	Component(go),
 	wnd(window),
-	transform(gameObject->GetComponent<Transform>().value()),
 	movementSpeed(mSpeed),
 	lookSensitivity(lSens),
 	dragX(0.0f),
@@ -61,4 +59,9 @@ void SceneCameraController::Update() noexcept
 	{
 		transform->Translate(transform->GetRight() * movementSpeed * Engine::deltaTime);
 	}
+}
+
+void SceneCameraController::Initialize() noexcept
+{
+	transform = gameObject->GetComponent<Transform>().value();
 }

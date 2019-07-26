@@ -12,8 +12,7 @@ class Transform : public Component
 {
 	friend class Camera;
 public:
-	Transform(GameObject* go) noexcept;
-	Transform() = default;
+	Transform() noexcept;
 	Transform(const Transform&) noexcept;
 	Transform& operator=(const Transform&) noexcept;
 	Transform(Transform&&) noexcept;
@@ -50,7 +49,7 @@ public:
 	Transform* GetParent() const noexcept;
 	void SetParent(Transform* parent) noexcept;
 
-	void AddShaderToUpdate(std::unique_ptr<Shader> shader) noexcept;
+	void AddShaderToUpdate(Shader* shader) noexcept;
 public:
 	void DrawHierarchy(Editor& editor, int& nodeIndexCount) const noexcept;
 public:
@@ -69,11 +68,10 @@ private:
 	glm::mat4 transform;
 
 	glm::mat4 accumulatedTransform = glm::mat4(1.0f);
-	std::unique_ptr<Transform> parent;
-	std::vector<std::unique_ptr<Transform>> children;
-
+	Transform* parent;
+	std::vector<Transform*> children;
 	//Shaders
-	std::vector<std::unique_ptr<Shader>> shadersToUpdate;
+	std::vector<Shader*> shadersToUpdate;
 
 	bool updateAxes; //No need to calculate axes every frame
 public:

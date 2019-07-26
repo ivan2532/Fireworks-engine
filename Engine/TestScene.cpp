@@ -10,25 +10,29 @@ TestScene::TestScene(Engine& rEngine, Window& w) noexcept
 	textureShader("UnlitTextureVS.glsl", "UnlitTextureFS.glsl"),
 	testModel("Material_ball/material_ball.obj", textureShader)
 {
-	testModel.MoveToScene(*this);
+	testModel.AddToScene(*this);
 
-	auto transformTest = AddSceneObject("TestChild");
-	transformTest->AddComponent(std::make_unique<Transform>(transformTest));
-	transformTest->GetComponent<Transform>().value()->SetParent(sceneObjects.front()->GetComponent<Transform>().value());
+	GameObject transformTest("Test child");
+	transformTest.AddComponent<Transform>();
 
+	//Nasty parent setting only for testing purposes
+	transformTest.GetComponent<Transform>().value()->SetParent(sceneObjects.front().GetComponent<Transform>().value());
 
-	auto cameraObject = AddSceneObject("SceneCamera");
-	cameraObject->AddComponent(std::make_unique<Transform>(cameraObject));
-	cameraObject->GetComponent<Transform>().value()->Translate(0.0f, 0.0f, 20.0f);
-	cameraObject->GetComponent<Transform>().value()->AddShaderToUpdate(std::make_unique<Shader>(textureShader));
-	cameraObject->AddComponent(std::make_unique<Camera>(engine, cameraObject));
-	cameraObject->AddComponent(std::make_unique<SceneCameraController>(cameraObject, wnd, 7.0f, 0.25f));
+	AddSceneObject(std::move(transformTest));
+
+	GameObject cameraObject("SceneCamera");
+	cameraObject.AddComponent<Transform>();
+	cameraObject.GetComponent<Transform>().value()->Translate(0.0f, 0.0f, 20.0f);
+	cameraObject.GetComponent<Transform>().value()->AddShaderToUpdate(&textureShader);
+	cameraObject.AddComponent<Camera>(engine);
+	cameraObject.AddComponent<SceneCameraController>(wnd, 7.0f, 0.25f);
+	AddSceneObject(std::move(cameraObject));
 }
 
 void TestScene::Update() noexcept
 {
 	for (auto& object : sceneObjects)
-		object->Update();
+		object.Update();
 
 	textureShader.SetVec3("lightPos", glm::vec3(sin(glfwGetTime()) * 5.0f, sin(glfwGetTime()) * 2.5f, 8.0f));
 	textureShader.SetVec4("pointLight.lightColor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));

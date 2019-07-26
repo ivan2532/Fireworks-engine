@@ -22,9 +22,6 @@
     <Filter Include="Header Files\Components">
       <UniqueIdentifier>{7e98fbb8-850a-4dee-b383-f370a38bd5eb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Graphics">
-      <UniqueIdentifier>{429021dd-8f08-4313-a7e7-6ebfe346b102}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Components">
       <UniqueIdentifier>{e0c661ff-41d7-4a9b-a7e3-63624556354a}</UniqueIdentifier>
     </Filter>
@@ -61,6 +58,9 @@
     <Filter Include="Source Files\Scenes">
       <UniqueIdentifier>{27430075-5fee-4f13-a6d2-0a148e4b203e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Graphics">
+      <UniqueIdentifier>{429021dd-8f08-4313-a7e7-6ebfe346b102}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -91,9 +91,6 @@
       <Filter>Source Files\Components</Filter>
     </ClCompile>
     <ClCompile Include="MeshRenderer.cpp">
-      <Filter>Source Files\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="ModelRenderer.cpp">
       <Filter>Source Files\Components</Filter>
     </ClCompile>
     <ClCompile Include="Scene.cpp">
@@ -177,9 +174,6 @@
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Transform.hpp">
-      <Filter>Header Files\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="ModelRenderer.hpp">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
     <ClInclude Include="imguiIncludes.hpp">
