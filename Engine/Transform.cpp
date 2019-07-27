@@ -30,8 +30,9 @@ void Transform::DrawInspector(Editor& editor) noexcept
 		{
 			if (!pushUndoable)
 			{
-				startState.reset(this);
-				std::cout << "Set pushUndoable." << std::endl;
+				startState.release();
+				Transform copyState = *this;
+				startState = std::make_unique<Transform>(copyState);
 				pushUndoable = true;
 			}
 
@@ -39,7 +40,6 @@ void Transform::DrawInspector(Editor& editor) noexcept
 
 			if (pushUndoable)
 			{
-				std::cout << "Process pushUndoable." << std::endl;
 				PushUndoable<Transform>(editor, this, startState.get(), this);
 				pushUndoable = false;
 			}
@@ -47,14 +47,14 @@ void Transform::DrawInspector(Editor& editor) noexcept
 
 		ImGui::Text("Rotation: ");
 		ImGui::SameLine();
-		if (ImGui::InputFloat3("##input_rot", rotInput, inputTextFlags))
+		if (ImGui::InputFloat3("##input_rot", rotInput, "%.3f", inputTextFlags))
 		{
 			SetEulerAngles(rotInput[0], rotInput[1], rotInput[2]);
 		}
 
 		ImGui::Text("Scale: ");
 		ImGui::SameLine();
-		if (ImGui::InputFloat3("##input_scale", scaleInput, inputTextFlags))
+		if (ImGui::InputFloat3("##input_scale", scaleInput, "%.3f", inputTextFlags))
 		{
 			SetScale(scaleInput[0], scaleInput[1], scaleInput[2]);
 		}

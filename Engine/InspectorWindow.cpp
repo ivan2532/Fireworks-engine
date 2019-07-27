@@ -21,6 +21,7 @@ void InspectorWindow::Draw() noexcept
 	{
 		if (selectedObject)
 		{
+			ImGui::Text("Remember to press 'ENTER' to apply changes");
 			char buf[64] = {};
 			std::string goName = selectedObject->GetName();
 
@@ -29,7 +30,7 @@ void InspectorWindow::Draw() noexcept
 				buf[i] = goName[i];
 			}
 
-			ImGui::Text("Game object name \n(press ENTER to apply new name): ");
+			ImGui::Text("Game object name: ");
 			if (ImGui::InputText("##go_name_input", buf, sizeof(buf)))
 			{
 				if (editor.engine.GetWindow()->GetKey(GLFW_KEY_ENTER, false))
