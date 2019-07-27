@@ -177,6 +177,14 @@ void Window::MakeWindow(bool r, bool lc, bool max) noexcept
 		LockCursor();
 }
 
+void Window::KeyCallback(int key, int scancode, int action, int mods) noexcept
+{
+	if (action == GLFW_PRESS)
+		keyDown.set(key, 1);
+	else if (action == GLFW_RELEASE)
+		keyUp.set(key, 1);
+}
+
 bool Window::GetKey(int key, bool respectCapture) noexcept
 {
 	if (respectCapture && ImGui::GetIO().WantCaptureKeyboard)
@@ -184,17 +192,30 @@ bool Window::GetKey(int key, bool respectCapture) noexcept
 
 	return glfwGetKey(wnd, key);
 }
-
-bool Window::GetKeyDown(int glfwKey, bool respectCapture) noexcept
+bool Window::GetKeyDown(int key, bool respectCapture) noexcept
 {
-	return false;
-}
+	bool result = keyDown.test(key);
 
-bool Window::GetKeyUp(int glfwKey, bool respectCapture) noexcept
+	if (keyDown.test(key) && glfwGetKey(wnd, key))
+		keyDown.set(key, 0);
+
+	if (respectCapture && ImGui::GetIO().WantCaptureKeyboard)
+		return false;
+
+	return result;
+}
+bool Window::GetKeyUp(int key, bool respectCapture) noexcept
 {
-	return false;
-}
+	bool result = keyUp.test(key);
 
+	if (keyUp.test(key) && !glfwGetKey(wnd, key))
+		keyUp.set(key, 0);
+
+	if (respectCapture && ImGui::GetIO().WantCaptureKeyboard)
+		return false;
+
+	return result;
+}
 bool Window::GetMouseButton(int glfwMouseButton, bool respectCapture) noexcept
 {
 	return glfwGetMouseButton(wnd, glfwMouseButton);

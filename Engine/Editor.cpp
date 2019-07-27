@@ -179,10 +179,18 @@ void Editor::DrawMenuBar() noexcept
 
 void Editor::ProcessInput() noexcept
 {
-	if (engine.wnd.GetKeyDown(GLFW_KEY_LEFT_CONTROL) && engine.wnd.GetKeyDown(GLFW_KEY_Z))
+	if (engine.wnd.GetKey(GLFW_KEY_LEFT_CONTROL) && engine.wnd.GetKeyDown(GLFW_KEY_Z))
 		Undo();
-	if (engine.wnd.GetKeyDown(GLFW_KEY_LEFT_CONTROL) && engine.wnd.GetKeyDown(GLFW_KEY_Y))
+	if (engine.wnd.GetKey(GLFW_KEY_LEFT_CONTROL) && engine.wnd.GetKeyDown(GLFW_KEY_Y))
 		Redo();
+}
+
+void Editor::PushUndoable(std::unique_ptr<Undoable> newUndoable) noexcept
+{
+	if (undoBuffer.size() == undoRedoBufferSize)
+		undoBuffer.erase(undoBuffer.begin());
+
+	undoBuffer.push_back(std::move(newUndoable));
 }
 
 void Editor::Undo() noexcept
@@ -190,9 +198,9 @@ void Editor::Undo() noexcept
 	if (undoBuffer.size() < 1)
 		return;
 
-	undoBuffer.top()->Undo();
-	redoBuffer.push(std::move(undoBuffer.top()));
-	undoBuffer.pop();
+	undoBuffer.back()->Undo();
+	redoBuffer.push_back(std::move(undoBuffer.back()));
+	undoBuffer.pop_back();
 }
 
 void Editor::Redo() noexcept
@@ -200,7 +208,7 @@ void Editor::Redo() noexcept
 	if (redoBuffer.size() < 1)
 		return;
 
-	redoBuffer.top()->Redo();
-	undoBuffer.push(std::move(redoBuffer.top()));
-	redoBuffer.pop();
+	redoBuffer.back()->Redo();
+	undoBuffer.push_back(std::move(redoBuffer.back()));
+	redoBuffer.pop_back();
 }

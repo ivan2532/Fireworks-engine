@@ -54,8 +54,9 @@ public:
 	void DrawHierarchy(Editor& editor, int& nodeIndexCount) const noexcept;
 public:
 	void Update() noexcept override;
-private:
 	void DrawInspector() noexcept override;
+private:
+
 	void UpdateTransform() noexcept;
 	void UpdateShaders() noexcept;
 private:
@@ -72,7 +73,6 @@ private:
 	std::vector<Transform*> children;
 	//Shaders
 	std::vector<Shader*> shadersToUpdate;
-
 	bool updateAxes; //No need to calculate axes every frame
 public:
 	static constexpr glm::vec3 worldForward = glm::vec3(0.0f, 0.0f, -1.0f);

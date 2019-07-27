@@ -8,7 +8,6 @@
 #include "Undoable.hpp"
 #include <memory>
 #include <optional>
-#include <stack>
 
 class Engine;
 class Transform;
@@ -39,6 +38,7 @@ public:
 	void DrawMenuBar() noexcept;
 	void ProcessInput() noexcept;
 public:
+	void PushUndoable(std::unique_ptr<Undoable> newUndoable) noexcept;
 	void Undo() noexcept;
 	void Redo() noexcept;
 private:
@@ -46,8 +46,8 @@ private:
 	std::vector<std::unique_ptr<EditorWindow>> editorWindows;
 	std::unique_ptr<GizmoManager> gizmoManager;
 private:
-	std::stack<std::unique_ptr<Undoable>> undoBuffer;
-	std::stack<std::unique_ptr<Undoable>> redoBuffer;
+	std::vector<std::unique_ptr<Undoable>> undoBuffer;
+	std::vector<std::unique_ptr<Undoable>> redoBuffer;
 private:
 	bool sceneViewFocused = false;
 	bool gameViewFocused = false;
@@ -55,6 +55,8 @@ private:
 	//Paddings
 	float menuPadding = 0.0f;
 	float dockspacePadding = 0.0f;
+	//Undo/redo
+	static constexpr size_t undoRedoBufferSize = 50u;
 };
 
 template<class T>

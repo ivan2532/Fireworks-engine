@@ -26,6 +26,8 @@ public:
 public:
 	void OnMouseMove(double x, double y) noexcept;
 	void OnWindowResize(int width, int height) noexcept;
+	void OnKeyCallback(int key, int scancode, int action, int mods) noexcept;
+public:
 	void SetCamera(Camera* camera) noexcept;
 	Window* GetWindow() noexcept;
 	Camera* GetActiveCamera() const noexcept;
@@ -51,3 +53,4 @@ public:
 
 void CursorMoveCallback(GLFWwindow* wnd, double x, double y);
 void FramebufferSizeCallback(GLFWwindow* wnd, int width, int height);
+void KeyCallback(GLFWwindow* wnd, int key, int scancode, int action, int mods);

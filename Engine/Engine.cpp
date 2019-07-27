@@ -49,6 +49,11 @@ void Engine::SetCallbacks() noexcept
 		wnd.GetWindow(),
 		FramebufferSizeCallback
 	);
+
+	glfwSetKeyCallback(
+		wnd.GetWindow(),
+		KeyCallback
+	);
 }
 
 void Engine::ClearBuffers() noexcept
@@ -127,6 +132,11 @@ void Engine::OnWindowResize(int width, int height) noexcept
 	activeScene->OnWindowResize(width, height);
 }
 
+void Engine::OnKeyCallback(int key, int scancode, int action, int mods) noexcept
+{
+	wnd.KeyCallback(key, scancode, action, mods);
+}
+
 void CursorMoveCallback(GLFWwindow* wnd, double x, double y)
 {
 	reinterpret_cast<Engine*>(glfwGetWindowUserPointer(wnd))->OnMouseMove(x, y);
@@ -136,4 +146,9 @@ void FramebufferSizeCallback(GLFWwindow* wnd, int width, int height)
 {
 	reinterpret_cast<Engine*>(glfwGetWindowUserPointer(wnd))->OnWindowResize(width, height);
 	glViewport(0, 0, width, height);
+}
+
+void KeyCallback(GLFWwindow* wnd, int key, int scancode, int action, int mods)
+{
+	reinterpret_cast<Engine*>(glfwGetWindowUserPointer(wnd))->OnKeyCallback(key, scancode, action, mods);
 }

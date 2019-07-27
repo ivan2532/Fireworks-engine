@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <functional>
+#include <bitset>
 
 struct GLFWwindow;
 
@@ -18,13 +19,14 @@ public:
 	void SetHeight(int value) noexcept;
 	void EndFrame() noexcept;
 	void MakeWindow(bool resizable, bool lockCursor, bool maximize) noexcept;
-
+public:
+	void KeyCallback(int key, int scancode, int action, int mods) noexcept;
 	bool GetKey(int glfwKey, bool respectCapture = true) noexcept;
-	bool GetKeyDown(int glfwKey, bool respectCapture = true) noexcept;
-	bool GetKeyUp(int glfwKey, bool respectCapture = true) noexcept;
+	bool GetKeyDown(int key, bool respectCapture = true) noexcept;
+	bool GetKeyUp(int key, bool respectCapture = true) noexcept;
 	bool GetMouseButton(int glfwMouseButton, bool respectCapture = true) noexcept;
+public:
 	bool ShouldClose() const noexcept;
-
 	void Close() noexcept;
 	void LockCursor() noexcept;
 	void UnlockCursor() noexcept;
@@ -49,4 +51,6 @@ private:
 	unsigned frameBuffer = 0;
 	unsigned colorBuffer = 0;
 	unsigned depthBuffer = 0;
+	std::bitset<348> keyDown;
+	std::bitset<348> keyUp;
 };
