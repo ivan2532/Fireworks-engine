@@ -19,7 +19,7 @@ void MeshRenderer::Update() noexcept
 		mesh->Draw(shader);
 }
 
-void MeshRenderer::DrawInspector() noexcept
+void MeshRenderer::DrawInspector(Editor& editor) noexcept
 {
 	if (ImGui::CollapsingHeader("Mesh renderer"))
 	{

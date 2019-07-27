@@ -35,7 +35,7 @@ void GizmoManager::DrawGizmo() noexcept
 		{
 			editor.PushUndoable(
 				std::move(
-					std::make_unique<ComponentUndoable<Transform>>(*gizmoTransform, startState, *gizmoTransform)
+					std::make_unique<ComponentUndoable<Transform>>(gizmoTransform, startState, *gizmoTransform)
 				)
 			);
 			pushUndoable = false;

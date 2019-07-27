@@ -25,7 +25,7 @@ void Camera::Update() noexcept
 	UpdateShaders();
 }
 
-void Camera::DrawInspector() noexcept
+void Camera::DrawInspector(Editor& editor) noexcept
 {
 	if (ImGui::CollapsingHeader("Camera"))
 	{

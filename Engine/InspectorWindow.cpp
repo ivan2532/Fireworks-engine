@@ -1,9 +1,10 @@
+#include <GLFW\glfw3.h>
 #include "InspectorWindow.hpp"
 #include "imguiIncludes.hpp"
 #include "Editor.hpp"
 #include "Engine.hpp"
 #include "Transform.hpp"
-#include <GLFW\glfw3.h>
+#include "GizmoManager.hpp"
 
 InspectorWindow::InspectorWindow(Editor& editor) noexcept
 	:
@@ -40,7 +41,7 @@ void InspectorWindow::Draw() noexcept
 			ImGui::Text("Components: ");
 			for (auto& component : selectedObject->components)
 			{
-				component->DrawInspector();
+				component->DrawInspector(editor);
 			}
 		}
 	}

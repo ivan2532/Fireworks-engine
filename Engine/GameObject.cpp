@@ -1,4 +1,5 @@
 #include "GameObject.hpp"
+#include "Component.hpp"
 
 GameObject::GameObject(const std::string& n) noexcept
 	:

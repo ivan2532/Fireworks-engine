@@ -13,7 +13,7 @@ public:
 public:
 	void Update() noexcept override;
 public:
-	void DrawInspector() noexcept override;
+	void DrawInspector(Editor& editor) noexcept override;
 public:
 	float GetFOV() const noexcept;
 	void SetFOV(float value) noexcept;

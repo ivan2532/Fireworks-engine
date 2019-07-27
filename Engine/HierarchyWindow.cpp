@@ -3,6 +3,7 @@
 #include "Engine.hpp"
 #include "Transform.hpp"
 #include "SceneCameraController.hpp"
+#include "GizmoManager.hpp"
 
 HierarchyWindow::HierarchyWindow(Editor& editor) noexcept
 	:

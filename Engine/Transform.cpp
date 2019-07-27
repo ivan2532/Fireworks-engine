@@ -6,6 +6,7 @@
 #include "Math.hpp"
 #include "HierarchyWindow.hpp"
 #include "InspectorWindow.hpp"
+#include <iostream>
 
 void Transform::Update() noexcept
 {
@@ -13,7 +14,7 @@ void Transform::Update() noexcept
 	UpdateShaders(); //First call UpdateTransform() !!!!!
 }
 
-void Transform::DrawInspector() noexcept
+void Transform::DrawInspector(Editor& editor) noexcept
 {
 	if (ImGui::CollapsingHeader("Transform"))
 	{
@@ -21,58 +22,42 @@ void Transform::DrawInspector() noexcept
 		float rotInput[3] = { eulerAngles.x, eulerAngles.y, eulerAngles.z };
 		float scaleInput[3] = { scale.x, scale.y, scale.z };
 
+		auto inputTextFlags = ImGuiInputTextFlags_EnterReturnsTrue;
+
 		ImGui::Text("Position: ");
 		ImGui::SameLine();
-		if (ImGui::InputFloat3("##input_pos", posInput))
+		if (ImGui::InputFloat3("##input_pos", posInput, "%.3f", inputTextFlags))
 		{
+			if (!pushUndoable)
+			{
+				startState.reset(this);
+				std::cout << "Set pushUndoable." << std::endl;
+				pushUndoable = true;
+			}
+
 			SetPosition(posInput[0], posInput[1], posInput[2]);
+
+			if (pushUndoable)
+			{
+				std::cout << "Process pushUndoable." << std::endl;
+				PushUndoable<Transform>(editor, this, startState.get(), this);
+				pushUndoable = false;
+			}
 		}
 
 		ImGui::Text("Rotation: ");
 		ImGui::SameLine();
-		if (ImGui::InputFloat3("##input_rot", rotInput))
+		if (ImGui::InputFloat3("##input_rot", rotInput, inputTextFlags))
 		{
 			SetEulerAngles(rotInput[0], rotInput[1], rotInput[2]);
 		}
 
 		ImGui::Text("Scale: ");
 		ImGui::SameLine();
-		if (ImGui::InputFloat3("##input_scale", scaleInput))
+		if (ImGui::InputFloat3("##input_scale", scaleInput, inputTextFlags))
 		{
 			SetScale(scaleInput[0], scaleInput[1], scaleInput[2]);
 		}
-
-		/*glm::vec3 ap, ae, as;
-		glm::mat4 ar;
-		Math::DecomposeTransform(accumulatedTransform, &ap, &as, &ar);
-		ae = Math::EulerAnglesFromRotation(ar);
-
-		float aposInput[3] = { ap.x, ap.y, ap.z };
-		float arotInput[3] = { ae.x, ae.y, ae.z };
-		float ascaleInput[3] = { as.x, as.y, as.z };
-
-		ImGui::Text("Accumulated Transform (Debug):");
-
-		ImGui::Text("Position: ");
-		ImGui::SameLine();
-		if (ImGui::InputFloat3("##input_apos", aposInput))
-		{
-			//SetPosition(aposInput[0], aposInput[1], aposInput[2]);
-		}
-
-		ImGui::Text("Rotation: ");
-		ImGui::SameLine();
-		if (ImGui::InputFloat3("##input_arot", arotInput))
-		{
-			//SetEulerAngles(arotInput[0], arotInput[1], arotInput[2]);
-		}
-
-		ImGui::Text("Scale: ");
-		ImGui::SameLine();
-		if (ImGui::InputFloat3("##input_ascale", ascaleInput))
-		{
-			//SetScale(ascaleInput[0], ascaleInput[1], ascaleInput[2]);
-		}*/
 	}
 }
 

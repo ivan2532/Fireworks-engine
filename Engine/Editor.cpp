@@ -191,6 +191,8 @@ void Editor::PushUndoable(std::unique_ptr<Undoable> newUndoable) noexcept
 		undoBuffer.erase(undoBuffer.begin());
 
 	undoBuffer.push_back(std::move(newUndoable));
+
+	std::cout << "Undo size: " << undoBuffer.size() << ", Redo size: " << redoBuffer.size() << std::endl;
 }
 
 void Editor::Undo() noexcept
@@ -201,6 +203,8 @@ void Editor::Undo() noexcept
 	undoBuffer.back()->Undo();
 	redoBuffer.push_back(std::move(undoBuffer.back()));
 	undoBuffer.pop_back();
+
+	std::cout << "Undo size: " << undoBuffer.size() << ", Redo size: " << redoBuffer.size() << std::endl;
 }
 
 void Editor::Redo() noexcept
@@ -211,4 +215,6 @@ void Editor::Redo() noexcept
 	redoBuffer.back()->Redo();
 	undoBuffer.push_back(std::move(redoBuffer.back()));
 	redoBuffer.pop_back();
+
+	std::cout << "Undo size: " << undoBuffer.size() << ", Redo size: " << redoBuffer.size() << std::endl;
 }

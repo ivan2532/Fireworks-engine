@@ -11,6 +11,7 @@
 
 class Engine;
 class Transform;
+class GizmoManager;
 
 class Editor
 {

@@ -16,7 +16,7 @@ public:
 public:
 	void Update() noexcept override;
 public:
-	void DrawInspector() noexcept override;
+	void DrawInspector(Editor& editor) noexcept override;
 private:
 	std::vector<std::unique_ptr<Mesh>> meshes;
 	Shader& shader;

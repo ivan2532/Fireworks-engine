@@ -9,7 +9,7 @@ class FPCameraMovement : public Component
 public:
 	FPCameraMovement(Window& window, float mSpeed = 7.0f, float lSens = 0.2f) noexcept;
 public:
-	void DrawInspector() noexcept override;
+	void DrawInspector(Editor& editor) noexcept override;
 	void OnMouseMove(float x, float y) noexcept override;
 public:
 	void Update() noexcept override;

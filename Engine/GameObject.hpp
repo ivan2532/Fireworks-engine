@@ -1,10 +1,11 @@
 #pragma once
-#include "Component.hpp"
 #include <string>
 #include <vector>
 #include <memory>
 #include <optional>
 #include <utility>
+
+class Component;
 
 class GameObject
 {

@@ -16,7 +16,7 @@ FPCameraMovement::FPCameraMovement(Window& window, float mSpeed, float lSens) no
 {
 }
 
-void FPCameraMovement::DrawInspector() noexcept
+void FPCameraMovement::DrawInspector(Editor& editor) noexcept
 {
 	if (ImGui::CollapsingHeader("FPCameraMovement"))
 	{
