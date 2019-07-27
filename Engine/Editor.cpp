@@ -109,43 +109,25 @@ void Editor::DrawMenuBar() noexcept
 	{
 		if (ImGui::BeginMenu("File"))
 		{
-			if (ImGui::MenuItem("New Scene", "Ctrl + N"))
-			{
+			if (ImGui::MenuItem("New Scene", "Ctrl + N")) { }
 
-			}
-
-			if (ImGui::MenuItem("New Project", "Ctrl + Shift + N"))
-			{
-
-			}
+			if (ImGui::MenuItem("New Project", "Ctrl + Shift + N")) { }
 
 			ImGui::Spacing();
 			ImGui::Separator();
 			ImGui::Spacing();
 
-			if (ImGui::MenuItem("Open Scene", "Ctrl + O"))
-			{
+			if (ImGui::MenuItem("Open Scene", "Ctrl + O")) { }
 
-			}
-
-			if (ImGui::MenuItem("Open Project", "Ctrl + Shift + O"))
-			{
-
-			}
+			if (ImGui::MenuItem("Open Project", "Ctrl + Shift + O")) { }
 
 			ImGui::Spacing();
 			ImGui::Separator();
 			ImGui::Spacing();
 
-			if (ImGui::MenuItem("Save scene", "Ctrl + S"))
-			{
+			if (ImGui::MenuItem("Save scene", "Ctrl + S")) { }
 
-			}
-
-			if (ImGui::MenuItem("Save Project", "Ctrl + Shift + S"))
-			{
-
-			}
+			if (ImGui::MenuItem("Save Project", "Ctrl + Shift + S")) { }
 
 			ImGui::Spacing();
 			ImGui::Separator();
@@ -160,6 +142,19 @@ void Editor::DrawMenuBar() noexcept
 			ImGui::EndMenu();
 		}
 		
+		ImGui::Separator();
+
+		if (ImGui::BeginMenu("Edit"))
+		{
+			if (ImGui::MenuItem("Undo", "Ctrl + Z"))
+				Undo();
+
+			if (ImGui::MenuItem("Redo", "Ctrl + Y"))
+				Redo();
+
+			ImGui::EndMenu();
+		}
+
 		ImGui::Separator();
 
 		if (ImGui::BeginMenu("Window"))
@@ -178,5 +173,34 @@ void Editor::DrawMenuBar() noexcept
 		menuPadding = ImGui::GetWindowSize().y;
 		ImGui::EndMainMenuBar();
 	}
+
 	gizmoManager->DrawTransformationMenu();
+}
+
+void Editor::ProcessInput() noexcept
+{
+	if (engine.wnd.GetKeyDown(GLFW_KEY_LEFT_CONTROL) && engine.wnd.GetKeyDown(GLFW_KEY_Z))
+		Undo();
+	if (engine.wnd.GetKeyDown(GLFW_KEY_LEFT_CONTROL) && engine.wnd.GetKeyDown(GLFW_KEY_Y))
+		Redo();
+}
+
+void Editor::Undo() noexcept
+{
+	if (undoBuffer.size() < 1)
+		return;
+
+	undoBuffer.top()->Undo();
+	redoBuffer.push(std::move(undoBuffer.top()));
+	undoBuffer.pop();
+}
+
+void Editor::Redo() noexcept
+{
+	if (redoBuffer.size() < 1)
+		return;
+
+	redoBuffer.top()->Redo();
+	undoBuffer.push(std::move(redoBuffer.top()));
+	redoBuffer.pop();
 }

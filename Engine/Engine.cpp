@@ -93,6 +93,8 @@ void Engine::ProcessInput() noexcept
 {
 	if (wnd.GetKey(GLFW_KEY_ESCAPE, false))
 		wnd.Close();
+
+	editor.ProcessInput();
 }
 
 void Engine::SetCamera(Camera* camera) noexcept

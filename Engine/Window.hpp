@@ -20,6 +20,8 @@ public:
 	void MakeWindow(bool resizable, bool lockCursor, bool maximize) noexcept;
 
 	bool GetKey(int glfwKey, bool respectCapture = true) noexcept;
+	bool GetKeyDown(int glfwKey, bool respectCapture = true) noexcept;
+	bool GetKeyUp(int glfwKey, bool respectCapture = true) noexcept;
 	bool GetMouseButton(int glfwMouseButton, bool respectCapture = true) noexcept;
 	bool ShouldClose() const noexcept;
 

@@ -4,6 +4,7 @@
 #include "imguiIncludes.hpp"
 #include "Math.hpp"
 #include "ImageLoader.h"
+#include "ComponentUndoable.hpp"
 
 GizmoManager::GizmoManager(Editor& rEditor) noexcept
 	:
@@ -29,9 +30,25 @@ void GizmoManager::DrawGizmo() noexcept
 
 		for (int i = 0; i < 16; i++)
 			gizmoMatrix[i] = matrix.data[i];
+
+		if (pushUndoable)
+		{
+			editor.undoBuffer.push(
+				std::move(
+					std::make_unique<ComponentUndoable<Transform>>(*gizmoTransform, startState, *gizmoTransform)
+				)
+			);
+			pushUndoable = false;
+		}
 	}
 	else
 	{
+		if (!pushUndoable)
+		{
+			startState = *gizmoTransform;
+			pushUndoable = true;
+		}
+
 		gizmoTransform->SetTransformation(Math::ArrayToGlm4x4(gizmoMatrix), true);
 	}
 

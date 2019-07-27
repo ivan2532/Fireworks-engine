@@ -199,6 +199,8 @@
     <ClInclude Include="Shader.hpp" />
     <ClInclude Include="TestScene.hpp" />
     <ClInclude Include="Transform.hpp" />
+    <ClInclude Include="ComponentUndoable.hpp" />
+    <ClInclude Include="Undoable.hpp" />
     <ClInclude Include="Window.hpp" />
   </ItemGroup>
   <ItemGroup>

@@ -61,6 +61,9 @@
     <Filter Include="Header Files\Graphics">
       <UniqueIdentifier>{429021dd-8f08-4313-a7e7-6ebfe346b102}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Editor\Undoables">
+      <UniqueIdentifier>{5a3aa96e-a5fc-4845-909c-1cec983e1fd7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -277,6 +280,12 @@
     </ClInclude>
     <ClInclude Include="GizmoManager.hpp">
       <Filter>Header Files\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Undoable.hpp">
+      <Filter>Header Files\Editor\Undoables</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentUndoable.hpp">
+      <Filter>Header Files\Editor\Undoables</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -20,4 +20,7 @@ private:
 	Transform* gizmoTransform = nullptr;
 	SceneViewWindow* sceneViewWindow;
 	unsigned translateImage, rotateImage, scaleImage;
+	//For undoing
+	Transform startState;
+	bool pushUndoable = false;
 };

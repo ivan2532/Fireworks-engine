@@ -17,7 +17,7 @@ TestScene::TestScene(Engine& rEngine, Window& w) noexcept
 
 	//Nasty parent setting only for testing purposes
 	transformTest.GetComponent<Transform>().value()->SetParent(sceneObjects.front().GetComponent<Transform>().value());
-
+	
 	AddSceneObject(std::move(transformTest));
 
 	GameObject cameraObject("SceneCamera");

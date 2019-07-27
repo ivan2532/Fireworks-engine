@@ -4,8 +4,6 @@
 #include "imguiIncludes.hpp"
 #include <iostream>
 
-//#define DETAILED_LOGGING
-
 Window::Window(bool lc, bool max) noexcept
 {
 	char input = 0; //Used for handling Y/N
@@ -73,9 +71,6 @@ Window::Window(unsigned w, unsigned h, std::string t, bool fs, bool r, bool lc, 
 
 Window::~Window() noexcept
 {
-#ifdef DETAILED_LOGGING
-	std::cout << "Destructing window.";
-#endif
 	glfwDestroyWindow(wnd);
 	glfwTerminate();
 }
@@ -113,10 +108,6 @@ void Window::EndFrame() noexcept
 
 void Window::MakeWindow(bool r, bool lc, bool max) noexcept
 {
-#ifdef DETAILED_LOGGING
-	std::cout << std::endl << "------------------STARTING WINDOW CREATION" << std::endl;
-	std::cout << "Initializing GLFW." << std::endl;
-#endif
 	if (!glfwInit())
 	{
 		std::cout << "Failed to initialize GLFW!";
@@ -124,15 +115,9 @@ void Window::MakeWindow(bool r, bool lc, bool max) noexcept
 		exit(-1);
 	}
 
-#ifdef DETAILED_LOGGING
-	std::cout << "Setting OpenGL version." << std::endl;
-#endif
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 
-#ifdef DETAILED_LOGGING
-	std::cout << "Setting OpenGL profile." << std::endl;
-#endif
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	if (!fullscreen && max)
@@ -145,9 +130,6 @@ void Window::MakeWindow(bool r, bool lc, bool max) noexcept
 		height = videoMode->height;
 	}
 
-#ifdef DETAILED_LOGGING
-	std::cout << "Creating window." << std::endl;
-#endif
 	if (fullscreen)
 		wnd = glfwCreateWindow(width, height, title.c_str(), glfwGetPrimaryMonitor(), nullptr);
 	else
@@ -161,9 +143,6 @@ void Window::MakeWindow(bool r, bool lc, bool max) noexcept
 		exit(-1);
 	}
 
-#ifdef DETAILED_LOGGING
-	std::cout << "Setting window to current context." << std::endl;
-#endif
 	glfwMakeContextCurrent(wnd);
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -174,14 +153,8 @@ void Window::MakeWindow(bool r, bool lc, bool max) noexcept
 		exit(-1);
 	}
 
-#ifdef DETAILED_LOGGING
-	std::cout << "Setting viewport." << std::endl;
-#endif
 	glViewport(0, 0, width, height);
 
-#ifdef DETAILED_LOGGING
-	std::cout << "Setting resize callback." << std::endl;
-#endif
 	if (resizable)
 	{
 		glfwSetFramebufferSizeCallback(
@@ -195,30 +168,13 @@ void Window::MakeWindow(bool r, bool lc, bool max) noexcept
 	else
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
-#ifdef DETAILED_LOGGING
-	std::cout << "Enabling face culling." << std::endl;
-#endif
 	glEnable(GL_CULL_FACE);
-
-#ifdef DETAILED_LOGGING
-	std::cout << "Enabling depth buffer." << std::endl;
-#endif
 	glEnable(GL_DEPTH_TEST);
 
-#ifdef DETAILED_LOGGING
-	std::cout << "Enabling v-sync." << std::endl;
-#endif
 	//INSERT V-SYNC HERE
 
-#ifdef DETAILED_LOGGING
-	std::cout << "Locking cursor if needed." << std::endl;
-#endif
 	if (lc)
 		LockCursor();
-
-#ifdef DETAILED_LOGGING
-	std::cout << "------------------WINDOW CREATION SUCCESSFULLY ENDED" << std::endl << std::endl;
-#endif
 }
 
 bool Window::GetKey(int key, bool respectCapture) noexcept
@@ -227,6 +183,16 @@ bool Window::GetKey(int key, bool respectCapture) noexcept
 		return false;
 
 	return glfwGetKey(wnd, key);
+}
+
+bool Window::GetKeyDown(int glfwKey, bool respectCapture) noexcept
+{
+	return false;
+}
+
+bool Window::GetKeyUp(int glfwKey, bool respectCapture) noexcept
+{
+	return false;
 }
 
 bool Window::GetMouseButton(int glfwMouseButton, bool respectCapture) noexcept

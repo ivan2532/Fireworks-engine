@@ -1,12 +1,14 @@
 #pragma once
 #include "imguiIncludes.hpp"
-#include "GameObject.hpp"
 #include "ImGuizmo/ImGuizmo.h"
+#include "GameObject.hpp"
 #include "EditorWindow.hpp"
 #include "EditorWindowIncludes.hpp"
 #include "GizmoManager.hpp"
+#include "Undoable.hpp"
 #include <memory>
 #include <optional>
+#include <stack>
 
 class Engine;
 class Transform;
@@ -35,16 +37,21 @@ public:
 	void DrawDockSpace() noexcept;
 	void DrawGUI() noexcept;
 	void DrawMenuBar() noexcept;
+	void ProcessInput() noexcept;
+public:
+	void Undo() noexcept;
+	void Redo() noexcept;
 private:
 	Engine& engine;
 	std::vector<std::unique_ptr<EditorWindow>> editorWindows;
 	std::unique_ptr<GizmoManager> gizmoManager;
-
+private:
+	std::stack<std::unique_ptr<Undoable>> undoBuffer;
+	std::stack<std::unique_ptr<Undoable>> redoBuffer;
+private:
 	bool sceneViewFocused = false;
 	bool gameViewFocused = false;
-
 	bool drawGizmo = false;
-
 	//Paddings
 	float menuPadding = 0.0f;
 	float dockspacePadding = 0.0f;
