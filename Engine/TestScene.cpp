@@ -16,7 +16,7 @@ TestScene::TestScene(Engine& rEngine, Window& w) noexcept
 	transformTest.AddComponent<Transform>();
 
 	//Nasty parent setting only for testing purposes
-	transformTest.GetComponent<Transform>().value()->SetParent(sceneObjects.front().GetComponent<Transform>().value());
+	//transformTest.GetComponent<Transform>().value()->SetParent(sceneObjects.front().GetComponent<Transform>().value());
 	
 	AddSceneObject(std::move(transformTest));
 
@@ -43,4 +43,9 @@ void TestScene::Update() noexcept
 	textureShader.SetFloat("pointLight.attenuation_const", 1.0f);
 	textureShader.SetFloat("pointLight.attenuation_linear", 0.045f);
 	textureShader.SetFloat("pointLight.attenuation_quadratic", 0.0075f);
+
+	if (sceneObjects.size() > 0 && wnd.GetKeyDown(GLFW_KEY_G))
+	{
+		sceneObjects[0].Delete();
+	}
 }

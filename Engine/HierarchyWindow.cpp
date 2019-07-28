@@ -19,13 +19,16 @@ void HierarchyWindow::Draw() noexcept
 	nodeIndexCount = 0;
 	if (ImGui::Begin("Hierarchy", &open))
 	{
-		for (int i = 0; i < editor.engine.activeScene->sceneObjects.size(); i++)
+		for (int i = 0; i < (int)editor.engine.activeScene->sceneObjects.size(); i++)
 		{
-			auto transform = editor.engine.activeScene->sceneObjects[i].GetComponent<Transform>().value();
+			auto transform = editor.engine.activeScene->sceneObjects[i].GetComponent<Transform>();
 
-			if (transform->GetParent() == nullptr && !editor.engine.activeScene->sceneObjects[i].GetComponent<SceneCameraController>().has_value())
+			if (!transform.has_value())
+				continue;
+
+			if (transform.value()->GetParent() == nullptr && !editor.engine.activeScene->sceneObjects[i].GetComponent<SceneCameraController>().has_value())
 			{
-				transform->DrawHierarchy(editor, nodeIndexCount);
+				transform.value()->DrawHierarchy(editor, nodeIndexCount);
 			}
 		}
 	}

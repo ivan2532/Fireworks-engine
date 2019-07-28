@@ -14,6 +14,17 @@ void Transform::Update() noexcept
 	UpdateShaders(); //First call UpdateTransform() !!!!!
 }
 
+void Transform::CheckChildrenDelete() noexcept
+{
+	for (auto it = children.begin(); it != children.end();)
+	{
+		if ((*it)->GetObject()->deleteFlag)
+			it = children.erase(it);
+		else
+			++it;
+	}
+}
+
 void Transform::DrawInspector(Editor& editor) noexcept
 {
 	if (ImGui::CollapsingHeader("Transform"))
@@ -289,6 +300,11 @@ void Transform::Scale(const glm::vec3& value) noexcept
 Transform* Transform::GetChild(int i) const noexcept
 {
 	return children[i];
+}
+
+size_t Transform::GetChildCount() const noexcept
+{
+	return children.size();
 }
 
 Transform* Transform::GetParent() const noexcept

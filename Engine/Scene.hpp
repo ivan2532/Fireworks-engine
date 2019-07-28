@@ -16,6 +16,8 @@ public:
 	std::string GetName() const noexcept;
 	void AddSceneObject(GameObject go, bool move = false) noexcept;
 	virtual void Update() noexcept;
+	void CheckObjectDelete() noexcept;
+	void UpdateScene();
 public:
 	void OnMouseMove(float x, float y) noexcept;
 	void OnWindowResize(int width, int height) noexcept;

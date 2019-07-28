@@ -91,7 +91,8 @@ void GizmoManager::DrawTransformationMenu() noexcept
 	float buttonSize = (float)editor.engine.GetWindow()->GetWidth() / (float)editor.engine.GetWindow()->GetHeight() * 15.0f;
 
 	ImGui::SetNextWindowPos(ImVec2(0, editor.menuPadding));
-	ImGui::SetNextWindowSize(ImVec2(editor.engine.GetWindow()->GetWidth(), buttonSize + style.ItemSpacing.y * 2 + style.WindowPadding.y * 2 + style.FramePadding.y));
+	ImGui::SetNextWindowSize(ImVec2((float)editor.engine.GetWindow()->GetWidth(),
+		buttonSize + style.ItemSpacing.y * 2 + style.WindowPadding.y * 2 + style.FramePadding.y));
 	ImGui::Begin("Transform panel", (bool*)0, transformPanelFlags);
 
 	bool pushedColor1 = false;

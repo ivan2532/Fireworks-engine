@@ -10,6 +10,7 @@ class Editor;
 
 class Transform : public Component
 {
+	friend GameObject;
 	friend class Camera;
 public:
 	Transform() noexcept;
@@ -45,6 +46,7 @@ public:
 	void Scale(const glm::vec3& value) noexcept;
 
 	Transform* GetChild(int i) const noexcept;
+	size_t GetChildCount() const noexcept;
 
 	Transform* GetParent() const noexcept;
 	void SetParent(Transform* parent) noexcept;
@@ -54,9 +56,9 @@ public:
 	void DrawHierarchy(Editor& editor, int& nodeIndexCount) const noexcept;
 public:
 	void Update() noexcept override;
+	void CheckChildrenDelete() noexcept;
 	void DrawInspector(Editor& editor) noexcept override;
 private:
-
 	void UpdateTransform() noexcept;
 	void UpdateShaders() noexcept;
 private:

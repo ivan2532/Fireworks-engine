@@ -11,6 +11,7 @@ class GameObject
 {
 	friend class Scene;
 	friend class Editor;
+	friend class Transform;
 	friend class InspectorWindow;
 public:
 	GameObject(const std::string& name) noexcept;
@@ -29,9 +30,12 @@ public:
 
 	template<class T>
 	std::optional<T*> GetComponent() const noexcept;
+
+	void Delete(bool deleteChildren = true) noexcept;
 private:
 	std::string name;
 	std::vector<std::unique_ptr<Component>> components;
+	bool deleteFlag = false;
 };
 
 template<typename T, class ...Args>

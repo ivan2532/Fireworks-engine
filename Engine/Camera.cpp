@@ -29,10 +29,10 @@ void Camera::DrawInspector(Editor& editor) noexcept
 {
 	if (ImGui::CollapsingHeader("Camera"))
 	{
-		int input = fov;
+		int input = (int)fov;
 		ImGui::Text("FOV: ");
 		ImGui::SameLine();
-		if (ImGui::SliderInt("##slider_fov", &input, 0.1f, 179.9f))
+		if (ImGui::SliderInt("##slider_fov", &input, 1, 179))
 			fov = (float)input;
 	}
 }

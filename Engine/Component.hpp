@@ -25,6 +25,6 @@ protected:
 	void PushUndoable(Editor& editor, void* target, void* startState, void* endState) noexcept;
 protected:
 	GameObject* gameObject = nullptr;
-	void* startState;
-	void* endState;
+	void* startState = nullptr;
+	void* endState = nullptr;
 };

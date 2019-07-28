@@ -82,7 +82,7 @@ void Engine::BeginFrame() noexcept
 void Engine::Update() noexcept
 {
 	ProcessInput();
-	activeScene->Update();
+	activeScene->UpdateScene();
 	editor.DrawGUI();
 }
 

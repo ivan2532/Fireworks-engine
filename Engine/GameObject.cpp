@@ -1,5 +1,7 @@
 #include "GameObject.hpp"
 #include "Component.hpp"
+#include "Transform.hpp"
+#include <iostream>
 
 GameObject::GameObject(const std::string& n) noexcept
 	:
@@ -21,6 +23,7 @@ GameObject::GameObject(const GameObject& rhs) noexcept
 
 GameObject& GameObject::operator=(const GameObject& rhs) noexcept
 {
+	deleteFlag = rhs.deleteFlag;
 	name = rhs.name;
 
 	components.resize(rhs.components.size());
@@ -44,6 +47,7 @@ GameObject::GameObject(GameObject&& rhs) noexcept
 
 GameObject& GameObject::operator=(GameObject&& rhs) noexcept
 {
+	deleteFlag = rhs.deleteFlag;
 	name = std::move(rhs.name);
 	components = std::move(rhs.components);
 
@@ -67,4 +71,20 @@ void GameObject::Update() noexcept
 {
 	for (auto& component : components)
 		component->Update();
+}
+
+void GameObject::Delete(bool deleteChildren) noexcept
+{
+	auto transform = GetComponent<Transform>().value();
+
+	if (deleteChildren)
+	{
+		for (unsigned i = 0; i < transform->GetChildCount(); i++)
+			transform->GetChild(i)->GetObject()->Delete();
+	}
+
+	deleteFlag = true;
+
+	if (transform->parent)
+		transform->parent->CheckChildrenDelete();
 }

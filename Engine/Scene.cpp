@@ -1,5 +1,6 @@
 #include "Scene.hpp"
 #include "Engine.hpp"
+#include <iostream>
 
 Scene::Scene(Engine& rEngine, const std::string& n) noexcept
 	:
@@ -41,4 +42,21 @@ void Scene::Update() noexcept
 {
 	for (auto& object : sceneObjects)
 		object.Update();
+}
+
+void Scene::CheckObjectDelete() noexcept
+{
+	for (auto it = sceneObjects.begin(); it != sceneObjects.end();)
+	{
+		if (it->deleteFlag == true)
+			it = sceneObjects.erase(it);
+		else
+			++it;
+	}
+}
+
+void Scene::UpdateScene()
+{
+	CheckObjectDelete();
+	Update();
 }

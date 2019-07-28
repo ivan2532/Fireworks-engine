@@ -15,6 +15,6 @@ public:
 	void SetRect(const ImVec2& bottomLeft, const ImVec2& topRight) noexcept;
 	float GetSceneViewAspectRatio() const noexcept;
 private:
-	float sceneViewAspectRatio;
+	float sceneViewAspectRatio = 4.0f / 3.0f;
 	ImVec2 bottomLeftSceneView, topRightSceneView;
 };

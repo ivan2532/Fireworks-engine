@@ -25,7 +25,7 @@ private:
 	void UpdateShaders() noexcept;
 private:
 	Engine& engine;
-	Transform* transform;
+	Transform* transform = nullptr;
 	glm::mat4 viewMatrix;
 	glm::mat4 projectionMatrix;
 	float fov; //In degrees!

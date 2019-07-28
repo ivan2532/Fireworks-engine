@@ -36,7 +36,7 @@ void SceneViewWindow::Draw() noexcept
 
 		if (windowSize.x != bufferWidth || windowSize.y != bufferHeight)
 		{
-			editor.engine.GetWindow()->MakeFramebuffer(windowSize.x, windowSize.y);
+			editor.engine.GetWindow()->MakeFramebuffer(static_cast<unsigned>(windowSize.x), static_cast<unsigned>(windowSize.y));
 			sceneViewAspectRatio = static_cast<float>(windowSize.x) / static_cast<float>(windowSize.y);
 		}
 
