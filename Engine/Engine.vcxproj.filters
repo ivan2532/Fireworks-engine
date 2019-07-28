@@ -49,12 +49,6 @@
     <Filter Include="Source Files\Editor">
       <UniqueIdentifier>{4e89ae7a-5319-4efa-85f9-21abf9be6b0a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Editor\EditorWindows">
-      <UniqueIdentifier>{35b11cf8-f25f-4553-aa45-bef856471a9e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Editor\EditorWindows">
-      <UniqueIdentifier>{4e4f463c-81c3-4a33-8240-ebb426c5b80f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Scenes">
       <UniqueIdentifier>{27430075-5fee-4f13-a6d2-0a148e4b203e}</UniqueIdentifier>
     </Filter>
@@ -63,6 +57,18 @@
     </Filter>
     <Filter Include="Header Files\Editor\Undoables">
       <UniqueIdentifier>{5a3aa96e-a5fc-4845-909c-1cec983e1fd7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Editor\Project Management">
+      <UniqueIdentifier>{6895d649-28d8-4b3e-9bdb-05ba808293e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Editor\Editor Windows">
+      <UniqueIdentifier>{35b11cf8-f25f-4553-aa45-bef856471a9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Editor\Editor Windows">
+      <UniqueIdentifier>{4e4f463c-81c3-4a33-8240-ebb426c5b80f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Editor\Project Management\Assets">
+      <UniqueIdentifier>{d5a9a086-04d6-4bfb-9c76-cdce952bc8c4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -142,16 +148,16 @@
       <Filter>Source Files\Editor</Filter>
     </ClCompile>
     <ClCompile Include="EditorWindow.cpp">
-      <Filter>Source Files\Editor\EditorWindows</Filter>
+      <Filter>Source Files\Editor\Editor Windows</Filter>
     </ClCompile>
     <ClCompile Include="HierarchyWindow.cpp">
-      <Filter>Source Files\Editor\EditorWindows</Filter>
+      <Filter>Source Files\Editor\Editor Windows</Filter>
     </ClCompile>
     <ClCompile Include="InspectorWindow.cpp">
-      <Filter>Source Files\Editor\EditorWindows</Filter>
+      <Filter>Source Files\Editor\Editor Windows</Filter>
     </ClCompile>
     <ClCompile Include="AssetExplorerWindow.cpp">
-      <Filter>Source Files\Editor\EditorWindows</Filter>
+      <Filter>Source Files\Editor\Editor Windows</Filter>
     </ClCompile>
     <ClCompile Include="SceneCameraController.cpp">
       <Filter>Source Files\Editor</Filter>
@@ -160,7 +166,10 @@
       <Filter>Source Files\Editor</Filter>
     </ClCompile>
     <ClCompile Include="SceneViewWindow.cpp">
-      <Filter>Source Files\Editor\EditorWindows</Filter>
+      <Filter>Source Files\Editor\Editor Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetManager.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -258,22 +267,22 @@
       <Filter>Header Files\Editor</Filter>
     </ClInclude>
     <ClInclude Include="EditorWindow.hpp">
-      <Filter>Header Files\Editor\EditorWindows</Filter>
+      <Filter>Header Files\Editor\Editor Windows</Filter>
     </ClInclude>
     <ClInclude Include="HierarchyWindow.hpp">
-      <Filter>Header Files\Editor\EditorWindows</Filter>
+      <Filter>Header Files\Editor\Editor Windows</Filter>
     </ClInclude>
     <ClInclude Include="EditorWindowIncludes.hpp">
-      <Filter>Header Files\Editor\EditorWindows</Filter>
+      <Filter>Header Files\Editor\Editor Windows</Filter>
     </ClInclude>
     <ClInclude Include="InspectorWindow.hpp">
-      <Filter>Header Files\Editor\EditorWindows</Filter>
+      <Filter>Header Files\Editor\Editor Windows</Filter>
     </ClInclude>
     <ClInclude Include="AssetExplorerWindow.hpp">
-      <Filter>Header Files\Editor\EditorWindows</Filter>
+      <Filter>Header Files\Editor\Editor Windows</Filter>
     </ClInclude>
     <ClInclude Include="SceneViewWindow.hpp">
-      <Filter>Header Files\Editor\EditorWindows</Filter>
+      <Filter>Header Files\Editor\Editor Windows</Filter>
     </ClInclude>
     <ClInclude Include="SceneCameraController.hpp">
       <Filter>Header Files\Editor</Filter>
@@ -286,6 +295,12 @@
     </ClInclude>
     <ClInclude Include="ComponentUndoable.hpp">
       <Filter>Header Files\Editor\Undoables</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetManager.hpp">
+      <Filter>Header Files\Editor\Project Management\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset.hpp">
+      <Filter>Header Files\Editor\Project Management\Assets</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

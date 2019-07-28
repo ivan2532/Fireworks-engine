@@ -15,12 +15,12 @@ void AssetExplorerWindow::Draw() noexcept
 
 	if (ImGui::Begin("Asset explorer", &open))
 	{
-		static float filterSize = ImGui::GetWindowWidth() / 5;
+		static float folderSize = ImGui::GetWindowWidth() / 5;
 		static float fileSize = ImGui::GetWindowWidth() * 4 / 5;
 
-		editor.Splitter(true, 8.0f, &filterSize, &fileSize, 10.0f, 10.0f);
-		ImGui::BeginChild("Filter explorer", ImVec2(filterSize, 0), true);
-		ImGui::Text("Filters");
+		editor.Splitter(true, 8.0f, &folderSize, &fileSize, 10.0f, 10.0f);
+		ImGui::BeginChild("Folder explorer", ImVec2(folderSize, 0), true);
+		ImGui::Text("Folders");
 		if (ImGui::TreeNode("Root"))
 		{
 			for (int i = 0; i < 10; i++)
