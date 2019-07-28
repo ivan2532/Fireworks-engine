@@ -16,16 +16,16 @@ enum TextureType
 
 struct Vertex
 {
-	glm::vec3 pos;
-	glm::vec3 normal;
-	glm::vec2 texCoords;
+	glm::vec3 pos = glm::zero<glm::vec3>();
+	glm::vec3 normal = glm::zero<glm::vec3>();
+	glm::vec2 texCoords = glm::zero<glm::vec2>();
 };
 
 struct Texture
 {
-	unsigned id;
-	TextureType type;
-	std::string path;
+	unsigned id = 0;
+	TextureType type = Diffuse;
+	std::string path = "";
 };
 
 class Mesh

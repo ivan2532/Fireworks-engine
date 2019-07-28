@@ -1,10 +1,23 @@
 #include "AssetManager.hpp"
 
+namespace fs = std::filesystem;
+
 AssetManager::AssetManager(const std::string& projectDirectory) noexcept
 	:
-	projectDir(projectDirectory)
+	assetsDirString(projectDirectory)
 {
+	assetsDir = fs::path(assetsDirString);
 	ScanAssets();
+}
+
+std::string AssetManager::GetAssetsDirString() const noexcept
+{
+	return assetsDirString;
+}
+
+std::filesystem::path AssetManager::GetAssetsDir() const noexcept
+{
+	return assetsDir;
 }
 
 void AssetManager::ScanAssets() noexcept

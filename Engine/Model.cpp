@@ -8,6 +8,7 @@
 
 Model::Model(std::string path, Shader& s) noexcept
 	:
+	Asset(path, 0u),
 	shader(s)
 {
 	LoadMesh(path);

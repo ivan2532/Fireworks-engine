@@ -5,6 +5,7 @@
 #include "Transform.hpp"
 #include "MeshRenderer.hpp"
 #include "GameObject.hpp"
+#include "Asset.hpp"
 #include <string>
 #include <vector>
 #include <memory>
@@ -12,7 +13,7 @@
 class Scene;
 class Shader;
 
-class Model
+class Model : public Asset
 {
 public:
 	Model(std::string path, Shader& shader) noexcept;
@@ -22,6 +23,8 @@ private:
 	void ProcessNode(aiNode *node, const aiScene *scene, Transform* parent) noexcept;
 	std::unique_ptr<Mesh> ProcessMesh(aiMesh* mesh, const aiScene* scene) noexcept;
 	std::vector<Texture> LoadMaterialTextures(aiMaterial* material, aiTextureType type, TextureType typeName) noexcept;
+public:
+	void DrawInspector() noexcept override {} //TODO: Implement inspection of assets.
 private:
 	std::vector<GameObject> meshObjects;
 	std::string directory; //For textures

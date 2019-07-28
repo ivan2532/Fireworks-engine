@@ -2,9 +2,12 @@
 #include "imguiIncludes.hpp"
 #include "Editor.hpp"
 
+namespace fs = std::filesystem;
+
 AssetExplorerWindow::AssetExplorerWindow(Editor& editor) noexcept
 	:
-	EditorWindow(editor, "Asset explorer")
+	EditorWindow(editor, "Asset explorer"),
+	assetManager("D:\\Fireworks projects\\Test project\\Assets")
 {
 }
 
@@ -19,17 +22,12 @@ void AssetExplorerWindow::Draw() noexcept
 		static float fileSize = ImGui::GetWindowWidth() * 4 / 5;
 
 		editor.Splitter(true, 8.0f, &folderSize, &fileSize, 10.0f, 10.0f);
+
 		ImGui::BeginChild("Folder explorer", ImVec2(folderSize, 0), true);
 		ImGui::Text("Folders");
-		if (ImGui::TreeNode("Root"))
+		if (ImGui::TreeNode("Assets"))
 		{
-			for (int i = 0; i < 10; i++)
-			{
-				if (ImGui::TreeNode((void*)(intptr_t)i, "Filter %d", i))
-				{
-					ImGui::TreePop();
-				}
-			}
+			DrawAssetsTree();
 			ImGui::TreePop();
 		}
 		ImGui::EndChild();
@@ -41,4 +39,54 @@ void AssetExplorerWindow::Draw() noexcept
 		ImGui::EndChild();
 	}
 	ImGui::End();
+}
+
+void AssetExplorerWindow::DrawAssetsTree() noexcept
+{
+	nodeIndexCount = 0;
+	DrawDirectoryTree(assetManager.GetAssetsDir());
+}
+
+void AssetExplorerWindow::DrawDirectoryTree(const std::filesystem::path& directory) noexcept
+{
+	if (fs::exists(directory) && fs::is_directory(directory))
+	{
+		for (const auto& entry : fs::directory_iterator(directory))
+		{
+			if (fs::is_directory(entry.status()))
+			{
+				auto directoryString = entry.path().filename().string();
+
+				auto currentIndex = nodeIndexCount++;
+				auto nodeFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
+
+				if (currentIndex == selectedFolderID)
+					nodeFlags |= ImGuiTreeNodeFlags_Selected;
+
+				bool isLeaf = true;
+				for (auto& leafCheck : fs::directory_iterator(entry.path()))
+				{
+					isLeaf = false;
+					break;
+				}
+
+				if(isLeaf)
+					nodeFlags |= ImGuiTreeNodeFlags_Leaf;
+
+				bool open = ImGui::TreeNodeEx((void*)(intptr_t)currentIndex, nodeFlags, directoryString.c_str());
+
+				if (ImGui::IsItemClicked())
+				{
+					selectedFolderID = currentIndex;
+					selectedFolder = entry.path();
+				}
+
+				if (open)
+				{
+					DrawDirectoryTree(entry.path());
+					ImGui::TreePop();
+				}
+			}
+		}
+	}
 }
