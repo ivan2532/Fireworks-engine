@@ -24,6 +24,15 @@ void AssetManager::ScanAssets() noexcept
 {
 	folders.clear();
 	ScanDirectory(assetsDir, -1);
+
+	std::sort(
+		folders.begin(),
+		folders.end(),
+		[](const Folder& lhs, const Folder& rhs)
+		{
+			return lhs.path < rhs.path;
+		}
+	);
 }
 
 void AssetManager::ImportAsset(const std::string& path) noexcept

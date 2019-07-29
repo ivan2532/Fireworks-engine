@@ -39,17 +39,33 @@ void AssetExplorerWindow::Draw() noexcept
 
 void AssetExplorerWindow::DrawAssetsTree() noexcept
 {
+	nodeIndexCount = 0;
 	DrawFolderTree(assetManager.folders.front());
 }
 
 void AssetExplorerWindow::DrawFolderTree(const Folder& folder) noexcept
 {
-	if (ImGui::TreeNode(folder.name.c_str()))
+	int currentIndex = nodeIndexCount++;
+	auto nodeFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
+
+	if (folder.childrenIndices.size() == 0)
+		nodeFlags |= ImGuiTreeNodeFlags_Leaf;
+
+	if (currentIndex == selectedFolderID)
+		nodeFlags |= ImGuiTreeNodeFlags_Selected;
+
+	bool expandedNode = ImGui::TreeNodeEx((void*)(intptr_t)currentIndex, nodeFlags, folder.name.c_str());
+
+	if (ImGui::IsItemClicked())
+	{
+		selectedFolderID = currentIndex;
+		selectedFolder = folder.path;
+	}
+
+	if (expandedNode)
 	{
 		for (const auto& childFolder : folder.childrenIndices)
-		{
 			DrawFolderTree(assetManager.folders[childFolder]);
-		}
 
 		ImGui::TreePop();
 	}
