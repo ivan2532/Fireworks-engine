@@ -87,9 +87,6 @@
     <ClCompile Include="Model.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="ImGuiManager.cpp">
-      <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="Shader.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
@@ -180,6 +177,9 @@
     <ClCompile Include="AssetManager.cpp">
       <Filter>Source Files\Project Management\Assets</Filter>
     </ClCompile>
+    <ClCompile Include="ImGuiManager.cpp">
+      <Filter>Source Files\Editor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Component.hpp">
@@ -231,9 +231,6 @@
       <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="GameObject.hpp">
-      <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGuiManager.hpp">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="Math.hpp">
@@ -310,6 +307,12 @@
     </ClInclude>
     <ClInclude Include="Asset.hpp">
       <Filter>Header Files\Editor\Project Management\Assets</Filter>
+    </ClInclude>
+    <ClInclude Include="FontIcons.hpp">
+      <Filter>Header Files\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGuiManager.hpp">
+      <Filter>Header Files\Editor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

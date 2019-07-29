@@ -173,6 +173,7 @@
     <ClInclude Include="Editor.hpp" />
     <ClInclude Include="EditorWindow.hpp" />
     <ClInclude Include="EditorWindowIncludes.hpp" />
+    <ClInclude Include="FontIcons.hpp" />
     <ClInclude Include="FPCameraMovement.hpp" />
     <ClInclude Include="Engine.hpp" />
     <ClInclude Include="GameObject.hpp" />

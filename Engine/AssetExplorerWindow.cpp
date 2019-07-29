@@ -1,6 +1,8 @@
 #include "AssetExplorerWindow.hpp"
 #include "imguiIncludes.hpp"
 #include "Editor.hpp"
+#include "FontIcons.hpp"
+#include <sstream>
 
 namespace fs = std::filesystem;
 
@@ -43,7 +45,7 @@ void AssetExplorerWindow::DrawAssetsTree() noexcept
 	DrawFolderTree(assetManager.folders.front());
 }
 
-void AssetExplorerWindow::DrawFolderTree(const Folder& folder) noexcept
+void AssetExplorerWindow::DrawFolderTree(const FolderNode& folder) noexcept
 {
 	int currentIndex = nodeIndexCount++;
 	auto nodeFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
@@ -54,7 +56,12 @@ void AssetExplorerWindow::DrawFolderTree(const Folder& folder) noexcept
 	if (currentIndex == selectedFolderID)
 		nodeFlags |= ImGuiTreeNodeFlags_Selected;
 
-	bool expandedNode = ImGui::TreeNodeEx((void*)(intptr_t)currentIndex, nodeFlags, folder.name.c_str());
+	if (currentIndex == 0)
+		nodeFlags |= ImGuiTreeNodeFlags_DefaultOpen;
+
+	std::ostringstream displayString;
+	displayString << ICON_FA_FOLDER << "  " << folder.name;
+	bool expandedNode = ImGui::TreeNodeEx((void*)(intptr_t)currentIndex, nodeFlags, displayString.str().c_str());
 
 	if (ImGui::IsItemClicked())
 	{

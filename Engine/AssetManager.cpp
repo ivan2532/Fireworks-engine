@@ -28,7 +28,7 @@ void AssetManager::ScanAssets() noexcept
 	std::sort(
 		folders.begin(),
 		folders.end(),
-		[](const Folder& lhs, const Folder& rhs)
+		[](const FolderNode& lhs, const FolderNode& rhs)
 		{
 			return lhs.path < rhs.path;
 		}
@@ -49,7 +49,7 @@ void AssetManager::ScanDirectory(const std::filesystem::path& directory, int par
 {
 	if (fs::exists(directory) && fs::is_directory(directory))
 	{
-		Folder newFolder;
+		FolderNode newFolder;
 		newFolder.path = directory.string();
 		newFolder.name = directory.filename().string();
 		newFolder.parentIndex = parent;

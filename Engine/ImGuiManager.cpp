@@ -1,5 +1,6 @@
 #include "ImGuiManager.hpp"
 #include "imgui/imgui.h"
+#include "FontIcons.hpp"
 
 ImGuiManager::ImGuiManager()
 {
@@ -17,7 +18,16 @@ ImGuiManager::~ImGuiManager()
 
 void ImGuiManager::StyleInit()
 {
-	ImGui::GetIO().Fonts->AddFontFromFileTTF("Fonts/Ruda-Bold.ttf", 15.0f);
+	ImGuiIO& io = ImGui::GetIO();
+	io.Fonts->AddFontFromFileTTF("Fonts/Ruda-Bold.ttf", 15.0f);
+
+	static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
+	ImFontConfig icons_config;
+	icons_config.MergeMode = true;
+	icons_config.PixelSnapH = true;
+
+	io.Fonts->AddFontFromFileTTF(FONT_ICON_FILE_NAME_FAS, 16.0f, &icons_config, icons_ranges);
+
 	ImGuiStyle& style = ImGui::GetStyle();
 	ImVec4* colors = style.Colors;
 

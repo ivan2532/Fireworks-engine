@@ -5,7 +5,7 @@
 #include <filesystem>
 #include <memory>
 
-struct Folder
+struct FolderNode
 {
 	std::string path;
 	std::string name;
@@ -30,6 +30,6 @@ private:
 private:
 	std::string assetsDirString;
 	std::filesystem::path assetsDir;
-	std::vector<Folder> folders;
+	std::vector<FolderNode> folders;
 	std::vector<std::unique_ptr<Asset>> assets;
 };
