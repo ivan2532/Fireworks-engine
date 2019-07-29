@@ -13,10 +13,9 @@ public:
 	void Draw() noexcept override;
 	void DrawAssetsTree() noexcept;
 private:
-	void DrawDirectoryTree(const std::filesystem::path& directory) noexcept;
+	void DrawFolderTree(const Folder& folder) noexcept;
 private:
 	AssetManager assetManager;
-
 	int nodeIndexCount = 0;
 	int selectedFolderID = -1;
 	std::filesystem::path selectedFolder;

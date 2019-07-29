@@ -1,12 +1,21 @@
 #pragma once
+#include "Asset.hpp"
 #include <string>
 #include <vector>
 #include <filesystem>
+#include <memory>
 
-class Asset;
+struct Folder
+{
+	std::string path;
+	std::string name;
+	int parentIndex = -1;
+	std::vector<int> childrenIndices;
+};
 
 class AssetManager
 {
+	friend class AssetExplorerWindow;
 public:
 	AssetManager(const std::string& projectDirectory) noexcept;
 public:
@@ -17,7 +26,10 @@ public:
 	void ImportAsset(const std::string& path) noexcept;
 	void DeleteAsset(unsigned index) noexcept;
 private:
+	void ScanDirectory(const std::filesystem::path& directory, int parent) noexcept;
+private:
 	std::string assetsDirString;
 	std::filesystem::path assetsDir;
-	std::vector<std::string> assets;
+	std::vector<Folder> folders;
+	std::vector<std::unique_ptr<Asset>> assets;
 };

@@ -25,11 +25,7 @@ void AssetExplorerWindow::Draw() noexcept
 
 		ImGui::BeginChild("Folder explorer", ImVec2(folderSize, 0), true);
 		ImGui::Text("Folders");
-		if (ImGui::TreeNode("Assets"))
-		{
-			DrawAssetsTree();
-			ImGui::TreePop();
-		}
+		DrawAssetsTree();
 		ImGui::EndChild();
 
 		ImGui::SameLine();
@@ -43,50 +39,18 @@ void AssetExplorerWindow::Draw() noexcept
 
 void AssetExplorerWindow::DrawAssetsTree() noexcept
 {
-	nodeIndexCount = 0;
-	DrawDirectoryTree(assetManager.GetAssetsDir());
+	DrawFolderTree(assetManager.folders.front());
 }
 
-void AssetExplorerWindow::DrawDirectoryTree(const std::filesystem::path& directory) noexcept
+void AssetExplorerWindow::DrawFolderTree(const Folder& folder) noexcept
 {
-	if (fs::exists(directory) && fs::is_directory(directory))
+	if (ImGui::TreeNode(folder.name.c_str()))
 	{
-		for (const auto& entry : fs::directory_iterator(directory))
+		for (const auto& childFolder : folder.childrenIndices)
 		{
-			if (fs::is_directory(entry.status()))
-			{
-				auto directoryString = entry.path().filename().string();
-
-				auto currentIndex = nodeIndexCount++;
-				auto nodeFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
-
-				if (currentIndex == selectedFolderID)
-					nodeFlags |= ImGuiTreeNodeFlags_Selected;
-
-				bool isLeaf = true;
-				for (auto& leafCheck : fs::directory_iterator(entry.path()))
-				{
-					isLeaf = false;
-					break;
-				}
-
-				if(isLeaf)
-					nodeFlags |= ImGuiTreeNodeFlags_Leaf;
-
-				bool open = ImGui::TreeNodeEx((void*)(intptr_t)currentIndex, nodeFlags, directoryString.c_str());
-
-				if (ImGui::IsItemClicked())
-				{
-					selectedFolderID = currentIndex;
-					selectedFolder = entry.path();
-				}
-
-				if (open)
-				{
-					DrawDirectoryTree(entry.path());
-					ImGui::TreePop();
-				}
-			}
+			DrawFolderTree(assetManager.folders[childFolder]);
 		}
+
+		ImGui::TreePop();
 	}
 }
