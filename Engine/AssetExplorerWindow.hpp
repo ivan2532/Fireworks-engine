@@ -14,9 +14,12 @@ public:
 	void DrawAssetsTree() noexcept;
 private:
 	void DrawFolderTree(FolderNode& folder) noexcept;
+	void DrawFolderContents(const FolderNode& folder) const noexcept;
 private:
 	AssetManager assetManager;
 	int nodeIndexCount = 0;
 	int selectedFolderID = -1;
-	std::filesystem::path selectedFolder;
+	FolderNode* selectedFolder = nullptr;
+public:
+	static constexpr float fileButtonSize = 70.0f;
 };

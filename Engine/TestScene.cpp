@@ -8,7 +8,7 @@ TestScene::TestScene(Engine& rEngine, Window& w) noexcept
 	:
 	Scene(rEngine, "Test scene"),
 	wnd(w),
-	testModel("Material_ball/material_ball.obj", rEngine.defaultShader)
+	testModel("material_ball", "Material_ball/material_ball.obj", rEngine.defaultShader)
 {
 	testModel.AddToScene(*this);
 

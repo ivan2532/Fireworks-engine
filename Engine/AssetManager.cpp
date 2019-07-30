@@ -65,7 +65,7 @@ void AssetManager::ScanDirectory(const std::filesystem::path& directory, int par
 
 void AssetManager::LoadModelAsset(const std::filesystem::path& path, FolderNode& folder) noexcept
 {
-	auto modelAsset = std::make_unique<Model>(path.string(), shader);
+	auto modelAsset = std::make_unique<Model>(path.filename().string(), path.string(), shader);
 	folder.assets.push_back(std::move(modelAsset));
 	std::cout << "Loaded model: " << path.string() << " in " << folder.name << std::endl;
 }

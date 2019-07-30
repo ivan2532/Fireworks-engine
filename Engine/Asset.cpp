@@ -6,3 +6,8 @@ Asset::Asset(const std::string& name, unsigned image) noexcept
 	imageID(image)
 {
 }
+
+std::string Asset::GetName() const noexcept
+{
+	return assetName;
+}

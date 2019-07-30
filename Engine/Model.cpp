@@ -15,15 +15,15 @@ const std::vector<std::string> Model::supportedFormats = {
 	".mdl"
 };
 
-Model::Model(std::string path, Shader& s) noexcept
+Model::Model(const std::string& name, const std::string& path, Shader& s) noexcept
 	:
-	Asset(path, 0u),
+	Asset(name, 0u),
 	shader(s)
 {
 	LoadMesh(path);
 }
 
-void Model::LoadMesh(std::string path) noexcept
+void Model::LoadMesh(const std::string& path) noexcept
 {
 	Assimp::Importer importer;
 	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);

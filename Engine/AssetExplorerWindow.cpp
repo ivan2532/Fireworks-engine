@@ -30,7 +30,9 @@ void AssetExplorerWindow::Draw() noexcept
 		ImGui::Text("Folders");
 		ImGui::Separator();
 		ImGui::Spacing();
+
 		DrawAssetsTree();
+
 		ImGui::EndChild();
 
 		ImGui::SameLine();
@@ -39,6 +41,12 @@ void AssetExplorerWindow::Draw() noexcept
 		ImGui::Text("Files");
 		ImGui::Separator();
 		ImGui::Spacing();
+
+		if (selectedFolderID != -1)
+		{
+			DrawFolderContents(*selectedFolder);
+		}
+
 		ImGui::EndChild();
 	}
 	ImGui::End();
@@ -76,7 +84,7 @@ void AssetExplorerWindow::DrawFolderTree(FolderNode& folder) noexcept
 	if (ImGui::IsItemClicked())
 	{
 		selectedFolderID = currentIndex;
-		selectedFolder = folder.path;
+		selectedFolder = &folder;
 	}
 
 	if (expandedNode)
@@ -93,4 +101,26 @@ void AssetExplorerWindow::DrawFolderTree(FolderNode& folder) noexcept
 	}
 	else
 		folder.expanded = false;
+}
+
+void AssetExplorerWindow::DrawFolderContents(const FolderNode& folder) const noexcept
+{
+	ImGuiStyle& style = ImGui::GetStyle();
+	float xLimit = ImGui::GetWindowPos().x + ImGui::GetContentRegionMax().x;
+
+	for (unsigned i = 0; i < folder.assets.size(); i++)
+	{
+		auto curAsset = folder.assets[i].get();
+
+		ImGui::PushID(i);
+
+		ImGui::Button(curAsset->GetName().c_str(), ImVec2(fileButtonSize, fileButtonSize));
+		float lastButtonX = ImGui::GetItemRectMax().x;
+		float nextButtonX = lastButtonX + style.ItemSpacing.x + 50;
+
+		if (i + 1 < folder.assets.size() && nextButtonX < xLimit)
+			ImGui::SameLine();
+
+		ImGui::PopID();
+	}
 }

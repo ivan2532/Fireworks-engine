@@ -18,10 +18,10 @@ class Model : public Asset
 public:
 	static const std::vector<std::string> supportedFormats;
 public:
-	Model(std::string path, Shader& shader) noexcept;
+	Model(const std::string& name, const std::string&, Shader& shader) noexcept;
 	void AddToScene(Scene&);
 private:
-	void LoadMesh(std::string path) noexcept;
+	void LoadMesh(const std::string& path) noexcept;
 	void ProcessNode(aiNode *node, const aiScene *scene, Transform* parent) noexcept;
 	std::unique_ptr<Mesh> ProcessMesh(aiMesh* mesh, const aiScene* scene) noexcept;
 	std::vector<Texture> LoadMaterialTextures(aiMaterial* material, aiTextureType type, TextureType typeName) noexcept;
