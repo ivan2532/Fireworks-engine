@@ -17,6 +17,8 @@ private:
 	void DrawFolderContents(const FolderNode& folder) const noexcept;
 private:
 	AssetManager assetManager;
+	float folderWidth;
+	float fileWidth;
 	int nodeIndexCount = 0;
 	int selectedFolderID = -1;
 	FolderNode* selectedFolder = nullptr;

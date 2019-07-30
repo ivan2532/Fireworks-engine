@@ -16,17 +16,24 @@ AssetExplorerWindow::AssetExplorerWindow(Editor& editor) noexcept
 
 void AssetExplorerWindow::Draw() noexcept
 {
+	//ImGui::ShowDemoWindow();
 	if (!open)
 		return;
 
 	if (ImGui::Begin("Asset explorer", &open))
 	{
-		static float folderSize = ImGui::GetWindowWidth() / 5;
-		static float fileSize = ImGui::GetWindowWidth() * 4 / 5;
+		static bool initializedWidths = false;
 
-		editor.Splitter(true, 8.0f, &folderSize, &fileSize, 10.0f, 10.0f);
+		if (!initializedWidths)
+		{
+			folderWidth = ImGui::GetWindowWidth() / 5;
+			fileWidth = ImGui::GetWindowWidth() * 4 / 5;
+			initializedWidths = true;
+		}
 
-		ImGui::BeginChild("Folder explorer", ImVec2(folderSize, 0), true);
+		editor.Splitter(true, 8.0f, &folderWidth, &fileWidth, 10.0f, 10.0f);
+
+		ImGui::BeginChild("Folder explorer", ImVec2(folderWidth, 0), true);
 		ImGui::Text("Folders");
 		ImGui::Separator();
 		ImGui::Spacing();
@@ -37,7 +44,7 @@ void AssetExplorerWindow::Draw() noexcept
 
 		ImGui::SameLine();
 
-		ImGui::BeginChild("File explorer", ImVec2(fileSize, 0), true);
+		ImGui::BeginChild("File explorer", ImVec2(fileWidth, 0), true);
 		ImGui::Text("Files");
 		ImGui::Separator();
 		ImGui::Spacing();
@@ -106,21 +113,40 @@ void AssetExplorerWindow::DrawFolderTree(FolderNode& folder) noexcept
 void AssetExplorerWindow::DrawFolderContents(const FolderNode& folder) const noexcept
 {
 	ImGuiStyle& style = ImGui::GetStyle();
-	float xLimit = ImGui::GetWindowPos().x + ImGui::GetContentRegionMax().x;
-
+	const auto columnCount = std::max(1, static_cast<int>(fileWidth / (fileButtonSize + style.ItemSpacing.x)));
+	
 	for (unsigned i = 0; i < folder.assets.size(); i++)
 	{
 		auto curAsset = folder.assets[i].get();
 
+		std::ostringstream columnID;
+		columnID << "##file_" << i << "_column";
+		ImGui::Columns(columnCount, columnID.str().c_str());
+
 		ImGui::PushID(i);
-
-		ImGui::Button(curAsset->GetName().c_str(), ImVec2(fileButtonSize, fileButtonSize));
-		float lastButtonX = ImGui::GetItemRectMax().x;
-		float nextButtonX = lastButtonX + style.ItemSpacing.x + 50;
-
-		if (i + 1 < folder.assets.size() && nextButtonX < xLimit)
-			ImGui::SameLine();
-
+		ImGui::Button("", ImVec2(fileButtonSize, fileButtonSize));
 		ImGui::PopID();
+
+		std::string textString = curAsset->GetName();
+		bool cutString = false;
+
+		if (ImGui::CalcTextSize(textString.c_str()).x > fileButtonSize)
+			cutString = true;
+
+		if (cutString)
+		{
+			textString.pop_back();
+			textString += "...";
+
+			while (textString.length() > 3 && ImGui::CalcTextSize(textString.c_str()).x > fileButtonSize)
+			{
+				cutString = true;
+				textString.erase(textString.end() - 4);
+			}
+		}
+
+		ImGui::Text(textString.c_str());
+
+		ImGui::NextColumn();
 	}
 }
