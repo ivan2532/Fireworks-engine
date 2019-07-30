@@ -27,42 +27,23 @@ void AssetManager::ScanAssets() noexcept
 {
 	folders.clear();
 	ScanDirectory(assetsDir, -1);
-
-	std::sort(
-		folders.begin(),
-		folders.end(),
-		[](const FolderNode& lhs, const FolderNode& rhs)
-		{
-			return lhs.path < rhs.path;
-		}
-	);
 }
 
-void AssetManager::ImportAsset(const std::string& path) noexcept
-{
-	//Create asset from file and push into the assets vector.
-}
-
-void AssetManager::DeleteAsset(unsigned index) noexcept
-{
-	//Delete file and erase from assets vector.
-}
-
-void AssetManager::ScanDirectory(const std::filesystem::path& directory, int parent) noexcept
+void AssetManager::ScanDirectory(const std::filesystem::path& directory, int parentIndex) noexcept
 {
 	if (fs::exists(directory) && fs::is_directory(directory))
 	{
 		FolderNode newFolder;
 		newFolder.path = directory.string();
 		newFolder.name = directory.filename().string();
-		newFolder.parentIndex = parent;
+		newFolder.parentIndex = parentIndex;
 
 		int currentIndex = folders.size();
 
-		folders.push_back(newFolder);
+		folders.push_back(std::move(newFolder));
 
-		if (parent != -1)
-			folders[parent].childrenIndices.push_back(currentIndex);
+		if (parentIndex != -1)
+			folders[parentIndex].childrenIndices.push_back(currentIndex);
 
 		for (const auto& entry : fs::directory_iterator(directory))
 		{
@@ -76,15 +57,15 @@ void AssetManager::ScanDirectory(const std::filesystem::path& directory, int par
 
 				for (const auto& modelExtension : Model::supportedFormats)
 					if (modelExtension == fileExtension)
-						LoadModelAsset(entry.path());
+						LoadModelAsset(entry.path(), folders[currentIndex]);
 			}
 		}
 	}
 }
 
-void AssetManager::LoadModelAsset(const std::filesystem::path& path) noexcept
+void AssetManager::LoadModelAsset(const std::filesystem::path& path, FolderNode& folder) noexcept
 {
 	auto modelAsset = std::make_unique<Model>(path.string(), shader);
-	assets.push_back(std::move(modelAsset));
-	std::cout << "Loaded model: " << path.string() << std::endl;
+	folder.assets.push_back(std::move(modelAsset));
+	std::cout << "Loaded model: " << path.string() << " in " << folder.name << std::endl;
 }

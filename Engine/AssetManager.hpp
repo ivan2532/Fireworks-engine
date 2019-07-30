@@ -9,9 +9,10 @@ struct FolderNode
 {
 	std::string path;
 	std::string name;
+	bool expanded = false;
 	int parentIndex = -1;
 	std::vector<int> childrenIndices;
-	bool expanded = false;
+	std::vector<std::unique_ptr<Asset>> assets;
 };
 
 class Shader;
@@ -26,15 +27,12 @@ public:
 	std::filesystem::path GetAssetsDir() const noexcept;
 public:
 	void ScanAssets() noexcept;
-	void ImportAsset(const std::string& path) noexcept;
-	void DeleteAsset(unsigned index) noexcept;
 private:
-	void ScanDirectory(const std::filesystem::path& directory, int parent) noexcept;
-	void LoadModelAsset(const std::filesystem::path& path) noexcept;
+	void ScanDirectory(const std::filesystem::path& directory, int parentIndex) noexcept;
+	void LoadModelAsset(const std::filesystem::path& path, FolderNode& folder) noexcept;
 private:
 	std::string assetsDirString;
 	std::filesystem::path assetsDir;
 	std::vector<FolderNode> folders;
-	std::vector<std::unique_ptr<Asset>> assets;
 	Shader& shader;
 };
