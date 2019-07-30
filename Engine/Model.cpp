@@ -6,6 +6,15 @@
 #include "ImageLoader.h"
 #include <iostream>
 
+const std::vector<std::string> Model::supportedFormats = {
+	".fbx",
+	".dae",
+	".blend",
+	".3ds",
+	".obj",
+	".mdl"
+};
+
 Model::Model(std::string path, Shader& s) noexcept
 	:
 	Asset(path, 0u),

@@ -49,6 +49,7 @@ private:
 	//User variables here
 public:
 	static float deltaTime;
+	Shader defaultShader;
 };
 
 void CursorMoveCallback(GLFWwindow* wnd, double x, double y);

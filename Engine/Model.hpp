@@ -16,6 +16,8 @@ class Shader;
 class Model : public Asset
 {
 public:
+	static const std::vector<std::string> supportedFormats;
+public:
 	Model(std::string path, Shader& shader) noexcept;
 	void AddToScene(Scene&);
 private:

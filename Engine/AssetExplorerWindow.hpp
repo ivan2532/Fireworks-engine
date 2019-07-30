@@ -13,7 +13,7 @@ public:
 	void Draw() noexcept override;
 	void DrawAssetsTree() noexcept;
 private:
-	void DrawFolderTree(const FolderNode& folder) noexcept;
+	void DrawFolderTree(FolderNode& folder) noexcept;
 private:
 	AssetManager assetManager;
 	int nodeIndexCount = 0;

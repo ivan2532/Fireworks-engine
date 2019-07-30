@@ -12,6 +12,5 @@ public:
 	void Update() noexcept override;
 private:
 	Window& wnd;
-	Shader textureShader;
 	Model testModel;
 };

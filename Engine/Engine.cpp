@@ -10,7 +10,8 @@ Engine::Engine() noexcept
 	:
 	wnd(1920u, 1080u, "Fireworks engine", false, true, false, true),
 	editor(*this),
-	activeScene(std::make_unique<TestScene>(*this, wnd))
+	activeScene(std::make_unique<TestScene>(*this, wnd)),
+	defaultShader("UnlitTextureVS.glsl", "UnlitTextureFS.glsl")
 {
 	//wnd.MakeFramebuffer(800u, 600u);
 
