@@ -174,5 +174,5 @@ std::vector<Texture> Model::LoadMaterialTextures(aiMaterial* material, aiTexture
 void Model::AddToScene(Scene& scene)
 {
 	for (auto& object : meshObjects)
-		scene.AddSceneObject(object, true);
+		scene.AddSceneObject(object);
 }

@@ -1,6 +1,12 @@
+#include "OpenGLIncludes.hpp"
 #include "AssetManager.hpp"
 #include "Model.hpp"
+#include "Editor.hpp"
+#include "Engine.hpp"
 #include <iostream>
+#include <chrono>
+#include <thread>
+#include <future>
 
 namespace fs = std::filesystem;
 
@@ -31,6 +37,8 @@ void AssetManager::ScanAssets() noexcept
 
 void AssetManager::ScanDirectory(const std::filesystem::path& directory, int parentIndex) noexcept
 {
+	auto start = std::chrono::steady_clock::now();
+
 	if (fs::exists(directory) && fs::is_directory(directory))
 	{
 		FolderNode newFolder;
@@ -39,28 +47,40 @@ void AssetManager::ScanDirectory(const std::filesystem::path& directory, int par
 		newFolder.parentIndex = parentIndex;
 
 		int currentIndex = folders.size();
-
+		foldersMutex.lock();
 		folders.push_back(std::move(newFolder));
 
 		if (parentIndex != -1)
 			folders[parentIndex].childrenIndices.push_back(currentIndex);
+		foldersMutex.unlock();
 
 		for (const auto& entry : fs::directory_iterator(directory))
 		{
 			if (fs::is_directory(entry.status()))
 			{
-				ScanDirectory(entry.path(), currentIndex);
+				//ScanDirectory(entry.path(), currentIndex);
+				auto newThread = std::async(&AssetManager::ScanDirectory, this, std::ref(entry.path()), currentIndex);
 			}
 			else
 			{
 				std::string fileExtension = entry.path().extension().string();
 
 				for (const auto& modelExtension : Model::supportedFormats)
+				{
 					if (modelExtension == fileExtension)
-						LoadModelAsset(entry.path(), folders[currentIndex]);
+					{
+						std::cout << "Started loading model!" << std::endl;
+						//LoadModelAsset(entry.path(), folders[currentIndex]); 
+						//auto newThread = std::async(&AssetManager::LoadModelAsset, this, std::ref(entry.path()), std::ref(folders[currentIndex]));
+					}
+				}
 			}
 		}
 	}
+
+	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>
+		(std::chrono::steady_clock::now() - start);
+	//std::cout << std::endl << duration.count() << std::endl;
 }
 
 void AssetManager::LoadModelAsset(const std::filesystem::path& path, FolderNode& folder) noexcept

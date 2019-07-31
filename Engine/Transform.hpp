@@ -53,10 +53,9 @@ public:
 
 	void AddShaderToUpdate(Shader* shader) noexcept;
 public:
-	void DrawHierarchy(Editor& editor, int& nodeIndexCount) const noexcept;
-public:
 	void Update() noexcept override;
 	void CheckChildrenDelete() noexcept;
+	void DrawHierarchy(Editor& editor, int& nodeIndexCount) const noexcept;
 	void DrawInspector(Editor& editor) noexcept override;
 private:
 	void UpdateTransform() noexcept;

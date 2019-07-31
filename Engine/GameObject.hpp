@@ -25,8 +25,11 @@ public:
 	void SetName(const std::string&) noexcept;
 	void Update() noexcept;
 
+	template<class T>
+	T* AddComponent(std::unique_ptr<T> component) noexcept;
+
 	template<class T, typename... Args>
-	void AddComponent(Args&&... args) noexcept;
+	T* AddComponent(Args&&... args) noexcept;
 
 	template<class T>
 	std::optional<T*> GetComponent() const noexcept;
@@ -38,12 +41,20 @@ private:
 	bool deleteFlag = false;
 };
 
+template<class T>
+T* GameObject::AddComponent(std::unique_ptr<T> component) noexcept
+{
+	components.push_back(std::move(component));
+	return dynamic_cast<T*>(components.back().get());
+}
+
 template<typename T, class ...Args>
-void GameObject::AddComponent(Args&&... args) noexcept
+T* GameObject::AddComponent(Args&&... args) noexcept
 {
 	components.push_back(std::move(std::make_unique<T>(std::forward<Args>(args)...)));
 	components.back()->SetObject(this);
 	components.back()->Initialize();
+	return dynamic_cast<T*>(components.back().get());
 }
 
 template<class T>

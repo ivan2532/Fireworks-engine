@@ -14,7 +14,7 @@ public:
 	Scene(Engine& rEngine, const std::string& name) noexcept;
 public:
 	std::string GetName() const noexcept;
-	void AddSceneObject(GameObject go, bool move = false) noexcept;
+	void AddSceneObject(GameObject go) noexcept;
 	virtual void Update() noexcept;
 	void CheckObjectDelete() noexcept;
 	void UpdateScene();

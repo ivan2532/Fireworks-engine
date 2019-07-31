@@ -4,6 +4,7 @@
 #include <vector>
 #include <filesystem>
 #include <memory>
+#include <mutex>
 
 struct FolderNode
 {
@@ -16,6 +17,7 @@ struct FolderNode
 };
 
 class Shader;
+class Editor;
 
 class AssetManager
 {
@@ -35,4 +37,5 @@ private:
 	std::filesystem::path assetsDir;
 	std::vector<FolderNode> folders;
 	Shader& shader;
+	std::mutex foldersMutex;
 };

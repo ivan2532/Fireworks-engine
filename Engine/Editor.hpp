@@ -17,6 +17,7 @@ class Editor
 {
 	friend HierarchyWindow;
 	friend InspectorWindow;
+	friend AssetManager;
 	friend AssetExplorerWindow;
 	friend SceneViewWindow;
 	friend GizmoManager;
