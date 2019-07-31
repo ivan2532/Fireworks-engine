@@ -20,6 +20,7 @@ public:
 public:
 	Model(const std::string& name, const std::string&, Shader& shader) noexcept;
 	void AddToScene(Scene&);
+	void InitMeshes() noexcept;
 private:
 	void LoadMesh(const std::string& path) noexcept;
 	void ProcessNode(aiNode *node, const aiScene *scene, Transform* parent) noexcept;

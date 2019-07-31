@@ -10,6 +10,7 @@ TestScene::TestScene(Engine& rEngine, Window& w) noexcept
 	wnd(w),
 	testModel("material_ball", "Material_ball/material_ball.obj", rEngine.defaultShader)
 {
+	testModel.InitMeshes();
 	testModel.AddToScene(*this);
 
 	GameObject transformTest("Test child");

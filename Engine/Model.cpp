@@ -176,3 +176,19 @@ void Model::AddToScene(Scene& scene)
 	for (auto& object : meshObjects)
 		scene.AddSceneObject(object);
 }
+
+void Model::InitMeshes() noexcept
+{
+	for (auto& object : meshObjects)
+	{
+		auto meshRenderer = object.GetComponent<MeshRenderer>();
+
+		if (!meshRenderer.has_value())
+			continue;
+
+		for (auto& mesh : meshRenderer.value()->GetMeshes())
+		{
+			mesh->InitMesh();
+		}
+	}
+}

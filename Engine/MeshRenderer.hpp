@@ -13,6 +13,7 @@ class MeshRenderer : public Component
 public:
 	MeshRenderer(Shader& shader);
 	void AddMesh(std::unique_ptr<Mesh> m) noexcept;
+	std::vector<std::unique_ptr<Mesh>>& GetMeshes() noexcept;
 public:
 	void Update() noexcept override;
 public:

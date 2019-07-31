@@ -31,14 +31,27 @@ std::filesystem::path AssetManager::GetAssetsDir() const noexcept
 
 void AssetManager::ScanAssets() noexcept
 {
+	auto start = std::chrono::steady_clock::now();
+
 	folders.clear();
 	ScanDirectory(assetsDir, -1);
+
+	for (auto& folder : folders)
+	{
+		for (auto& asset : folder.assets)
+		{
+			if (auto check = dynamic_cast<Model*>(asset.get()))
+				check->InitMeshes();
+		}
+	}
+
+	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>
+		(std::chrono::steady_clock::now() - start);
+	std::cout << std::endl << duration.count() << std::endl;
 }
 
 void AssetManager::ScanDirectory(const std::filesystem::path& directory, int parentIndex) noexcept
 {
-	auto start = std::chrono::steady_clock::now();
-
 	if (fs::exists(directory) && fs::is_directory(directory))
 	{
 		FolderNode newFolder;
@@ -47,6 +60,7 @@ void AssetManager::ScanDirectory(const std::filesystem::path& directory, int par
 		newFolder.parentIndex = parentIndex;
 
 		int currentIndex = folders.size();
+
 		foldersMutex.lock();
 		folders.push_back(std::move(newFolder));
 
@@ -70,17 +84,14 @@ void AssetManager::ScanDirectory(const std::filesystem::path& directory, int par
 					if (modelExtension == fileExtension)
 					{
 						std::cout << "Started loading model!" << std::endl;
-						//LoadModelAsset(entry.path(), folders[currentIndex]); 
-						//auto newThread = std::async(&AssetManager::LoadModelAsset, this, std::ref(entry.path()), std::ref(folders[currentIndex]));
+						//LoadModelAsset(entry.path(), folders[currentIndex]);
+						auto newThread = std::async(&AssetManager::LoadModelAsset, this, std::ref(entry.path()), std::ref(folders[currentIndex]));
+						continue;
 					}
 				}
 			}
 		}
 	}
-
-	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>
-		(std::chrono::steady_clock::now() - start);
-	//std::cout << std::endl << duration.count() << std::endl;
 }
 
 void AssetManager::LoadModelAsset(const std::filesystem::path& path, FolderNode& folder) noexcept

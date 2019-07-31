@@ -10,7 +10,6 @@ Mesh::Mesh(const std::string& n, std::vector<Vertex> v, std::vector<unsigned> i,
 	indices(std::move(i)),
 	textures(std::move(t))
 {
-	InitMesh();
 }
 
 Mesh::Mesh(const Mesh& rhs) noexcept
@@ -22,7 +21,6 @@ Mesh::Mesh(const Mesh& rhs) noexcept
 	elementBufferID(rhs.elementBufferID),
 	vertexArrayID(rhs.vertexArrayID)
 {
-	InitMesh();
 }
 
 Mesh& Mesh::operator=(const Mesh& rhs) noexcept
@@ -33,8 +31,6 @@ Mesh& Mesh::operator=(const Mesh& rhs) noexcept
 	vertexBufferID = rhs.vertexBufferID;
 	elementBufferID = rhs.elementBufferID;
 	vertexArrayID = rhs.vertexArrayID;
-
-	InitMesh();
 
 	return *this;
 }
@@ -48,7 +44,6 @@ Mesh::Mesh(Mesh&& rhs) noexcept
 	elementBufferID(std::move(rhs.elementBufferID)),
 	vertexArrayID(std::move(rhs.vertexArrayID))
 {
-	InitMesh();
 }
 
 Mesh& Mesh::operator=(Mesh&& rhs) noexcept
@@ -59,8 +54,6 @@ Mesh& Mesh::operator=(Mesh&& rhs) noexcept
 	vertexBufferID = std::move(rhs.vertexBufferID);
 	elementBufferID = std::move(rhs.elementBufferID);
 	vertexArrayID = std::move(rhs.vertexArrayID);
-
-	InitMesh();
 
 	return *this;
 }

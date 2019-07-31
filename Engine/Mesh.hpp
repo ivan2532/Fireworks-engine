@@ -39,7 +39,6 @@ public:
 	Mesh& operator=(Mesh&&) noexcept;
 	void Draw(Shader& shader) const noexcept;
 	std::string GetName() const noexcept;
-private:
 	void InitMesh() noexcept;
 public:
 	std::vector<Vertex> vertices;

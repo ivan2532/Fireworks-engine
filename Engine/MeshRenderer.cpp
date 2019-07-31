@@ -13,6 +13,11 @@ void MeshRenderer::AddMesh(std::unique_ptr<Mesh> m) noexcept
 	meshes.push_back(std::move(m));
 }
 
+std::vector<std::unique_ptr<Mesh>>& MeshRenderer::GetMeshes() noexcept
+{
+	return meshes;
+}
+
 void MeshRenderer::Update() noexcept
 {
 	for(auto& mesh : meshes)
