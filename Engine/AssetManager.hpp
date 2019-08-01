@@ -19,11 +19,13 @@ struct FolderNode
 class Shader;
 class Editor;
 
+struct GLFWwindow;
+
 class AssetManager
 {
 	friend class AssetExplorerWindow;
 public:
-	AssetManager(const std::string& projectDirectory, Shader& shader) noexcept;
+	AssetManager(Editor& editor, const std::string& projectDirectory, Shader& shader) noexcept;
 public:
 	std::string GetAssetsDirString() const noexcept;
 	std::filesystem::path GetAssetsDir() const noexcept;
@@ -31,11 +33,12 @@ public:
 	void ScanAssets() noexcept;
 private:
 	void ScanDirectory(const std::filesystem::path& directory, int parentIndex) noexcept;
-	void LoadModelAsset(const std::filesystem::path& path, FolderNode& folder) noexcept;
+	void LoadModelAsset(const std::filesystem::path& path, int folderIndex) noexcept;
 private:
 	std::string assetsDirString;
 	std::filesystem::path assetsDir;
 	std::vector<FolderNode> folders;
 	Shader& shader;
 	std::mutex foldersMutex;
+	GLFWwindow* scanningContext;
 };

@@ -10,7 +10,7 @@ namespace fs = std::filesystem;
 AssetExplorerWindow::AssetExplorerWindow(Editor& editor) noexcept
 	:
 	EditorWindow(editor, "Asset explorer"),
-	assetManager("D:\\Fireworks projects\\Test project\\Assets", editor.engine.defaultShader)
+	assetManager(editor, "D:\\Fireworks projects\\Test project\\Assets", editor.engine.defaultShader)
 {
 }
 

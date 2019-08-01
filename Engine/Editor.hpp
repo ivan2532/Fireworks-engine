@@ -6,6 +6,7 @@
 #include "EditorWindowIncludes.hpp"
 #include "GizmoManager.hpp"
 #include "Undoable.hpp"
+#include "Window.hpp"
 #include <memory>
 #include <optional>
 
@@ -44,6 +45,7 @@ public:
 	void PushUndoable(std::unique_ptr<Undoable> newUndoable) noexcept;
 	void Undo() noexcept;
 	void Redo() noexcept;
+	Window* GetMainWindow() const noexcept;
 private:
 	Engine& engine;
 	std::vector<std::unique_ptr<EditorWindow>> editorWindows;

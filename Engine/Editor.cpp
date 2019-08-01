@@ -212,3 +212,8 @@ void Editor::Redo() noexcept
 	undoBuffer.push_back(std::move(redoBuffer.back()));
 	redoBuffer.pop_back();
 }
+
+Window* Editor::GetMainWindow() const noexcept
+{
+	return engine.GetWindow();
+}
