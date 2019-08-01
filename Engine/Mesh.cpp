@@ -2,6 +2,7 @@
 #include "Mesh.hpp"
 #include "Shader.hpp"
 #include <iostream>
+#include <thread>
 
 Mesh::Mesh(const std::string& n, std::vector<Vertex> v, std::vector<unsigned> i, std::vector<Texture> t) noexcept
 	:
@@ -102,6 +103,7 @@ std::string Mesh::GetName() const noexcept
 
 void Mesh::InitMesh() noexcept
 {
+	//std::cout << "OpenGL context: " << glfwGetCurrentContext() << " | Thread ID: " << std::this_thread::get_id() << std::endl;
 	glGenVertexArrays(1u, &vertexArrayID);
 	glGenBuffers(1u, &vertexBufferID);
 	glGenBuffers(1u, &elementBufferID);

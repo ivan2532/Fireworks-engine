@@ -4,7 +4,6 @@
 #include "Editor.hpp"
 #include "Engine.hpp"
 #include <iostream>
-#include <chrono>
 #include <thread>
 #include <future>
 
@@ -34,16 +33,10 @@ std::filesystem::path AssetManager::GetAssetsDir() const noexcept
 
 void AssetManager::ScanAssets() noexcept
 {
-	auto start = std::chrono::steady_clock::now();
-
 	folders.clear();
 
 	std::thread scanner(&AssetManager::ScanDirectory, this, assetsDir, -1);
 	scanner.detach();
-
-	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>
-		(std::chrono::steady_clock::now() - start);
-	//std::cout << std::endl << duration.count() << std::endl;
 }
 
 void AssetManager::ScanDirectory(const std::filesystem::path& directory, int parentIndex) noexcept
@@ -58,8 +51,6 @@ void AssetManager::ScanDirectory(const std::filesystem::path& directory, int par
 
 		{
 			std::lock_guard guard(foldersMutex);
-			std::cout << "Mrljamo!" << std::endl;
-
 			currentIndex = folders.size();
 			folders.push_back(std::move(newFolder));
 
@@ -72,6 +63,7 @@ void AssetManager::ScanDirectory(const std::filesystem::path& directory, int par
 			if (fs::is_directory(entry.status()))
 			{
 				//ScanDirectory(entry.path(), currentIndex);
+
 				std::thread newThread(&AssetManager::ScanDirectory, this,
 					entry.path(), currentIndex);
 				newThread.detach();
@@ -84,8 +76,8 @@ void AssetManager::ScanDirectory(const std::filesystem::path& directory, int par
 				{
 					if (modelExtension == fileExtension)
 					{
-						//std::cout << "Started loading model!" << std::endl;
-						//LoadModelAsset(entry.path(), folders[currentIndex]);
+						//LoadModelAsset(entry.path(), currentIndex);
+
 						std::thread newThread(&AssetManager::LoadModelAsset, this,
 							entry.path(), currentIndex);
 						newThread.detach();
@@ -100,16 +92,14 @@ void AssetManager::ScanDirectory(const std::filesystem::path& directory, int par
 
 void AssetManager::LoadModelAsset(const std::filesystem::path& path, int folderIndex) noexcept
 {
-
 	auto modelAsset = std::make_unique<Model>(path.filename().string(), path.string(), shader);
-	
-	{
-		std::lock_guard guard(foldersMutex);
-		std::cout << "Mrljamo LOAD MODEL!" << std::endl;
-		glfwMakeContextCurrent(scanningContext);
-		gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 
-		modelAsset->InitMeshes();
-		folders[folderIndex].assets.push_back(std::move(modelAsset));
-	}
+	std::lock_guard guard(foldersMutex);
+	glfwMakeContextCurrent(scanningContext);
+	gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+
+	modelAsset->InitMeshes();
+	folders[folderIndex].assets.push_back(std::move(modelAsset));
+
+	glfwMakeContextCurrent(nullptr);
 }

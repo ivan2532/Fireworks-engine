@@ -1,5 +1,5 @@
+#include "OpenGLIncludes.hpp"
 #include "Model.hpp"
-#include "glad/glad.h"
 #include "Shader.hpp"
 #include "Scene.hpp"
 #include "Math.hpp"
@@ -177,8 +177,14 @@ void Model::AddToScene(Scene& scene)
 		scene.AddSceneObject(object);
 }
 
-void Model::InitMeshes() noexcept
+void Model::InitMeshes(GLFWwindow* context) noexcept
 {
+	if (context != nullptr)
+	{
+		glfwMakeContextCurrent(context);
+		gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+	}
+
 	for (auto& object : meshObjects)
 	{
 		auto meshRenderer = object.GetComponent<MeshRenderer>();
