@@ -38,10 +38,12 @@ private:
 private:
 	std::string assetsDirString;
 	std::filesystem::path assetsDir;
+	std::filesystem::path cacheDir;
 	std::vector<FolderNode> folders;
 	Shader& shader;
 	std::mutex foldersMutex;
 	GLFWwindow* scanningContext;
 	std::atomic<unsigned> threadCount = 1u;
+	std::atomic<unsigned> currentID = 0u;
 	const unsigned hardwareThreads;
 };

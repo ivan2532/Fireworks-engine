@@ -15,18 +15,17 @@ const std::vector<std::string> Model::supportedFormats = {
 	".mdl"
 };
 
-Model::Model(const std::string& name, const std::string& path, Shader& s) noexcept
+Model::Model(unsigned id, const std::string& path, const std::string& name, Shader& s) noexcept
 	:
-	Asset(name, 0u),
+	Asset(id, path, name, 0u),
 	shader(s)
 {
-	LoadMesh(path);
 }
 
-void Model::LoadMesh(const std::string& path) noexcept
+void Model::LoadCPU() noexcept
 {
 	Assimp::Importer importer;
-	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+	const aiScene* scene = importer.ReadFile(assetPath, aiProcess_Triangulate | aiProcess_FlipUVs);
 
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 	{
@@ -34,7 +33,7 @@ void Model::LoadMesh(const std::string& path) noexcept
 		return;
 	}
 
-	directory = path.substr(0, path.find_last_of('/'));
+	directory = assetPath.substr(0, assetPath.find_last_of('/'));
 	ProcessNode(scene->mRootNode, scene, nullptr);
 }
 
@@ -177,7 +176,7 @@ void Model::AddToScene(Scene& scene)
 		scene.AddSceneObject(object);
 }
 
-void Model::InitMeshes(GLFWwindow* context) noexcept
+void Model::LoadGPU(GLFWwindow* context) noexcept
 {
 	if (context != nullptr)
 	{

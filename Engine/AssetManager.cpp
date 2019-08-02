@@ -6,6 +6,8 @@
 #include <iostream>
 #include <thread>
 #include <future>
+#include <sstream>
+#include <fstream>
 
 namespace fs = std::filesystem;
 
@@ -16,6 +18,7 @@ AssetManager::AssetManager(Editor& editor, const std::string& projectDirectory, 
 	hardwareThreads(std::thread::hardware_concurrency())
 {
 	assetsDir = fs::path(assetsDirString);
+	cacheDir = assetsDir.parent_path() / "Cache";
 
 	glfwWindowHint(GLFW_VISIBLE, GL_FALSE);
 	scanningContext = glfwCreateWindow(1, 1, "", nullptr, editor.GetMainWindow()->GetWindow());
@@ -35,9 +38,6 @@ std::filesystem::path AssetManager::GetAssetsDir() const noexcept
 void AssetManager::ScanAssets() noexcept
 {
 	folders.clear();
-
-	//std::thread scanner(&AssetManager::ScanDirectory, this, assetsDir, -1);
-	//scanner.detach();
 	ScanDirectory(assetsDir, -1, std::this_thread::get_id());
 }
 
@@ -80,7 +80,6 @@ void AssetManager::ScanDirectory(const std::filesystem::path& directory, int par
 				{
 					threadCount++;
 
-					//std::cout << "FOLDER SCAN NEW THREAD, COUNT: " << threadCount << std::endl;
 					std::thread newThread(&AssetManager::ScanDirectory, this,
 						entry.path(), currentIndex, std::ref(oldThreadID));
 					newThread.detach();
@@ -99,7 +98,6 @@ void AssetManager::ScanDirectory(const std::filesystem::path& directory, int par
 						if (threadCount < hardwareThreads)
 						{
 							threadCount++;
-							//std::cout << "MODEL SCAN NEW THREAD, COUNT: " << threadCount << std::endl;
 							std::thread newThread(&AssetManager::LoadModelAsset, this,
 								entry.path(), currentIndex, std::ref(oldThreadID));
 							newThread.detach();
@@ -123,28 +121,34 @@ void AssetManager::ScanDirectory(const std::filesystem::path& directory, int par
 
 void AssetManager::LoadModelAsset(const std::filesystem::path& path, int folderIndex, const std::thread::id& oldThreadID) noexcept
 {
-	//std::cout << "Starting model load. Thread count: " << threadCount << std::endl;
-	auto modelAsset = std::make_unique<Model>(path.filename().string(), path.string(), shader);
+	auto modelAsset = std::make_unique<Model>(currentID++, path.string(), path.stem().string(), shader);
+
+	std::ostringstream metaPath;
+	metaPath << (cacheDir / std::to_string(modelAsset->GetID())).string();
+	metaPath << ".meta";
+
+	if (!fs::exists(metaPath.str()))
+	{
+		std::ofstream metaStream(metaPath.str());
+		metaStream << "#fireworks_meta" << std::endl;
+		metaStream << "path " << modelAsset->GetPath() << std::endl;
+		metaStream << "type model" << std::endl;
+		metaStream << "preview_image NULL" << std::endl;
+		metaStream.close();
+	}
+
 	auto curID = std::this_thread::get_id();
 
 	if (curID != oldThreadID)
 	{
 		std::lock_guard guard(foldersMutex);
-		glfwMakeContextCurrent(scanningContext);
-		gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-
-		modelAsset->InitMeshes();
 		folders[folderIndex].assets.push_back(std::move(modelAsset));
-		glfwMakeContextCurrent(nullptr);
 
 		if(threadCount > 0)
 			threadCount--;
 	}
 	else
 	{
-		modelAsset->InitMeshes();
 		folders[folderIndex].assets.push_back(std::move(modelAsset));
 	}
-
-	//std::cout << "Ended model load. Thread count: " << threadCount << std::endl;
 }

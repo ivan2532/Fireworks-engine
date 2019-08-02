@@ -8,9 +8,10 @@ TestScene::TestScene(Engine& rEngine, Window& w) noexcept
 	:
 	Scene(rEngine, "Test scene"),
 	wnd(w),
-	testModel("material_ball", "Material_ball/material_ball.obj", rEngine.defaultShader)
+	testModel(UINT16_MAX, "Material_ball/material_ball.obj", "material_ball", rEngine.defaultShader)
 {
-	testModel.InitMeshes();
+	testModel.LoadCPU();
+	testModel.LoadGPU();
 	testModel.AddToScene(*this);
 
 	GameObject transformTest("Test child");
