@@ -5,6 +5,7 @@
 #include <filesystem>
 #include <memory>
 #include <mutex>
+#include <atomic>
 
 struct FolderNode
 {
@@ -32,8 +33,8 @@ public:
 public:
 	void ScanAssets() noexcept;
 private:
-	void ScanDirectory(const std::filesystem::path& directory, int parentIndex) noexcept;
-	void LoadModelAsset(const std::filesystem::path& path, int folderIndex) noexcept;
+	void ScanDirectory(const std::filesystem::path& directory, int parentIndex, const std::thread::id& oldThreadID) noexcept;
+	void LoadModelAsset(const std::filesystem::path& path, int folderIndex, const std::thread::id& oldThreadID) noexcept;
 private:
 	std::string assetsDirString;
 	std::filesystem::path assetsDir;
@@ -41,4 +42,6 @@ private:
 	Shader& shader;
 	std::mutex foldersMutex;
 	GLFWwindow* scanningContext;
+	std::atomic<unsigned> threadCount = 1u;
+	const unsigned hardwareThreads;
 };
