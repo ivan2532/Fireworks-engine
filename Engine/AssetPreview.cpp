@@ -74,5 +74,7 @@ void AssetPreview::GeneratePreviewImage(std::ofstream& outputStream, Model& mode
 	glDeleteTextures(1u, &depthBuffer);
 
 	if (context != nullptr)
+	{
 		glfwMakeContextCurrent(nullptr);
+	}
 }

@@ -122,10 +122,15 @@ void AssetExplorerWindow::DrawFolderContents(int folderIndex) const noexcept
 
 		ImGui::PushID(i);
 		//ImGui::Button("", ImVec2(fileButtonSize, fileButtonSize));
+		if (!assetManager.folders[folderIndex].assets[i])
+			break;
+
 		ImGui::ImageButton((void*)(intptr_t)assetManager.folders[folderIndex].assets[i]->GetPreview(),
 			ImVec2(fileButtonSize, fileButtonSize));
 		ImGui::PopID();
 
+		if (!assetManager.folders[folderIndex].assets[i])
+			break;
 		std::string textString = assetManager.folders[folderIndex].assets[i]->GetName();
 
 		ImGui::TextWrapped(textString.c_str());
