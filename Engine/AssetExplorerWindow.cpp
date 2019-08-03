@@ -111,7 +111,8 @@ void AssetExplorerWindow::DrawFolderTree(int folderIndex) noexcept
 void AssetExplorerWindow::DrawFolderContents(int folderIndex) const noexcept
 {
 	ImGuiStyle& style = ImGui::GetStyle();
-	const auto columnCount = std::max(1, static_cast<int>(fileWidth / (fileButtonSize + style.ItemSpacing.x)));
+	const auto columnCount = std::max(1, static_cast<int>(fileWidth /
+		(fileButtonSize + style.ItemSpacing.x + style.FramePadding.x + style.ItemInnerSpacing.x * 2)));
 	
 	for (unsigned i = 0; i < assetManager.folders[folderIndex].assets.size(); i++)
 	{
@@ -125,7 +126,11 @@ void AssetExplorerWindow::DrawFolderContents(int folderIndex) const noexcept
 			break;
 
 		ImGui::ImageButton((void*)(intptr_t)assetManager.folders[folderIndex].assets[i]->GetPreview(),
-			ImVec2(fileButtonSize, fileButtonSize));
+			ImVec2(fileButtonSize, fileButtonSize)/*,
+			ImVec2(0, 0),
+			ImVec2(1, 1),
+			0*/
+		);
 		ImGui::PopID();
 
 		if (!assetManager.folders[folderIndex].assets[i])
