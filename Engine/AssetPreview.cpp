@@ -2,6 +2,7 @@
 #include "AssetPreview.hpp"
 #include "Model.hpp"
 #include <iostream>
+
 void AssetPreview::GeneratePreviewImage(std::ofstream& outputStream, Model& model) noexcept
 {
 	glGenFramebuffers(1u, &previewBuffer);
@@ -29,16 +30,16 @@ void AssetPreview::GeneratePreviewImage(std::ofstream& outputStream, Model& mode
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		std::cout << std::endl << std::endl << "PREVIEW ERROR: Framebuffer incomplete!" << std::endl << std::endl;
 
-	previewShader = std::make_unique<Shader>("UnlitTextureVS.glsl", "UnlitTextureFS.glsl");
-	previewShader->Use();
+	//previewShader = std::make_unique<Shader>("UnlitTextureVS.glsl", "UnlitTextureFS.glsl");
+	//previewShader->Use();
 
-	model.LoadCPU();
-	model.LoadGPU();
+	//model.LoadCPU();
+	//model.LoadGPU();
 
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	glClearColor(0.4f, 0.4f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	model.Draw(*previewShader);
+	//model.Draw(*previewShader);
 	glfwSwapBuffers(glfwGetCurrentContext());
 
 	std::vector<uint8_t> previewData(128 * 128 * 3);

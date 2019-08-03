@@ -51,10 +51,10 @@ unsigned AssetManager::GetPreviewFromMeta(const std::filesystem::path& metaPath)
 		data = data.substr(14, data.length() - 14);
 
 	glGenTextures(1u, &result);
-	//std::cout << glGetError() << std::endl;
-	glBindTexture(GL_TEXTURE_2D, result);
 
+	glBindTexture(GL_TEXTURE_2D, result);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 128, 128, 0, GL_RGB, GL_UNSIGNED_BYTE, data.data());
+	glGenerateMipmap(GL_TEXTURE_2D);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -117,6 +117,8 @@ void AssetManager::LoadModelAsset(const std::filesystem::path& path, int folderI
 
 	auto GenerateMeta = [&]()
 	{
+		std::cout << "Importing " << path.string() << std::endl;
+
 		std::ofstream metaStream(metaPath.str());
 		metaStream << "path " << modelAsset->GetPath() << std::endl;
 		metaStream << "type model" << std::endl;

@@ -113,7 +113,6 @@ void AssetExplorerWindow::DrawFolderContents(int folderIndex) const noexcept
 	ImGuiStyle& style = ImGui::GetStyle();
 	const auto columnCount = std::max(1, static_cast<int>(fileWidth / (fileButtonSize + style.ItemSpacing.x)));
 	
-	
 	for (unsigned i = 0; i < assetManager.folders[folderIndex].assets.size(); i++)
 	{
 		std::ostringstream columnID;
