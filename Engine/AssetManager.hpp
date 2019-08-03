@@ -33,10 +33,10 @@ public:
 	std::filesystem::path GetAssetsDir() const noexcept;
 public:
 	void ScanAssets() noexcept;
-	unsigned GetPreviewFromMeta(const std::filesystem::path& metaPath, GLFWwindow* context = nullptr) const noexcept;
+	unsigned GetPreviewFromMeta(const std::filesystem::path& metaPath) const noexcept;
 private:
-	void ScanDirectory(const std::filesystem::path& directory, int parentIndex, const std::thread::id& oldThreadID) noexcept;
-	void LoadModelAsset(const std::filesystem::path& path, int folderIndex, const std::thread::id& oldThreadID) noexcept;
+	void ScanDirectory(const std::filesystem::path& directory, int parentIndex) noexcept;
+	void LoadModelAsset(const std::filesystem::path& path, int folderIndex) noexcept;
 private:
 	AssetPreview assetPreview;
 	std::string assetsDirString;
@@ -44,10 +44,5 @@ private:
 	std::filesystem::path cacheDir;
 	std::vector<FolderNode> folders;
 	Shader& shader;
-	std::mutex foldersMutex;
-	GLFWwindow* mainWindow;
-	GLFWwindow* previewContext;
-	std::atomic<unsigned> threadCount = 1u;
-	std::atomic<unsigned> currentID = 0u;
-	const unsigned hardwareThreads;
+	unsigned currentID = 0u;
 };

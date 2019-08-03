@@ -9,7 +9,7 @@ struct GLFWwindow;
 class AssetPreview
 {
 public:
-	void GeneratePreviewImage(std::ofstream& outputStream, Model& model, GLFWwindow* context = nullptr) noexcept;
+	void GeneratePreviewImage(std::ofstream& outputStream, Model& model) noexcept;
 private:
 	//Shader previewShader;
 	std::unique_ptr<Shader> previewShader;

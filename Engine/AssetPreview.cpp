@@ -2,19 +2,8 @@
 #include "AssetPreview.hpp"
 #include "Model.hpp"
 #include <iostream>
-#include <thread>
-
-void AssetPreview::GeneratePreviewImage(std::ofstream& outputStream, Model& model, GLFWwindow* context) noexcept
+void AssetPreview::GeneratePreviewImage(std::ofstream& outputStream, Model& model) noexcept
 {
-	if (context != nullptr)
-	{
-		glfwMakeContextCurrent(context);
-		gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-
-		glViewport(0, 0, 128, 128);
-		glEnable(GL_DEPTH_TEST);
-	}
-
 	glGenFramebuffers(1u, &previewBuffer);
 	glGenTextures(1u, &colorBuffer);
 	glGenTextures(1u, &depthBuffer);
@@ -40,7 +29,6 @@ void AssetPreview::GeneratePreviewImage(std::ofstream& outputStream, Model& mode
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		std::cout << std::endl << std::endl << "PREVIEW ERROR: Framebuffer incomplete!" << std::endl << std::endl;
 
-	//previewShader = Shader("UnlitTextureVS.glsl", "UnlitTextureFS.glsl");
 	previewShader = std::make_unique<Shader>("UnlitTextureVS.glsl", "UnlitTextureFS.glsl");
 	previewShader->Use();
 
@@ -55,8 +43,6 @@ void AssetPreview::GeneratePreviewImage(std::ofstream& outputStream, Model& mode
 
 	std::vector<uint8_t> previewData(128 * 128 * 3);
 
-	//glReadBuffer(GL_COLOR_ATTACHMENT0);
-	//glReadPixels(0, 0, 128, 128, GL_RGB, GL_UNSIGNED_BYTE, &previewData[0]);
 	glBindTexture(GL_TEXTURE_2D, colorBuffer);
 	glGetTexImage(GL_TEXTURE_2D, 0u, GL_RGB, GL_UNSIGNED_BYTE, &previewData[0]);
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -72,9 +58,4 @@ void AssetPreview::GeneratePreviewImage(std::ofstream& outputStream, Model& mode
 	glDeleteFramebuffers(1u, &previewBuffer);
 	glDeleteTextures(1u, &colorBuffer);
 	glDeleteTextures(1u, &depthBuffer);
-
-	if (context != nullptr)
-	{
-		glfwMakeContextCurrent(nullptr);
-	}
 }
