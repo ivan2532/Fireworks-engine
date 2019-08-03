@@ -11,8 +11,6 @@ SceneViewWindow::SceneViewWindow(Editor& editor) noexcept
 
 void SceneViewWindow::Draw() noexcept
 {
-	editor.engine.GetWindow()->UnbindFramebuffer();
-
 	if (!open)
 	{
 		editor.drawGizmo = false;
@@ -39,6 +37,8 @@ void SceneViewWindow::Draw() noexcept
 			editor.engine.GetWindow()->MakeFramebuffer(static_cast<unsigned>(windowSize.x), static_cast<unsigned>(windowSize.y));
 			sceneViewAspectRatio = static_cast<float>(windowSize.x) / static_cast<float>(windowSize.y);
 		}
+
+		editor.engine.GetWindow()->UnbindFramebuffer();
 
 		bottomLeftSceneView = ImVec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
 		topRightSceneView = ImVec2(bottomLeftSceneView.x + ImGui::GetWindowSize().x,

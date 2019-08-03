@@ -113,6 +113,7 @@ void AssetExplorerWindow::DrawFolderContents(int folderIndex) const noexcept
 	ImGuiStyle& style = ImGui::GetStyle();
 	const auto columnCount = std::max(1, static_cast<int>(fileWidth / (fileButtonSize + style.ItemSpacing.x)));
 	
+	
 	for (unsigned i = 0; i < assetManager.folders[folderIndex].assets.size(); i++)
 	{
 		std::ostringstream columnID;
@@ -120,28 +121,14 @@ void AssetExplorerWindow::DrawFolderContents(int folderIndex) const noexcept
 		ImGui::Columns(columnCount, columnID.str().c_str());
 
 		ImGui::PushID(i);
-		ImGui::Button("", ImVec2(fileButtonSize, fileButtonSize));
+		//ImGui::Button("", ImVec2(fileButtonSize, fileButtonSize));
+		ImGui::ImageButton((void*)(intptr_t)assetManager.folders[folderIndex].assets[i]->GetPreview(),
+			ImVec2(fileButtonSize, fileButtonSize));
 		ImGui::PopID();
 
 		std::string textString = assetManager.folders[folderIndex].assets[i]->GetName();
-		bool cutString = false;
 
-		if (ImGui::CalcTextSize(textString.c_str()).x > fileButtonSize)
-			cutString = true;
-
-		if (cutString)
-		{
-			textString.pop_back();
-			textString += "...";
-
-			while (textString.length() > 3 && ImGui::CalcTextSize(textString.c_str()).x > fileButtonSize)
-			{
-				cutString = true;
-				textString.erase(textString.end() - 4);
-			}
-		}
-
-		ImGui::Text(textString.c_str());
+		ImGui::TextWrapped(textString.c_str());
 
 		ImGui::NextColumn();
 	}

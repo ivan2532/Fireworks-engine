@@ -13,8 +13,6 @@ Engine::Engine() noexcept
 	activeScene(std::make_unique<TestScene>(*this, wnd)),
 	defaultShader("UnlitTextureVS.glsl", "UnlitTextureFS.glsl")
 {
-	//wnd.MakeFramebuffer(800u, 600u);
-
 	SetCallbacks();
 
 	ImGui_ImplGlfw_InitForOpenGL(wnd.GetWindow(), true);
@@ -146,7 +144,6 @@ void CursorMoveCallback(GLFWwindow* wnd, double x, double y)
 void FramebufferSizeCallback(GLFWwindow* wnd, int width, int height)
 {
 	reinterpret_cast<Engine*>(glfwGetWindowUserPointer(wnd))->OnWindowResize(width, height);
-	glViewport(0, 0, width, height);
 }
 
 void KeyCallback(GLFWwindow* wnd, int key, int scancode, int action, int mods)

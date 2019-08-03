@@ -155,23 +155,11 @@ void Window::MakeWindow(bool r, bool lc, bool max) noexcept
 
 	glViewport(0, 0, width, height);
 
-	if (resizable)
-	{
-		glfwSetFramebufferSizeCallback(
-			wnd,
-			[](GLFWwindow* wnd, int w, int h)
-			{
-				glViewport(0, 0, w, h);
-			}
-		);
-	}
-	else
+	if(!resizable)
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
-
-	//INSERT V-SYNC HERE
 
 	if (lc)
 		LockCursor();

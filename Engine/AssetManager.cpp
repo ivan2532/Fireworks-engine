@@ -21,7 +21,10 @@ AssetManager::AssetManager(Editor& editor, const std::string& projectDirectory, 
 	cacheDir = assetsDir.parent_path() / "Cache";
 
 	glfwWindowHint(GLFW_VISIBLE, GL_FALSE);
-	scanningContext = glfwCreateWindow(1, 1, "", nullptr, editor.GetMainWindow()->GetWindow());
+	mainWindow = editor.GetMainWindow()->GetWindow();
+
+	glfwWindowHint(GLFW_VISIBLE, GL_FALSE);
+	previewContext = glfwCreateWindow(1, 1, "Preview context", nullptr, nullptr);
 	ScanAssets();
 }
 
@@ -39,6 +42,45 @@ void AssetManager::ScanAssets() noexcept
 {
 	folders.clear();
 	ScanDirectory(assetsDir, -1, std::this_thread::get_id());
+}
+
+unsigned AssetManager::GetPreviewFromMeta(const std::filesystem::path& metaPath, GLFWwindow* context) const noexcept
+{
+	if (context != nullptr)
+	{
+		glfwMakeContextCurrent(context);
+		gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+	}
+
+	unsigned result;
+
+	std::string data;
+	data.reserve(128 * 128 * 3);
+	std::ifstream metaStream(metaPath.string());
+	std::cout << "Path: " << metaPath.string() << std::endl;
+
+	std::getline(metaStream, data);
+	std::getline(metaStream, data);
+	std::getline(metaStream, data);
+
+	if(data.length() > 15)
+		data = data.substr(14, data.length() - 14);
+
+
+	glGenTextures(1u, &result);
+	glBindTexture(GL_TEXTURE_2D, result);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 128, 128, 0, GL_RGB, GL_UNSIGNED_BYTE, data.data());
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	if(context != nullptr)
+		glfwMakeContextCurrent(nullptr);
+
+	return result;
 }
 
 void AssetManager::ScanDirectory(const std::filesystem::path& directory, int parentIndex, const std::thread::id& oldThreadID) noexcept
@@ -123,32 +165,72 @@ void AssetManager::LoadModelAsset(const std::filesystem::path& path, int folderI
 {
 	auto modelAsset = std::make_unique<Model>(currentID++, path.string(), path.stem().string(), shader);
 
+	auto curID = std::this_thread::get_id();
+
 	std::ostringstream metaPath;
 	metaPath << (cacheDir / std::to_string(modelAsset->GetID())).string();
 	metaPath << ".meta";
 
+	bool locked = false;
+	std::unique_lock guard(foldersMutex, std::defer_lock);
+
 	if (!fs::exists(metaPath.str()))
 	{
 		std::ofstream metaStream(metaPath.str());
-		metaStream << "#fireworks_meta" << std::endl;
 		metaStream << "path " << modelAsset->GetPath() << std::endl;
 		metaStream << "type model" << std::endl;
-		metaStream << "preview_image NULL" << std::endl;
+		metaStream << "preview_image ";
+
+		if (curID != oldThreadID)
+		{
+			locked = true;
+			guard.lock();
+
+			assetPreview.GeneratePreviewImage(metaStream, *modelAsset, previewContext);
+			metaStream << std::endl;
+
+			unsigned image = GetPreviewFromMeta(metaPath.str(), mainWindow);
+			modelAsset->SetPreview(image);
+		}
+		else
+		{
+			assetPreview.GeneratePreviewImage(metaStream, *modelAsset, nullptr);
+			metaStream << std::endl;
+
+			unsigned image = GetPreviewFromMeta(metaPath.str());
+			modelAsset->SetPreview(image);
+		}
+
 		metaStream.close();
 	}
-
-	auto curID = std::this_thread::get_id();
+	else
+	{
+		if (curID != oldThreadID)
+		{
+			unsigned image = GetPreviewFromMeta(metaPath.str(), mainWindow);
+			modelAsset->SetPreview(image);
+		}
+		else
+		{
+			unsigned image = GetPreviewFromMeta(metaPath.str());
+			modelAsset->SetPreview(image);
+		}
+	}
 
 	if (curID != oldThreadID)
 	{
-		std::lock_guard guard(foldersMutex);
-		folders[folderIndex].assets.push_back(std::move(modelAsset));
+		if (!locked)
+		{
+			locked = true;
+			guard.lock();
+		}
 
 		if(threadCount > 0)
 			threadCount--;
 	}
-	else
-	{
-		folders[folderIndex].assets.push_back(std::move(modelAsset));
-	}
+
+	folders[folderIndex].assets.push_back(std::move(modelAsset));
+
+	if(locked)
+		guard.unlock();
 }

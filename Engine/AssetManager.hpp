@@ -1,5 +1,6 @@
 #pragma once
 #include "Asset.hpp"
+#include "AssetPreview.hpp"
 #include <string>
 #include <vector>
 #include <filesystem>
@@ -32,17 +33,20 @@ public:
 	std::filesystem::path GetAssetsDir() const noexcept;
 public:
 	void ScanAssets() noexcept;
+	unsigned GetPreviewFromMeta(const std::filesystem::path& metaPath, GLFWwindow* context = nullptr) const noexcept;
 private:
 	void ScanDirectory(const std::filesystem::path& directory, int parentIndex, const std::thread::id& oldThreadID) noexcept;
 	void LoadModelAsset(const std::filesystem::path& path, int folderIndex, const std::thread::id& oldThreadID) noexcept;
 private:
+	AssetPreview assetPreview;
 	std::string assetsDirString;
 	std::filesystem::path assetsDir;
 	std::filesystem::path cacheDir;
 	std::vector<FolderNode> folders;
 	Shader& shader;
 	std::mutex foldersMutex;
-	GLFWwindow* scanningContext;
+	GLFWwindow* mainWindow;
+	GLFWwindow* previewContext;
 	std::atomic<unsigned> threadCount = 1u;
 	std::atomic<unsigned> currentID = 0u;
 	const unsigned hardwareThreads;

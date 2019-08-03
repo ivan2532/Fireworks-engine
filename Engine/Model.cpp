@@ -15,7 +15,7 @@ const std::vector<std::string> Model::supportedFormats = {
 	".mdl"
 };
 
-Model::Model(unsigned id, const std::string& path, const std::string& name, Shader& s) noexcept
+Model::Model(unsigned id, const std::filesystem::path& path, const std::string& name, Shader& s) noexcept
 	:
 	Asset(id, path, name, 0u),
 	shader(s)
@@ -24,8 +24,11 @@ Model::Model(unsigned id, const std::string& path, const std::string& name, Shad
 
 void Model::LoadCPU() noexcept
 {
+	if (loadedCPU)
+		return;
+
 	Assimp::Importer importer;
-	const aiScene* scene = importer.ReadFile(assetPath, aiProcess_Triangulate | aiProcess_FlipUVs);
+	const aiScene* scene = importer.ReadFile(assetPath.string(), aiProcess_Triangulate | aiProcess_FlipUVs);
 
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 	{
@@ -33,8 +36,10 @@ void Model::LoadCPU() noexcept
 		return;
 	}
 
-	directory = assetPath.substr(0, assetPath.find_last_of('/'));
+	directory = assetPath.string().substr(0, assetPath.string().find_last_of('/'));
 	ProcessNode(scene->mRootNode, scene, nullptr);
+
+	loadedCPU = true;
 }
 
 void Model::ProcessNode(aiNode* node, const aiScene* scene, Transform* parent) noexcept
@@ -176,13 +181,10 @@ void Model::AddToScene(Scene& scene)
 		scene.AddSceneObject(object);
 }
 
-void Model::LoadGPU(GLFWwindow* context) noexcept
+void Model::LoadGPU() noexcept
 {
-	if (context != nullptr)
-	{
-		glfwMakeContextCurrent(context);
-		gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-	}
+	if (loadedGPU)
+		return;
 
 	for (auto& object : meshObjects)
 	{
@@ -195,5 +197,33 @@ void Model::LoadGPU(GLFWwindow* context) noexcept
 		{
 			mesh->InitMesh();
 		}
+	}
+
+	loadedGPU = true;
+}
+
+void Model::UnloadCPU() noexcept
+{
+	loadedCPU = false;
+}
+
+void Model::UnloadGPU() noexcept
+{
+	loadedGPU = false;
+}
+
+void Model::Draw() noexcept
+{
+	for (auto& mesh : meshes)
+	{
+		mesh->Draw(shader);
+	}
+}
+
+void Model::Draw(Shader& rShader) noexcept
+{
+	for (auto& mesh : meshes)
+	{
+		mesh->Draw(rShader);
 	}
 }

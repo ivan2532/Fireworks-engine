@@ -8,7 +8,7 @@ class Shader
 {
 public:
 	//Delete unnecessary constructors and rule of 5
-	Shader() = delete;
+	Shader() = default;
 	~Shader() = default;
 	Shader(const Shader&) noexcept;
 	Shader& operator=(const Shader&) noexcept;

@@ -130,6 +130,7 @@
     <ClCompile Include="Asset.cpp" />
     <ClCompile Include="AssetExplorerWindow.cpp" />
     <ClCompile Include="AssetManager.cpp" />
+    <ClCompile Include="AssetPreview.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Editor.cpp" />
@@ -166,6 +167,7 @@
     <ClInclude Include="Asset.hpp" />
     <ClInclude Include="AssetExplorerWindow.hpp" />
     <ClInclude Include="AssetManager.hpp" />
+    <ClInclude Include="AssetPreview.hpp" />
     <ClInclude Include="assimpIncludes.hpp" />
     <ClInclude Include="Camera.hpp" />
     <ClInclude Include="Component.hpp" />
@@ -209,6 +211,8 @@
     <ClInclude Include="Window.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="FlatShadedFS.glsl" />
+    <None Include="FlatShadedVS.glsl" />
     <None Include="UnlitTextureFS.glsl" />
     <None Include="UnlitTextureVS.glsl" />
   </ItemGroup>
