@@ -8,12 +8,12 @@ MeshRenderer::MeshRenderer(Shader& s)
 {
 }
 
-void MeshRenderer::AddMesh(std::unique_ptr<Mesh> m) noexcept
+void MeshRenderer::AddMesh(Mesh* m) noexcept
 {
-	meshes.push_back(std::move(m));
+	meshes.push_back(m);
 }
 
-std::vector<std::unique_ptr<Mesh>>& MeshRenderer::GetMeshes() noexcept
+std::vector<Mesh*>& MeshRenderer::GetMeshes() noexcept
 {
 	return meshes;
 }

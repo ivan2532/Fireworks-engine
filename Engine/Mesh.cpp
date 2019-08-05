@@ -4,23 +4,34 @@
 #include <iostream>
 #include <thread>
 
-Mesh::Mesh(const std::string& n, std::vector<Vertex> v, std::vector<unsigned> i, std::vector<Texture> t) noexcept
+Mesh::Mesh(
+	const std::string& n,
+	const std::vector<Vertex>& v,
+	const std::vector<unsigned>& i,
+	const std::vector<Texture>& t,
+	const glm::vec3& center,
+	float radius
+) noexcept
 	:
 	name(n),
-	vertices(std::move(v)),
-	indices(std::move(i)),
-	textures(std::move(t))
+	vertices(v),
+	indices(i),
+	textures(t),
+	sphereCenter(center),
+	sphereRadius(radius)
 {
 }
 
-Mesh::Mesh(const Mesh& rhs) noexcept
+/*Mesh::Mesh(const Mesh& rhs) noexcept
 	:
 	vertices(rhs.vertices),
 	indices(rhs.indices),
 	textures(rhs.textures),
 	vertexBufferID(rhs.vertexBufferID),
 	elementBufferID(rhs.elementBufferID),
-	vertexArrayID(rhs.vertexArrayID)
+	vertexArrayID(rhs.vertexArrayID),
+	sphereCenter(rhs.sphereCenter),
+	sphereRadius(rhs.sphereRadius)
 {
 }
 
@@ -32,6 +43,8 @@ Mesh& Mesh::operator=(const Mesh& rhs) noexcept
 	vertexBufferID = rhs.vertexBufferID;
 	elementBufferID = rhs.elementBufferID;
 	vertexArrayID = rhs.vertexArrayID;
+	sphereCenter = rhs.sphereCenter;
+	sphereRadius = rhs.sphereRadius;
 
 	return *this;
 }
@@ -43,7 +56,9 @@ Mesh::Mesh(Mesh&& rhs) noexcept
 	textures(std::move(rhs.textures)),
 	vertexBufferID(std::move(rhs.vertexBufferID)),
 	elementBufferID(std::move(rhs.elementBufferID)),
-	vertexArrayID(std::move(rhs.vertexArrayID))
+	vertexArrayID(std::move(rhs.vertexArrayID)),
+	sphereCenter(std::move(rhs.sphereCenter)),
+	sphereRadius(std::move(rhs.sphereRadius))
 {
 }
 
@@ -55,9 +70,11 @@ Mesh& Mesh::operator=(Mesh&& rhs) noexcept
 	vertexBufferID = std::move(rhs.vertexBufferID);
 	elementBufferID = std::move(rhs.elementBufferID);
 	vertexArrayID = std::move(rhs.vertexArrayID);
+	sphereCenter = std::move(rhs.sphereCenter);
+	sphereRadius = std::move(rhs.sphereRadius);
 
 	return *this;
-}
+}*/
 
 void Mesh::Draw(Shader& shader) const noexcept
 {
@@ -103,7 +120,6 @@ std::string Mesh::GetName() const noexcept
 
 void Mesh::InitMesh() noexcept
 {
-	//std::cout << "OpenGL context: " << glfwGetCurrentContext() << " | Thread ID: " << std::this_thread::get_id() << std::endl;
 	glGenVertexArrays(1u, &vertexArrayID);
 	glGenBuffers(1u, &vertexBufferID);
 	glGenBuffers(1u, &elementBufferID);
@@ -126,4 +142,14 @@ void Mesh::InitMesh() noexcept
 	glEnableVertexAttribArray(2u);
 
 	glBindVertexArray(0);
+}
+
+glm::vec3 Mesh::GetSphereCenter() const noexcept
+{
+	return sphereCenter;
+}
+
+float Mesh::GetSphereRadius() const noexcept
+{
+	return sphereRadius;
 }

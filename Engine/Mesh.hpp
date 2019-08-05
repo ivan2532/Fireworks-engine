@@ -31,15 +31,28 @@ struct Texture
 class Mesh
 {
 public:
-	Mesh(const std::string& name, std::vector<Vertex> vertices, std::vector<unsigned> indices, std::vector<Texture> textures) noexcept;
+	Mesh(const std::string& name,
+		const std::vector<Vertex>& vertices,
+		const std::vector<unsigned>& indices,
+		const std::vector<Texture>& textures,
+		const glm::vec3& center = glm::zero<glm::vec3>(),
+		float radius = 0.0f
+	) noexcept;
 	~Mesh() = default;
-	Mesh(const Mesh&) noexcept;
+	/*Mesh(const Mesh&) noexcept;
 	Mesh& operator=(const Mesh&) noexcept;
 	Mesh(Mesh&&) noexcept;
-	Mesh& operator=(Mesh&&) noexcept;
+	Mesh& operator=(Mesh&&) noexcept;*/
+	Mesh(const Mesh&) = default;
+	Mesh& operator=(const Mesh&) = default;
+	Mesh(Mesh&&) = default;
+	Mesh& operator=(Mesh&&) = default;
+public:
 	void Draw(Shader& shader) const noexcept;
 	std::string GetName() const noexcept;
 	void InitMesh() noexcept;
+	glm::vec3 GetSphereCenter() const noexcept;
+	float GetSphereRadius() const noexcept;
 public:
 	std::vector<Vertex> vertices;
 	std::vector<unsigned> indices;
@@ -49,4 +62,6 @@ private:
 	unsigned vertexBufferID;
 	unsigned elementBufferID;
 	unsigned vertexArrayID;
+	glm::vec3 sphereCenter = glm::zero<glm::vec3>();
+	float sphereRadius = 0.0f;
 };

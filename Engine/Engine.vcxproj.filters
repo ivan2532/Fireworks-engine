@@ -320,6 +320,9 @@
     <ClInclude Include="AssetPreview.hpp">
       <Filter>Header Files\Editor\Project Management\Assets</Filter>
     </ClInclude>
+    <ClInclude Include="Miniball.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="UnlitTextureVS.glsl">

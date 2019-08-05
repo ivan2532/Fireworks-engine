@@ -4,6 +4,7 @@
 #include "Scene.hpp"
 #include "Math.hpp"
 #include "ImageLoader.h"
+#include "Miniball.hpp"
 #include <iostream>
 
 const std::vector<std::string> Model::supportedFormats = {
@@ -22,10 +23,13 @@ Model::Model(unsigned id, const std::filesystem::path& path, const std::string& 
 {
 }
 
-void Model::LoadCPU() noexcept
+void Model::LoadCPU(bool loadPreview) noexcept
 {
 	if (loadedCPU)
 		return;
+
+	if (loadPreview)
+		loadPreviewValues = true;
 
 	Assimp::Importer importer;
 	const aiScene* scene = importer.ReadFile(assetPath.string(), aiProcess_Triangulate | aiProcess_FlipUVs);
@@ -38,6 +42,22 @@ void Model::LoadCPU() noexcept
 
 	directory = assetPath.string().substr(0, assetPath.string().find_last_of('/'));
 	ProcessNode(scene->mRootNode, scene, nullptr);
+
+	if (loadPreviewValues)
+	{
+		glm::vec3 centerSum = glm::zero<glm::vec3>();
+		
+		for (auto& mesh : meshes)
+		{
+			centerSum += mesh->GetSphereCenter();
+			
+			const auto meshRadius = mesh->GetSphereRadius();
+			if (meshRadius > sphereRadius)
+				sphereRadius = meshRadius;
+		}
+
+		sphereCenter = glm::vec3(centerSum.x / meshes.size(), centerSum.y / meshes.size(), centerSum.z / meshes.size());
+	}
 
 	loadedCPU = true;
 }
@@ -72,7 +92,8 @@ void Model::ProcessNode(aiNode* node, const aiScene* scene, Transform* parent) n
 				scene
 			);
 
-			object.GetComponent<MeshRenderer>().value()->AddMesh(std::move(mesh));
+			meshes.push_back(std::move(mesh));
+			object.GetComponent<MeshRenderer>().value()->AddMesh(meshes.back().get());
 		}
 	}
 
@@ -134,6 +155,26 @@ std::unique_ptr<Mesh> Model::ProcessMesh(aiMesh* mesh, const aiScene* scene) noe
 		std::vector<Texture> normalTextures = LoadMaterialTextures(material, aiTextureType_HEIGHT, Normal);
 		if(normalTextures.size() > 0)
 			textures.insert(textures.end(), normalTextures.begin(), normalTextures.end());
+	}
+
+	if (loadPreviewValues)
+	{
+		struct VertexAccessor
+		{
+			typedef std::vector<Vertex>::const_iterator Pit;
+			typedef const float* Cit;
+			Cit operator()(Pit it) const
+			{
+				return &it->pos.x;
+			}
+		};
+
+		Miniball::Miniball<VertexAccessor> miniball(3, vertices.begin(), vertices.end());
+		const auto centerResult = miniball.center();
+		auto sphereCenter = glm::vec3(centerResult[0], centerResult[1], centerResult[2]);
+		auto sphereRadius = sqrt(miniball.squared_radius());
+
+		return std::make_unique<Mesh>(mesh->mName.C_Str(), vertices, indices, textures, sphereCenter, sphereRadius);
 	}
 
 	return std::make_unique<Mesh>(mesh->mName.C_Str(), vertices, indices, textures);
@@ -226,4 +267,14 @@ void Model::Draw(Shader& rShader) noexcept
 	{
 		mesh->Draw(rShader);
 	}
+}
+
+glm::vec3 Model::GetSphereCenter() const noexcept
+{
+	return sphereCenter;
+}
+
+float Model::GetSphereRadius() const noexcept
+{
+	return sphereRadius;
 }

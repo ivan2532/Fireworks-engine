@@ -10,6 +10,8 @@ void AssetPreview::GeneratePreviewImage(std::ofstream& outputStream, Model& mode
 	glGenTextures(1u, &colorBuffer);
 	glGenTextures(1u, &depthBuffer);
 
+	glViewport(0, 0, 128, 128);
+
 	glBindFramebuffer(GL_FRAMEBUFFER, previewBuffer);
 
 	glBindTexture(GL_TEXTURE_2D, depthBuffer);
@@ -34,13 +36,23 @@ void AssetPreview::GeneratePreviewImage(std::ofstream& outputStream, Model& mode
 	previewShader = std::make_unique<Shader>("UnlitTextureVS.glsl", "UnlitTextureFS.glsl");
 	previewShader->Use();
 
-	model.LoadCPU();
+	model.LoadCPU(true);
 	model.LoadGPU();
+
+	//TEST
+	glm::mat4 previewTransform(1.0f);
+	previewTransform = glm::rotate(previewTransform, glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+	previewTransform = glm::translate(previewTransform, -model.GetSphereCenter());
+	previewTransform = glm::translate(previewTransform, glm::vec3(0.0f, 0.0f, -model.GetSphereRadius() * 2.0f));
+	previewShader->SetMat4x4("model", previewTransform);
+	previewShader->SetMat4x4("viewProj", glm::perspective(glm::radians(70.0f), 1.0f, 0.1f, 100.0f));
+	//TEST
 
 	glClearColor(0.35f, 0.35f, 0.35f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	//model.Draw(*previewShader);
+	model.Draw(*previewShader);
+
 	glfwSwapBuffers(glfwGetCurrentContext());
 
 	std::vector<uint8_t> previewData(128 * 128 * 3);

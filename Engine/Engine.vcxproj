@@ -198,6 +198,7 @@
     <ClInclude Include="Math.hpp" />
     <ClInclude Include="Mesh.hpp" />
     <ClInclude Include="MeshRenderer.hpp" />
+    <ClInclude Include="Miniball.hpp" />
     <ClInclude Include="Model.hpp" />
     <ClInclude Include="OpenGLIncludes.hpp" />
     <ClInclude Include="Scene.hpp" />
