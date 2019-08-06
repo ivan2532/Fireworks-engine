@@ -50,6 +50,8 @@ unsigned AssetManager::GetPreviewFromMeta(const std::filesystem::path& metaPath)
 	if(data.length() > 15)
 		data = data.substr(14, data.length() - 14);
 
+	data.resize(128 * 128 * 3);
+
 	glGenTextures(1u, &result);
 
 	glBindTexture(GL_TEXTURE_2D, result);
@@ -95,6 +97,7 @@ void AssetManager::ScanDirectory(const std::filesystem::path& directory, int par
 				{
 					if (modelExtension == fileExtension)
 					{
+						std::cout << fileExtension << std::endl;
 						LoadModelAsset(entry.path(), currentIndex);
 						break;
 					}

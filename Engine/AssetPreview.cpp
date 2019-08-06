@@ -4,6 +4,12 @@
 #include "Model.hpp"
 #include <iostream>
 
+AssetPreview::AssetPreview() noexcept
+	:
+	previewShader("FlatShadedVS.glsl", "FlatShadedFS.glsl")
+{
+}
+
 void AssetPreview::GeneratePreviewImage(std::ofstream& outputStream, Model& model) noexcept
 {
 	glGenFramebuffers(1u, &previewBuffer);
@@ -33,25 +39,27 @@ void AssetPreview::GeneratePreviewImage(std::ofstream& outputStream, Model& mode
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		std::cout << std::endl << std::endl << "PREVIEW ERROR: Framebuffer incomplete!" << std::endl << std::endl;
 
-	previewShader = std::make_unique<Shader>("UnlitTextureVS.glsl", "UnlitTextureFS.glsl");
-	previewShader->Use();
+	//previewShader = std::make_unique<Shader>("FlatShadedVS.glsl", "FlatShadedFS.glsl");
+	previewShader.Use();
 
 	model.LoadCPU(true);
 	model.LoadGPU();
 
 	//TEST
 	glm::mat4 previewTransform(1.0f);
-	//previewTransform = glm::rotate(previewTransform, glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 	previewTransform = glm::translate(previewTransform, -model.GetSphereCenter());
 	previewTransform = glm::translate(previewTransform, glm::vec3(0.0f, 0.0f, -model.GetSphereRadius() * 2.0f));
-	previewShader->SetMat4x4("model", previewTransform);
-	previewShader->SetMat4x4("viewProj", glm::perspective(glm::radians(70.0f), 1.0f, 0.1f, 100.0f));
+	previewTransform = glm::rotate(previewTransform, glm::radians(20.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	previewTransform = glm::rotate(previewTransform, glm::radians(30.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	previewShader.SetMat4x4("model", previewTransform);
+	previewShader.SetMat4x4("viewProj", glm::perspective(glm::radians(70.0f), 1.0f, 0.1f, 100.0f));
+	//previewShader->SetVec3("lightDirection", 1.0f, 1.0f, 1.0f);
 	//TEST
 
 	glClearColor(0.35f, 0.35f, 0.35f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	model.Draw(*previewShader);
+	model.Draw(previewShader);
 
 	glfwSwapBuffers(glfwGetCurrentContext());
 

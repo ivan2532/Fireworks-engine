@@ -22,60 +22,6 @@ Mesh::Mesh(
 {
 }
 
-/*Mesh::Mesh(const Mesh& rhs) noexcept
-	:
-	vertices(rhs.vertices),
-	indices(rhs.indices),
-	textures(rhs.textures),
-	vertexBufferID(rhs.vertexBufferID),
-	elementBufferID(rhs.elementBufferID),
-	vertexArrayID(rhs.vertexArrayID),
-	sphereCenter(rhs.sphereCenter),
-	sphereRadius(rhs.sphereRadius)
-{
-}
-
-Mesh& Mesh::operator=(const Mesh& rhs) noexcept
-{
-	vertices = rhs.vertices;
-	indices = rhs.indices;
-	textures = rhs.textures;
-	vertexBufferID = rhs.vertexBufferID;
-	elementBufferID = rhs.elementBufferID;
-	vertexArrayID = rhs.vertexArrayID;
-	sphereCenter = rhs.sphereCenter;
-	sphereRadius = rhs.sphereRadius;
-
-	return *this;
-}
-
-Mesh::Mesh(Mesh&& rhs) noexcept
-	:
-	vertices(std::move(rhs.vertices)),
-	indices(std::move(rhs.indices)),
-	textures(std::move(rhs.textures)),
-	vertexBufferID(std::move(rhs.vertexBufferID)),
-	elementBufferID(std::move(rhs.elementBufferID)),
-	vertexArrayID(std::move(rhs.vertexArrayID)),
-	sphereCenter(std::move(rhs.sphereCenter)),
-	sphereRadius(std::move(rhs.sphereRadius))
-{
-}
-
-Mesh& Mesh::operator=(Mesh&& rhs) noexcept
-{
-	vertices = std::move(rhs.vertices);
-	indices = std::move(rhs.indices);
-	textures = std::move(rhs.textures);
-	vertexBufferID = std::move(rhs.vertexBufferID);
-	elementBufferID = std::move(rhs.elementBufferID);
-	vertexArrayID = std::move(rhs.vertexArrayID);
-	sphereCenter = std::move(rhs.sphereCenter);
-	sphereRadius = std::move(rhs.sphereRadius);
-
-	return *this;
-}*/
-
 void Mesh::Draw(Shader& shader) const noexcept
 {
 	shader.Use();
