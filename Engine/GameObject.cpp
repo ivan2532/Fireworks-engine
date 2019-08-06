@@ -16,7 +16,7 @@ GameObject::GameObject(const GameObject& rhs) noexcept
 	components.resize(rhs.components.size());
 	for (unsigned i = 0; i < rhs.components.size(); i++)
 	{
-		components[i].reset(rhs.components[i].get());
+		components[i] = std::move(rhs.components[i]->Clone());
 		components[i]->SetObject(this);
 	}
 }
@@ -29,7 +29,7 @@ GameObject& GameObject::operator=(const GameObject& rhs) noexcept
 	components.resize(rhs.components.size());
 	for (unsigned i = 0; i < rhs.components.size(); i++)
 	{
-		components[i].reset(rhs.components[i].get());
+		components[i] = std::move(rhs.components[i]->Clone());
 		components[i]->SetObject(this);
 	}
 

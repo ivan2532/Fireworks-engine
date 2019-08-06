@@ -19,6 +19,11 @@ Camera::Camera(Engine& rEngine, float f) noexcept
 	engine.SetCamera(this);
 }
 
+std::unique_ptr<Component> Camera::Clone() const noexcept
+{
+	return std::make_unique<Camera>(*this);
+}
+
 void Camera::Update() noexcept
 {
 	UpdateMatrices();

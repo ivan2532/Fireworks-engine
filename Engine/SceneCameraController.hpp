@@ -11,6 +11,7 @@ public:
 public:
 	void OnMouseMove(float x, float y) noexcept override;
 public:
+	std::unique_ptr<Component> Clone() const noexcept override;
 	void Update() noexcept override;
 private:
 	void Initialize() noexcept override;

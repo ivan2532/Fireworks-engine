@@ -53,6 +53,11 @@ void FPCameraMovement::OnMouseMove(float x, float y) noexcept
 	);
 }
 
+std::unique_ptr<Component> FPCameraMovement::Clone() const noexcept
+{
+	return std::make_unique<FPCameraMovement>(*this);
+}
+
 void FPCameraMovement::Update() noexcept
 {
 	if (wnd.GetKey(GLFW_KEY_W))

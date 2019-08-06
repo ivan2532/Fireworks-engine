@@ -53,6 +53,7 @@ public:
 
 	void AddShaderToUpdate(Shader* shader) noexcept;
 public:
+	std::unique_ptr<Component> Clone() const noexcept override;
 	void Update() noexcept override;
 	void CheckChildrenDelete() noexcept;
 	void DrawHierarchy(Editor& editor, int& nodeIndexCount) const noexcept;

@@ -8,6 +8,11 @@
 #include "InspectorWindow.hpp"
 #include <iostream>
 
+std::unique_ptr<Component> Transform::Clone() const noexcept
+{
+	return std::make_unique<Transform>(*this);
+}
+
 void Transform::Update() noexcept
 {
 	UpdateTransform();

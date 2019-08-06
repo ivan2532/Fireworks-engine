@@ -13,6 +13,7 @@ TestScene::TestScene(Engine& rEngine, Window& w) noexcept
 	testModel.LoadCPU();
 	testModel.LoadGPU();
 	testModel.AddToScene(*this);
+	testModel.AddToScene(*this);
 
 	GameObject transformTest("Test child");
 	transformTest.AddComponent<Transform>();

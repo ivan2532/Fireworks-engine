@@ -1,6 +1,6 @@
 #pragma once
 #include "ComponentUndoable.hpp"
-//#include "Editor.hpp"
+#include <memory>
 
 class GameObject;
 class Editor;
@@ -14,6 +14,7 @@ public:
 public:
 	GameObject* GetObject() const noexcept;
 	void SetObject(GameObject* go) noexcept;
+	virtual std::unique_ptr<Component> Clone() const noexcept = 0;
 	virtual void Update() noexcept = 0;
 	virtual void DrawInspector(Editor& editor) noexcept {}
 private:

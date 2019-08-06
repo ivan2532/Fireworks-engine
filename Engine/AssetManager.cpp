@@ -97,7 +97,6 @@ void AssetManager::ScanDirectory(const std::filesystem::path& directory, int par
 				{
 					if (modelExtension == fileExtension)
 					{
-						std::cout << fileExtension << std::endl;
 						LoadModelAsset(entry.path(), currentIndex);
 						break;
 					}

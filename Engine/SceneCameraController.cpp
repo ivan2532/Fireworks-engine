@@ -41,6 +41,11 @@ void SceneCameraController::OnMouseMove(float x, float y) noexcept
 		dragging = false;
 }
 
+std::unique_ptr<Component> SceneCameraController::Clone() const noexcept
+{
+	return std::make_unique<SceneCameraController>(*this);
+}
+
 void SceneCameraController::Update() noexcept
 {
 	if (wnd.GetKey(GLFW_KEY_W))

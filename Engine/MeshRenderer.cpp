@@ -18,6 +18,11 @@ std::vector<Mesh*>& MeshRenderer::GetMeshes() noexcept
 	return meshes;
 }
 
+std::unique_ptr<Component> MeshRenderer::Clone() const noexcept
+{
+	return std::make_unique<MeshRenderer>(*this);
+}
+
 void MeshRenderer::Update() noexcept
 {
 	for(auto& mesh : meshes)

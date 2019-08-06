@@ -11,6 +11,7 @@ class Camera : public Component
 public:
 	Camera(Engine& rEngine, float fov = 70.0f) noexcept;
 public:
+	std::unique_ptr<Component> Clone() const noexcept override;
 	void Update() noexcept override;
 public:
 	void DrawInspector(Editor& editor) noexcept override;

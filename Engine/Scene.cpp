@@ -15,7 +15,7 @@ std::string Scene::GetName() const noexcept
 	return name;
 }
 
-void Scene::AddSceneObject(GameObject go) noexcept
+void Scene::AddSceneObject(const GameObject& go) noexcept
 {
 	sceneObjects.push_back(std::move(go));
 }
