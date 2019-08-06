@@ -120,16 +120,16 @@ void AssetExplorerWindow::DrawFolderContents(int folderIndex) const noexcept
 		columnID << "##file_" << i << "_column";
 		ImGui::Columns(columnCount, columnID.str().c_str());
 
-		ImGui::PushID(i);
-		//ImGui::Button("", ImVec2(fileButtonSize, fileButtonSize));
 		if (!assetManager.folders[folderIndex].assets[i])
 			break;
 
+		ImGui::PushID(i);
+
 		ImGui::ImageButton((void*)(intptr_t)assetManager.folders[folderIndex].assets[i]->GetPreview(),
-			ImVec2(fileButtonSize, fileButtonSize)/*,
-			ImVec2(0, 0),
-			ImVec2(1, 1),
-			0*/
+			ImVec2(fileButtonSize, fileButtonSize),
+			ImVec2(0, 1), //Flip UVs
+			ImVec2(1, 0),
+			-1
 		);
 		ImGui::PopID();
 

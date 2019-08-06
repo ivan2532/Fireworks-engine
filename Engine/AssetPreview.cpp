@@ -41,7 +41,7 @@ void AssetPreview::GeneratePreviewImage(std::ofstream& outputStream, Model& mode
 
 	//TEST
 	glm::mat4 previewTransform(1.0f);
-	previewTransform = glm::rotate(previewTransform, glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+	//previewTransform = glm::rotate(previewTransform, glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 	previewTransform = glm::translate(previewTransform, -model.GetSphereCenter());
 	previewTransform = glm::translate(previewTransform, glm::vec3(0.0f, 0.0f, -model.GetSphereRadius() * 2.0f));
 	previewShader->SetMat4x4("model", previewTransform);
