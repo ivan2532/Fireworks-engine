@@ -13,7 +13,7 @@ public:
 	void Draw() noexcept override;
 	void DrawAssetsTree() noexcept;
 private:
-	void DrawFolderTree(int folderIndex) noexcept;
+	void DrawFolderTree(int folderIndex, const std::string& idBuildUp) noexcept;
 	void DrawFolderContents(int folderIndex) const noexcept;
 private:
 	AssetManager assetManager;

@@ -28,7 +28,7 @@ void HierarchyWindow::Draw() noexcept
 
 			if (transform.value()->GetParent() == nullptr && !editor.engine.activeScene->sceneObjects[i].GetComponent<SceneCameraController>())
 			{
-				transform.value()->DrawHierarchy(editor, nodeIndexCount);
+				transform.value()->DrawHierarchy(editor, nodeIndexCount, std::to_string(i));
 			}
 		}
 	}

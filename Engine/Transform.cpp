@@ -351,10 +351,12 @@ void Transform::AddShaderToUpdate(Shader* shader) noexcept
 	shadersToUpdate.push_back(shader);
 }
 
-void Transform::DrawHierarchy(Editor& editor, int& nodeIndexCount) const noexcept
+void Transform::DrawHierarchy(Editor& editor, int& nodeIndexCount, const std::string& idBuildUp) const noexcept
 {
 	auto hierarchyWindow = editor.GetEditorWindow<HierarchyWindow>().value();
 	const int currentIndex = nodeIndexCount;
+	auto id = idBuildUp;
+
 	nodeIndexCount++;
 
 	auto nodeFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
@@ -365,7 +367,7 @@ void Transform::DrawHierarchy(Editor& editor, int& nodeIndexCount) const noexcep
 	if (currentIndex == hierarchyWindow->GetSelectedHierarchy())
 		nodeFlags |= ImGuiTreeNodeFlags_Selected;
 
-	bool open = ImGui::TreeNodeEx((void*)(intptr_t)currentIndex, nodeFlags, gameObject->GetName().c_str());
+	bool open = ImGui::TreeNodeEx(id.c_str(), nodeFlags, gameObject->GetName().c_str());
 
 	if (ImGui::IsItemClicked())
 	{
@@ -375,8 +377,8 @@ void Transform::DrawHierarchy(Editor& editor, int& nodeIndexCount) const noexcep
 
 	if (open)
 	{
-		for (auto& child : children)
-			child->DrawHierarchy(editor, nodeIndexCount);
+		for (unsigned i = 0; i < children.size(); i++)
+			children[i]->DrawHierarchy(editor, nodeIndexCount, idBuildUp + std::to_string(i));
 
 		ImGui::TreePop();
 	}

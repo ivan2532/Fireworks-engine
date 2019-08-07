@@ -3,6 +3,7 @@
 #include "glmIncludes.hpp"
 #include <memory>
 #include <vector>
+#include <string>
 
 class GameObject;
 class Shader;
@@ -56,7 +57,7 @@ public:
 	std::unique_ptr<Component> Clone(GameObject* go) const noexcept override;
 	void Update() noexcept override;
 	void CheckChildrenDelete() noexcept;
-	void DrawHierarchy(Editor& editor, int& nodeIndexCount) const noexcept;
+	void DrawHierarchy(Editor& editor, int& nodeIndexCount, const std::string& idBuildUp) const noexcept;
 	void DrawInspector(Editor& editor) noexcept override;
 private:
 	void UpdateTransform() noexcept;
