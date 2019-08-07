@@ -12,7 +12,7 @@ public:
 	void DrawInspector(Editor& editor) noexcept override;
 	void OnMouseMove(float x, float y) noexcept override;
 public:
-	std::unique_ptr<Component> Clone() const noexcept override;
+	std::unique_ptr<Component> Clone(GameObject* go) const noexcept override;
 	void Update() noexcept override;
 private:
 	Window& wnd;

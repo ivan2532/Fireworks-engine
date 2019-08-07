@@ -53,9 +53,12 @@ void FPCameraMovement::OnMouseMove(float x, float y) noexcept
 	);
 }
 
-std::unique_ptr<Component> FPCameraMovement::Clone() const noexcept
+std::unique_ptr<Component> FPCameraMovement::Clone(GameObject* go) const noexcept
 {
-	return std::make_unique<FPCameraMovement>(*this);
+	auto result = std::make_unique<FPCameraMovement>(*this);
+	result->SetObject(go);
+	result->Initialize();
+	return std::move(result);
 }
 
 void FPCameraMovement::Update() noexcept

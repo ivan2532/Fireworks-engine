@@ -18,9 +18,12 @@ std::vector<Mesh*>& MeshRenderer::GetMeshes() noexcept
 	return meshes;
 }
 
-std::unique_ptr<Component> MeshRenderer::Clone() const noexcept
+std::unique_ptr<Component> MeshRenderer::Clone(GameObject* go) const noexcept
 {
-	return std::make_unique<MeshRenderer>(*this);
+	auto result = std::make_unique<MeshRenderer>(*this);
+	result->SetObject(go);
+	result->Initialize();
+	return std::move(result);
 }
 
 void MeshRenderer::Update() noexcept

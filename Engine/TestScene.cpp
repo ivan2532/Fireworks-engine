@@ -13,7 +13,7 @@ TestScene::TestScene(Engine& rEngine, Window& w) noexcept
 	testModel.LoadCPU();
 	testModel.LoadGPU();
 	testModel.AddToScene(*this);
-	testModel.AddToScene(*this);
+	//testModel.AddToScene(*this);
 
 	GameObject transformTest("Test child");
 	transformTest.AddComponent<Transform>();
@@ -24,19 +24,17 @@ TestScene::TestScene(Engine& rEngine, Window& w) noexcept
 	AddSceneObject(std::move(transformTest));
 
 	GameObject cameraObject("SceneCamera");
-	cameraObject.AddComponent<Transform>();
-	cameraObject.GetComponent<Transform>().value()->Translate(0.0f, 0.0f, 20.0f);
-	cameraObject.GetComponent<Transform>().value()->AddShaderToUpdate(&rEngine.defaultShader);
+	auto transform = cameraObject.AddComponent<Transform>();
+	transform->Translate(0.0f, 0.0f, 20.0f);
+	transform->AddShaderToUpdate(&rEngine.defaultShader);
 	cameraObject.AddComponent<Camera>(engine);
 	cameraObject.AddComponent<SceneCameraController>(wnd, 7.0f, 0.25f);
-	AddSceneObject(std::move(cameraObject));
+	//AddSceneObject(std::move(cameraObject));
+	cameraObject.AddToScene(*this, true);
 }
 
 void TestScene::Update() noexcept
 {
-	for (auto& object : sceneObjects)
-		object.Update();
-
 	engine.defaultShader.SetVec3("lightPos", glm::vec3(sin(glfwGetTime()) * 5.0f, sin(glfwGetTime()) * 2.5f, 8.0f));
 	engine.defaultShader.SetVec4("pointLight.lightColor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 	engine.defaultShader.SetFloat("pointLight.ambientStrength", 0.1f);

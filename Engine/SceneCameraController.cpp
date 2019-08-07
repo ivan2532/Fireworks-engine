@@ -41,9 +41,12 @@ void SceneCameraController::OnMouseMove(float x, float y) noexcept
 		dragging = false;
 }
 
-std::unique_ptr<Component> SceneCameraController::Clone() const noexcept
+std::unique_ptr<Component> SceneCameraController::Clone(GameObject* go) const noexcept
 {
-	return std::make_unique<SceneCameraController>(*this);
+	auto result = std::make_unique<SceneCameraController>(*this);
+	result->SetObject(go);
+	result->Initialize();
+	return std::move(result);
 }
 
 void SceneCameraController::Update() noexcept

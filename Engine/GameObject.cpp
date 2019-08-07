@@ -1,6 +1,7 @@
 #include "GameObject.hpp"
 #include "Component.hpp"
 #include "Transform.hpp"
+#include "Scene.hpp"
 #include <iostream>
 
 GameObject::GameObject(const std::string& n) noexcept
@@ -16,8 +17,16 @@ GameObject::GameObject(const GameObject& rhs) noexcept
 	components.resize(rhs.components.size());
 	for (unsigned i = 0; i < rhs.components.size(); i++)
 	{
-		components[i] = std::move(rhs.components[i]->Clone());
+		components[i] = std::move(rhs.components[i]->Clone(this));
 		components[i]->SetObject(this);
+	}
+
+	auto transform = rhs.GetComponent<Transform>();
+
+	if (transform)
+	{
+		for (auto& child : transform.value()->children)
+			child->SetParent(transform.value(), false);
 	}
 }
 
@@ -29,8 +38,16 @@ GameObject& GameObject::operator=(const GameObject& rhs) noexcept
 	components.resize(rhs.components.size());
 	for (unsigned i = 0; i < rhs.components.size(); i++)
 	{
-		components[i] = std::move(rhs.components[i]->Clone());
+		components[i] = std::move(rhs.components[i]->Clone(this));
 		components[i]->SetObject(this);
+	}
+
+	auto transform = rhs.GetComponent<Transform>();
+
+	if (transform)
+	{
+		for (auto& child : transform.value()->children)
+			child->SetParent(transform.value(), false);
 	}
 
 	return *this;
@@ -87,4 +104,27 @@ void GameObject::Delete(bool deleteChildren) noexcept
 
 	if (transform->parent)
 		transform->parent->CheckChildrenDelete();
+}
+
+GameObject& GameObject::AddToScene(Scene& scene, bool addChildren, Transform* parent) noexcept
+{
+	std::cout << "Adding game object \"" << name << "\"" << std::endl;
+
+	auto newGameObject = scene.AddSceneObject(*this);
+
+	auto transform = newGameObject.GetComponent<Transform>();
+
+	if (parent != nullptr)
+	{
+		if (transform)
+			transform.value()->SetParent(parent);
+	}
+
+	if (addChildren && transform)
+	{
+		for (auto& child : transform.value()->children)
+			child->gameObject->AddToScene(scene);
+	}
+
+	return newGameObject;
 }

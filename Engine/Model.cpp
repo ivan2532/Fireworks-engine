@@ -218,8 +218,10 @@ std::vector<Texture> Model::LoadMaterialTextures(aiMaterial* material, aiTexture
 
 void Model::AddToScene(Scene& scene)
 {
-	for (auto& object : meshObjects)
-		scene.AddSceneObject(object);
+	//for (auto& object : meshObjects)
+		//scene.AddSceneObject(object);
+
+	meshObjects.back().AddToScene(scene);
 }
 
 void Model::LoadGPU() noexcept
@@ -231,7 +233,7 @@ void Model::LoadGPU() noexcept
 	{
 		auto meshRenderer = object.GetComponent<MeshRenderer>();
 
-		if (!meshRenderer.has_value())
+		if (!meshRenderer)
 			continue;
 
 		for (auto& mesh : meshRenderer.value()->GetMeshes())

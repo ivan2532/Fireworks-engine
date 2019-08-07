@@ -15,13 +15,14 @@ Camera::Camera(Engine& rEngine, float f) noexcept
 		0.1f,
 		1000.0f
 	);
-
-	engine.SetCamera(this);
 }
 
-std::unique_ptr<Component> Camera::Clone() const noexcept
+std::unique_ptr<Component> Camera::Clone(GameObject* go) const noexcept
 {
-	return std::make_unique<Camera>(*this);
+	auto result = std::make_unique<Camera>(*this);
+	result->SetObject(go);
+	result->Initialize();
+	return std::move(result);
 }
 
 void Camera::Update() noexcept
@@ -79,6 +80,8 @@ void Camera::UpdateMatrices() noexcept
 		1000.0f
 	);
 	viewMatrix = glm::lookAt(transform->GetPosition(), transform->GetPosition() + transform->GetForward(), transform->GetUp());
+
+	engine.SetCamera(this);
 }
 
 void Camera::UpdateShaders() noexcept

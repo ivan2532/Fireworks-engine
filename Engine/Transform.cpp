@@ -8,9 +8,12 @@
 #include "InspectorWindow.hpp"
 #include <iostream>
 
-std::unique_ptr<Component> Transform::Clone() const noexcept
+std::unique_ptr<Component> Transform::Clone(GameObject* go) const noexcept
 {
-	return std::make_unique<Transform>(*this);
+	auto result = std::make_unique<Transform>(*this);
+	result->SetObject(go);
+	result->Initialize();
+	return std::move(result);
 }
 
 void Transform::Update() noexcept
@@ -129,9 +132,13 @@ Transform::Transform(const Transform& rhs) noexcept
 	eulerAngles(rhs.eulerAngles),
 	scale(rhs.scale),
 	transform(rhs.transform),
+	forward(rhs.forward),
+	right(rhs.right),
+	up(rhs.up),
 	parent(rhs.parent),
 	updateAxes(rhs.updateAxes),
-	shadersToUpdate(rhs.shadersToUpdate)
+	shadersToUpdate(rhs.shadersToUpdate),
+	children(rhs.children)
 {
 	gameObject = rhs.gameObject;
 }
@@ -143,9 +150,13 @@ Transform& Transform::operator=(const Transform& rhs) noexcept
 	eulerAngles = rhs.eulerAngles;
 	scale = rhs.scale;
 	transform = rhs.transform;
+	forward = rhs.forward;
+	right = rhs.right;
+	up = rhs.up;
 	parent = rhs.parent;
 	updateAxes = rhs.updateAxes;
 	shadersToUpdate = rhs.shadersToUpdate;
+	children = rhs.children;
 
 	return *this;
 }
@@ -156,9 +167,13 @@ Transform::Transform(Transform&& rhs) noexcept
 	eulerAngles(std::move(rhs.eulerAngles)),
 	scale(std::move(rhs.scale)),
 	transform(std::move(rhs.transform)),
+	forward(std::move(rhs.forward)),
+	right(std::move(rhs.right)),
+	up(std::move(rhs.up)),
 	parent(std::move(rhs.parent)),
 	shadersToUpdate(std::move(rhs.shadersToUpdate)),
-	updateAxes(std::move(rhs.updateAxes))
+	updateAxes(std::move(rhs.updateAxes)),
+	children(std::move(rhs.children))
 {
 	gameObject = std::move(rhs.gameObject);
 }
@@ -170,9 +185,13 @@ Transform& Transform::operator=(Transform&& rhs) noexcept
 	eulerAngles = std::move(rhs.eulerAngles);
 	scale = std::move(rhs.scale);
 	transform = std::move(rhs.transform);
+	forward = std::move(rhs.forward);
+	right = std::move(rhs.right);
+	up = std::move(rhs.up);
 	parent = std::move(rhs.parent);
 	shadersToUpdate = std::move(rhs.shadersToUpdate);
 	updateAxes = std::move(rhs.updateAxes);
+	children = std::move(rhs.children);
 
 	return *this;
 }
@@ -317,11 +336,11 @@ Transform* Transform::GetParent() const noexcept
 	return parent;
 }
 
-void Transform::SetParent(Transform* p) noexcept
+void Transform::SetParent(Transform* p, bool addToChildren) noexcept
 {
 	parent = p;
 
-	if (parent)
+	if (addToChildren && parent)
 		parent->children.push_back(this);
 }
 

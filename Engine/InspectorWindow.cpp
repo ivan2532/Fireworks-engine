@@ -60,9 +60,11 @@ void InspectorWindow::SetSelectedObject(GameObject* value) noexcept
 
 	auto gizmoManager = editor.gizmoManager.get();
 
+	auto transform = selectedObject->GetComponent<Transform>();
+
 	gizmoManager->gizmoTransform =
-		selectedObject->GetComponent<Transform>().has_value() ?
-		selectedObject->GetComponent<Transform>().value() : nullptr;
+		transform ?
+		transform.value() : nullptr;
 
 	if (gizmoManager->gizmoTransform != nullptr)
 	{

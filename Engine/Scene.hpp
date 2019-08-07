@@ -1,21 +1,23 @@
 #pragma once
-#include "GameObject.hpp"
 #include <string>
 #include <vector>
 #include <memory>
 
 class Engine;
+class GameObject;
 
 class Scene
 {
+	friend class GameObject;
 	friend class Editor;
 	friend class HierarchyWindow;
 public:
 	Scene(Engine& rEngine, const std::string& name) noexcept;
 public:
 	std::string GetName() const noexcept;
-	void AddSceneObject(const GameObject& go) noexcept;
-	virtual void Update() noexcept;
+	GameObject& AddSceneObject(const GameObject& go) noexcept;
+	GameObject& MoveSceneObject(GameObject&& go) noexcept;
+	virtual void Update() noexcept {};
 	void CheckObjectDelete() noexcept;
 	void UpdateScene();
 public:

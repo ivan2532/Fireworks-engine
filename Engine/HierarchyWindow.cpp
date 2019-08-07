@@ -23,10 +23,10 @@ void HierarchyWindow::Draw() noexcept
 		{
 			auto transform = editor.engine.activeScene->sceneObjects[i].GetComponent<Transform>();
 
-			if (!transform.has_value())
+			if (!transform)
 				continue;
 
-			if (transform.value()->GetParent() == nullptr && !editor.engine.activeScene->sceneObjects[i].GetComponent<SceneCameraController>().has_value())
+			if (transform.value()->GetParent() == nullptr && !editor.engine.activeScene->sceneObjects[i].GetComponent<SceneCameraController>())
 			{
 				transform.value()->DrawHierarchy(editor, nodeIndexCount);
 			}

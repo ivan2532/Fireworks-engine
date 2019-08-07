@@ -6,6 +6,8 @@
 #include <utility>
 
 class Component;
+class Scene;
+class Transform;
 
 class GameObject
 {
@@ -35,6 +37,8 @@ public:
 	std::optional<T*> GetComponent() const noexcept;
 
 	void Delete(bool deleteChildren = true) noexcept;
+public:
+	GameObject& AddToScene(Scene& scene, bool addChildren = true, Transform* parent = nullptr) noexcept;
 private:
 	std::string name;
 	std::vector<std::unique_ptr<Component>> components;
@@ -45,6 +49,8 @@ template<class T>
 T* GameObject::AddComponent(std::unique_ptr<T> component) noexcept
 {
 	components.push_back(std::move(component));
+	components.back()->SetObject(this);
+	components.back()->Initialize();
 	return dynamic_cast<T*>(components.back().get());
 }
 

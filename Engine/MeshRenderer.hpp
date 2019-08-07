@@ -15,7 +15,7 @@ public:
 	void AddMesh(Mesh* m) noexcept;
 	std::vector<Mesh*>& GetMeshes() noexcept;
 public:
-	std::unique_ptr<Component> Clone() const noexcept override;
+	std::unique_ptr<Component> Clone(GameObject* go) const noexcept override;
 	void Update() noexcept override;
 public:
 	void DrawInspector(Editor& editor) noexcept override;

@@ -49,11 +49,11 @@ public:
 	size_t GetChildCount() const noexcept;
 
 	Transform* GetParent() const noexcept;
-	void SetParent(Transform* parent) noexcept;
+	void SetParent(Transform* parent, bool addToChildren = true) noexcept;
 
 	void AddShaderToUpdate(Shader* shader) noexcept;
 public:
-	std::unique_ptr<Component> Clone() const noexcept override;
+	std::unique_ptr<Component> Clone(GameObject* go) const noexcept override;
 	void Update() noexcept override;
 	void CheckChildrenDelete() noexcept;
 	void DrawHierarchy(Editor& editor, int& nodeIndexCount) const noexcept;
