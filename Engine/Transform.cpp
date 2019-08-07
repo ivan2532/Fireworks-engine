@@ -341,7 +341,9 @@ void Transform::SetParent(Transform* p, bool addToChildren) noexcept
 	parent = p;
 
 	if (addToChildren && parent)
+	{
 		parent->children.push_back(this);
+	}
 }
 
 void Transform::AddShaderToUpdate(Shader* shader) noexcept

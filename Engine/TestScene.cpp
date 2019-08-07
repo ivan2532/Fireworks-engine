@@ -13,7 +13,7 @@ TestScene::TestScene(Engine& rEngine, Window& w) noexcept
 	testModel.LoadCPU();
 	testModel.LoadGPU();
 	testModel.AddToScene(*this);
-	//testModel.AddToScene(*this);
+	testModel.AddToScene(*this);
 
 	GameObject transformTest("Test child");
 	transformTest.AddComponent<Transform>();
@@ -29,8 +29,7 @@ TestScene::TestScene(Engine& rEngine, Window& w) noexcept
 	transform->AddShaderToUpdate(&rEngine.defaultShader);
 	cameraObject.AddComponent<Camera>(engine);
 	cameraObject.AddComponent<SceneCameraController>(wnd, 7.0f, 0.25f);
-	//AddSceneObject(std::move(cameraObject));
-	cameraObject.AddToScene(*this, true);
+	cameraObject.AddToScene(*this);
 }
 
 void TestScene::Update() noexcept

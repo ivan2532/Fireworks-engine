@@ -38,10 +38,15 @@ public:
 
 	void Delete(bool deleteChildren = true) noexcept;
 public:
-	GameObject& AddToScene(Scene& scene, bool addChildren = true, Transform* parent = nullptr) noexcept;
+	GameObject& AddChild(const GameObject& child) noexcept;
+	GameObject& AddChild(GameObject&& child) noexcept;
+	std::vector<GameObject>& GetChildren() noexcept;
+
+	GameObject& AddToScene(Scene& scene, Transform* parent = nullptr) noexcept;
 private:
 	std::string name;
-	std::vector<std::unique_ptr<Component>> components;
+	std::vector<std::unique_ptr<Component>> components; //TODO: Maybe switch everything in the engine from vector to list?
+	std::vector<GameObject> childrenObjects;
 	bool deleteFlag = false;
 };
 

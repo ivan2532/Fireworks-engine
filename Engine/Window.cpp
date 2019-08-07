@@ -167,6 +167,9 @@ void Window::MakeWindow(bool r, bool lc, bool max) noexcept
 
 void Window::KeyCallback(int key, int scancode, int action, int mods) noexcept
 {
+	if (key < 0 || key > 347)
+		return;
+
 	if (action == GLFW_PRESS)
 		keyDown.set(key, 1);
 	else if (action == GLFW_RELEASE)

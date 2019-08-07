@@ -21,12 +21,20 @@ GameObject::GameObject(const GameObject& rhs) noexcept
 		components[i]->SetObject(this);
 	}
 
-	auto transform = rhs.GetComponent<Transform>();
+	auto transform = GetComponent<Transform>();
 
 	if (transform)
+		transform.value()->children.clear();
+
+	auto rhsTransform = rhs.GetComponent<Transform>();
+
+	if (rhsTransform)
 	{
-		for (auto& child : transform.value()->children)
-			child->SetParent(transform.value(), false);
+		for (auto& child : rhsTransform.value()->children)
+		{
+			childrenObjects.push_back(*child->gameObject);
+			childrenObjects.back().GetComponent<Transform>().value()->SetParent(transform.value());
+		}
 	}
 }
 
@@ -34,6 +42,7 @@ GameObject& GameObject::operator=(const GameObject& rhs) noexcept
 {
 	deleteFlag = rhs.deleteFlag;
 	name = rhs.name;
+	childrenObjects = rhs.childrenObjects;
 
 	components.resize(rhs.components.size());
 	for (unsigned i = 0; i < rhs.components.size(); i++)
@@ -55,8 +64,10 @@ GameObject& GameObject::operator=(const GameObject& rhs) noexcept
 
 GameObject::GameObject(GameObject&& rhs) noexcept
 	:
+	deleteFlag(std::move(rhs.deleteFlag)),
 	name(std::move(rhs.name)),
-	components(std::move(rhs.components))
+	components(std::move(rhs.components)),
+	childrenObjects(std::move(rhs.childrenObjects))
 {
 	for (auto& c : components)
 		c->SetObject(this);
@@ -67,6 +78,7 @@ GameObject& GameObject::operator=(GameObject&& rhs) noexcept
 	deleteFlag = rhs.deleteFlag;
 	name = std::move(rhs.name);
 	components = std::move(rhs.components);
+	childrenObjects = std::move(rhs.childrenObjects);
 
 	for (auto& c : components)
 		c->SetObject(this);
@@ -88,6 +100,14 @@ void GameObject::Update() noexcept
 {
 	for (auto& component : components)
 		component->Update();
+
+	auto transform = GetComponent<Transform>();
+
+	if (transform)
+	{
+		for (auto& child : transform.value()->children)
+			child->gameObject->Update();
+	}
 }
 
 void GameObject::Delete(bool deleteChildren) noexcept
@@ -106,7 +126,24 @@ void GameObject::Delete(bool deleteChildren) noexcept
 		transform->parent->CheckChildrenDelete();
 }
 
-GameObject& GameObject::AddToScene(Scene& scene, bool addChildren, Transform* parent) noexcept
+GameObject& GameObject::AddChild(const GameObject& child) noexcept
+{
+	childrenObjects.push_back(child);
+	return childrenObjects.back();
+}
+
+GameObject& GameObject::AddChild(GameObject&& child) noexcept
+{
+	childrenObjects.push_back(std::move(child));
+	return childrenObjects.back();
+}
+
+std::vector<GameObject>& GameObject::GetChildren() noexcept
+{
+	return childrenObjects;
+}
+
+GameObject& GameObject::AddToScene(Scene& scene, Transform* parent) noexcept
 {
 	std::cout << "Adding game object \"" << name << "\"" << std::endl;
 
@@ -118,12 +155,6 @@ GameObject& GameObject::AddToScene(Scene& scene, bool addChildren, Transform* pa
 	{
 		if (transform)
 			transform.value()->SetParent(parent);
-	}
-
-	if (addChildren && transform)
-	{
-		for (auto& child : transform.value()->children)
-			child->gameObject->AddToScene(scene);
 	}
 
 	return newGameObject;

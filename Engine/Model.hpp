@@ -40,7 +40,7 @@ private:
 	bool loadedCPU = false;
 	bool loadedGPU = false;
 	bool loadPreviewValues = false;
-	std::vector<GameObject> meshObjects;
+	GameObject meshObject;
 	std::vector<std::unique_ptr<Mesh>> meshes;
 	std::string directory; //For textures
 	std::vector<Texture> loadedTextures;

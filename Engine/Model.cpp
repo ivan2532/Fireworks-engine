@@ -19,7 +19,8 @@ const std::vector<std::string> Model::supportedFormats = {
 Model::Model(unsigned id, const std::filesystem::path& path, const std::string& name, Shader& s) noexcept
 	:
 	Asset(id, path, name, 0u),
-	shader(s)
+	shader(s),
+	meshObject("null")
 {
 }
 
@@ -79,7 +80,8 @@ void Model::ProcessNode(aiNode* node, const aiScene* scene, Transform* parent) n
 	object.GetComponent<Transform>().value()->SetPosition(position);
 	object.GetComponent<Transform>().value()->SetEulerAngles(eulerAngles);
 	object.GetComponent<Transform>().value()->SetScale(scale);
-	object.GetComponent<Transform>().value()->SetParent(parent);
+	if(parent)
+		object.GetComponent<Transform>().value()->SetParent(parent);
 
 	if (node->mNumMeshes > 0)
 	{
@@ -97,10 +99,23 @@ void Model::ProcessNode(aiNode* node, const aiScene* scene, Transform* parent) n
 		}
 	}
 
-	for (unsigned i = 0; i < node->mNumChildren; i++)
-		ProcessNode(node->mChildren[i], scene, object.GetComponent<Transform>().value());
+	Transform* newParent = nullptr;
 
-	meshObjects.push_back(std::move(object));
+	if (!parent)
+	{
+		meshObject = std::move(object);
+		newParent = meshObject.GetComponent<Transform>().value();
+	}
+	else
+	{
+		auto newChild = parent->gameObject->AddChild(std::move(object));
+		newParent = newChild.GetComponent<Transform>().value();
+	}
+
+	for (unsigned i = 0; i < node->mNumChildren; i++)
+		ProcessNode(node->mChildren[i], scene, newParent);
+
+	//meshObjects.push_back(std::move(object));
 }
 
 std::unique_ptr<Mesh> Model::ProcessMesh(aiMesh* mesh, const aiScene* scene) noexcept
@@ -218,10 +233,7 @@ std::vector<Texture> Model::LoadMaterialTextures(aiMaterial* material, aiTexture
 
 void Model::AddToScene(Scene& scene)
 {
-	//for (auto& object : meshObjects)
-		//scene.AddSceneObject(object);
-
-	meshObjects.back().AddToScene(scene);
+	meshObject.AddToScene(scene);
 }
 
 void Model::LoadGPU() noexcept
@@ -229,7 +241,15 @@ void Model::LoadGPU() noexcept
 	if (loadedGPU)
 		return;
 
-	for (auto& object : meshObjects)
+	auto meshObjectRenderer = meshObject.GetComponent<MeshRenderer>();
+
+	if (meshObjectRenderer)
+	{
+		for (auto& mesh : meshObjectRenderer.value()->GetMeshes())
+			mesh->InitMesh();
+	}
+
+	for (auto& object : meshObject.GetChildren())
 	{
 		auto meshRenderer = object.GetComponent<MeshRenderer>();
 
@@ -237,9 +257,7 @@ void Model::LoadGPU() noexcept
 			continue;
 
 		for (auto& mesh : meshRenderer.value()->GetMeshes())
-		{
 			mesh->InitMesh();
-		}
 	}
 
 	loadedGPU = true;
