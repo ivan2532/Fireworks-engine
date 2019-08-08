@@ -28,7 +28,10 @@ Shader& Shader::operator=(Shader&& rhs) noexcept
 	return *this;
 }
 
-Shader::Shader(std::string vsPath, std::string fsPath)
+Shader::Shader(unsigned major, unsigned minor, std::string vsPath, std::string fsPath)
+	:
+	glVersionMajor(major),
+	glVersionMinor(minor)
 {
 	std::string vsSourceStr, fsSourceStr;
 	std::stringstream vsStream, fsStream;
@@ -49,6 +52,14 @@ Shader::Shader(std::string vsPath, std::string fsPath)
 		
 		vsSourceStr = vsStream.str();
 		fsSourceStr = fsStream.str();
+
+		auto versionIndexVS = vsSourceStr.find_first_of("#");
+		vsSourceStr[versionIndexVS + 9] = glVersionMajor + '0';
+		vsSourceStr[versionIndexVS + 10] = glVersionMinor + '0';
+
+		auto versionIndexFS = fsSourceStr.find_first_of("#");
+		fsSourceStr[versionIndexFS + 9] = glVersionMajor + '0';
+		fsSourceStr[versionIndexFS + 10] = glVersionMinor + '0';
 	}
 	catch (std::fstream::failure e)
 	{

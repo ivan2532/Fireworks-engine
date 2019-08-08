@@ -9,7 +9,7 @@ struct GLFWwindow;
 class AssetPreview
 {
 public:
-	AssetPreview() noexcept;
+	AssetPreview(unsigned glVersionMajor, unsigned glVersionMinor) noexcept;
 	void GeneratePreviewImage(std::ofstream& outputStream, Model& model) noexcept;
 private:
 	Shader previewShader;

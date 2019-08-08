@@ -11,12 +11,14 @@ Engine::Engine() noexcept
 	wnd(1920u, 1080u, "Fireworks engine", false, true, false, true),
 	editor(*this),
 	activeScene(std::make_unique<TestScene>(*this, wnd)),
-	defaultShader("UnlitTextureVS.glsl", "UnlitTextureFS.glsl")
+	defaultShader(wnd.GetGLVersionMajor(), wnd.GetGLVersionMinor(), "UnlitTextureVS.glsl", "UnlitTextureFS.glsl")
 {
 	SetCallbacks();
 
 	ImGui_ImplGlfw_InitForOpenGL(wnd.GetWindow(), true);
-	ImGui_ImplOpenGL3_Init("#version 460");
+	ImGui_ImplOpenGL3_Init(
+		("#version " + std::to_string(wnd.GetGLVersionMajor()) + std::to_string(wnd.GetGLVersionMinor()) + "0").c_str()
+	);
 }
 
 Engine::~Engine() noexcept

@@ -80,6 +80,16 @@ GLFWwindow* Window::GetWindow() const noexcept
 	return wnd;
 }
 
+unsigned Window::GetGLVersionMajor() const noexcept
+{
+	return glVersionMajor;
+}
+
+unsigned Window::GetGLVersionMinor() const noexcept
+{
+	return glVersionMinor;
+}
+
 unsigned Window::GetWidth() const noexcept
 {
 	return width;
@@ -111,36 +121,62 @@ void Window::MakeWindow(bool r, bool lc, bool max) noexcept
 	if (!glfwInit())
 	{
 		std::cout << "Failed to initialize GLFW!";
-		getchar();
+		auto wait = getchar();
 		exit(-1);
 	}
 
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-	if (!fullscreen && max)
+	while (true)
 	{
-		glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, glVersionMajor);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, glVersionMinor);
 
-		const auto videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-		width = videoMode->width;
-		height = videoMode->height;
-	}
+		if (!fullscreen && max)
+		{
+			glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
 
-	if (fullscreen)
-		wnd = glfwCreateWindow(width, height, title.c_str(), glfwGetPrimaryMonitor(), nullptr);
-	else
-		wnd = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
+			const auto videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
-	if (wnd == nullptr)
-	{
-		std::cout << "Failed to create window!";
-		glfwTerminate();
-		getchar();
-		exit(-1);
+			width = videoMode->width;
+			height = videoMode->height;
+		}
+
+		if (fullscreen)
+			wnd = glfwCreateWindow(width, height, title.c_str(), glfwGetPrimaryMonitor(), nullptr);
+		else
+			wnd = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
+
+		if (wnd != nullptr)
+			break;
+		else
+		{
+			if (glVersionMinor == 0)
+			{
+				switch (glVersionMajor)
+				{
+				case 4:
+					glVersionMajor = 3;
+					glVersionMinor = 3;
+					break;
+				case 3:
+					glVersionMajor = 2;
+					glVersionMinor = 1;
+					break;
+				case 2:
+					glVersionMajor = 1;
+					glVersionMinor = 5;
+					break;
+				case 1:
+					std::cout << "Failed to create window!" << std::endl;
+					auto wait = std::getchar();
+					glfwTerminate();
+					exit(-1);
+				}
+			}
+			else
+				glVersionMinor--;
+		}
 	}
 
 	glfwMakeContextCurrent(wnd);
@@ -149,9 +185,10 @@ void Window::MakeWindow(bool r, bool lc, bool max) noexcept
 	{
 		std::cout << "Failed to initialize GLAD!";
 		glfwTerminate();
-		getchar();
+		auto wait = getchar();
 		exit(-1);
 	}
+
 
 	glViewport(0, 0, width, height);
 

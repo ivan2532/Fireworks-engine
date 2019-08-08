@@ -4,9 +4,9 @@
 #include "Model.hpp"
 #include <iostream>
 
-AssetPreview::AssetPreview() noexcept
+AssetPreview::AssetPreview(unsigned major, unsigned minor) noexcept
 	:
-	previewShader("FlatShadedVS.glsl", "FlatShadedFS.glsl")
+	previewShader(major, minor, "FlatShadedVS.glsl", "FlatShadedFS.glsl")
 {
 }
 

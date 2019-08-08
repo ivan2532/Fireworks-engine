@@ -10,6 +10,7 @@
 
 AssetManager::AssetManager(Editor& editor, const std::string& projectDirectory, Shader& s) noexcept
 	:
+	assetPreview(editor.GetMainWindow()->GetGLVersionMajor(), editor.GetMainWindow()->GetGLVersionMinor()),
 	assetsDirString(projectDirectory),
 	shader(s)
 {

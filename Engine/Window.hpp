@@ -13,12 +13,15 @@ public:
 	~Window() noexcept;
 public:
 	GLFWwindow* GetWindow() const noexcept;
+	unsigned GetGLVersionMajor() const noexcept;
+	unsigned GetGLVersionMinor() const noexcept;
 	unsigned GetWidth() const noexcept;
 	void SetWidth(int value) noexcept;
 	unsigned GetHeight() const noexcept;
 	void SetHeight(int value) noexcept;
 	void EndFrame() noexcept;
 	void MakeWindow(bool resizable, bool lockCursor, bool maximize) noexcept;
+
 public:
 	void KeyCallback(int key, int scancode, int action, int mods) noexcept;
 	bool GetKey(int glfwKey, bool respectCapture = true) noexcept;
@@ -53,4 +56,6 @@ private:
 	unsigned depthBuffer = 0;
 	std::bitset<348> keyDown;
 	std::bitset<348> keyUp;
+	unsigned glVersionMajor = 4;
+	unsigned glVersionMinor = 6;
 };

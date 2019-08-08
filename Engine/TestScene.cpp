@@ -3,6 +3,7 @@
 #include "Window.hpp"
 #include "GLFW/glfw3.h"
 #include "Engine.hpp"
+#include <iostream>
 
 TestScene::TestScene(Engine& rEngine, Window& w) noexcept
 	:

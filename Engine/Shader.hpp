@@ -7,7 +7,6 @@
 class Shader
 {
 public:
-	//Delete unnecessary constructors and rule of 5
 	Shader() = default;
 	~Shader() = default;
 	Shader(const Shader&) noexcept;
@@ -15,7 +14,7 @@ public:
 	Shader(Shader&&) noexcept;
 	Shader& operator=(Shader&&) noexcept;
 
-	Shader(std::string vsPath, std::string fsPath);
+	Shader(unsigned glVersionMajor, unsigned glVersionMinor, std::string vsPath, std::string fsPath);
 public:
 	void Use() noexcept;
 	unsigned GetID() const noexcept;
@@ -37,4 +36,6 @@ public:
 	void SetMat4x4(const std::string& name, glm::mat4x4 value) noexcept;
 private:
 	unsigned programID;
+	unsigned glVersionMajor;
+	unsigned glVersionMinor;
 };
