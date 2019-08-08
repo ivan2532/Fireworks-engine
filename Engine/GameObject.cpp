@@ -145,9 +145,7 @@ std::vector<GameObject>& GameObject::GetChildren() noexcept
 
 GameObject& GameObject::AddToScene(Scene& scene, Transform* parent) noexcept
 {
-	std::cout << "Adding game object \"" << name << "\"" << std::endl;
-
-	auto newGameObject = scene.AddSceneObject(*this);
+	GameObject& newGameObject = scene.AddSceneObject(*this);
 
 	auto transform = newGameObject.GetComponent<Transform>();
 
