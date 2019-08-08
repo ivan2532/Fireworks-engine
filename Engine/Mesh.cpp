@@ -55,7 +55,7 @@ void Mesh::Draw(Shader& shader) const noexcept
 	glActiveTexture(GL_TEXTURE0);
 
 	glBindVertexArray(vertexArrayID);
-	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr);
+	glDrawElements(GL_TRIANGLES, (GLsizei)indices.size(), GL_UNSIGNED_INT, nullptr);
 	glBindVertexArray(0);
 }
 

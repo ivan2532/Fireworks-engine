@@ -79,7 +79,7 @@ void AssetManager::ScanDirectory(const std::filesystem::path& directory, int par
 		newFolder.parentIndex = parentIndex;
 		int currentIndex;
 
-		currentIndex = folders.size();
+		currentIndex = (int)folders.size();
 		folders.push_back(std::move(newFolder));
 
 		if (parentIndex != -1)
