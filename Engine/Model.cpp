@@ -239,7 +239,7 @@ void Model::LoadGPU() noexcept
 	if (loadedGPU)
 		return;
 
-	auto meshObjectRenderer = meshObject.GetComponent<MeshRenderer>();
+	/*auto meshObjectRenderer = meshObject.GetComponent<MeshRenderer>();
 
 	if (meshObjectRenderer)
 	{
@@ -256,9 +256,25 @@ void Model::LoadGPU() noexcept
 
 		for (auto& mesh : meshRenderer.value()->GetMeshes())
 			mesh->InitMesh();
-	}
+	}*/
+
+	LoadGPURecurse(meshObject);
 
 	loadedGPU = true;
+}
+
+void Model::LoadGPURecurse(GameObject& object) noexcept
+{
+	auto meshRenderer = object.GetComponent<MeshRenderer>();
+
+	if (meshRenderer)
+	{
+		for (auto& mesh : meshRenderer.value()->GetMeshes())
+			mesh->LoadGPU();
+	}
+
+	for (auto& child : object.GetChildren())
+		LoadGPURecurse(child);
 }
 
 void Model::UnloadCPU() noexcept

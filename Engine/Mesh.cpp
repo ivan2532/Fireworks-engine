@@ -64,7 +64,7 @@ std::string Mesh::GetName() const noexcept
 	return name;
 }
 
-void Mesh::InitMesh() noexcept
+void Mesh::LoadGPU() noexcept
 {
 	glGenVertexArrays(1u, &vertexArrayID);
 	glGenBuffers(1u, &vertexBufferID);

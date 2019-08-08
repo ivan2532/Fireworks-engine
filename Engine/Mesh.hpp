@@ -50,7 +50,7 @@ public:
 public:
 	void Draw(Shader& shader) const noexcept;
 	std::string GetName() const noexcept;
-	void InitMesh() noexcept;
+	void LoadGPU() noexcept;
 	glm::vec3 GetSphereCenter() const noexcept;
 	float GetSphereRadius() const noexcept;
 public:

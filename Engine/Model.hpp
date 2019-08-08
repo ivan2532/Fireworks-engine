@@ -31,6 +31,7 @@ public: //Preview getters
 	glm::vec3 GetSphereCenter() const noexcept;
 	float GetSphereRadius() const noexcept;
 private:
+	void LoadGPURecurse(GameObject& object) noexcept;
 	void ProcessNode(aiNode *node, const aiScene *scene, Transform* parent) noexcept;
 	std::unique_ptr<Mesh> ProcessMesh(aiMesh* mesh, const aiScene* scene) noexcept;
 	std::vector<Texture> LoadMaterialTextures(aiMaterial* material, aiTextureType type, TextureType typeName) noexcept;
