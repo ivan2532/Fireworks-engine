@@ -74,18 +74,18 @@ void Model::ProcessNode(aiNode* node, const aiScene* scene, Transform* parent) n
 	Math::DecomposeTransform(nodeTransform, &position, &scale, &rotation);
 	glm::vec3 eulerAngles = Math::EulerAnglesFromRotation(rotation);
 
-	auto object = GameObject(node->mName.C_Str());
-	object.AddComponent<Transform>();
-	object.GetComponent<Transform>().value()->AddShaderToUpdate(&shader);
-	object.GetComponent<Transform>().value()->SetPosition(position);
-	object.GetComponent<Transform>().value()->SetEulerAngles(eulerAngles);
-	object.GetComponent<Transform>().value()->SetScale(scale);
+	auto object = std::make_unique<GameObject>(node->mName.C_Str());
+	object->AddComponent<Transform>();
+	object->GetComponent<Transform>().value()->AddShaderToUpdate(&shader);
+	object->GetComponent<Transform>().value()->SetPosition(position);
+	object->GetComponent<Transform>().value()->SetEulerAngles(eulerAngles);
+	object->GetComponent<Transform>().value()->SetScale(scale);
 	if(parent)
-		object.GetComponent<Transform>().value()->SetParent(parent);
+		object->GetComponent<Transform>().value()->SetParent(parent);
 
 	if (node->mNumMeshes > 0)
 	{
-		object.AddComponent<MeshRenderer>(shader);
+		object->AddComponent<MeshRenderer>(shader);
 
 		for (unsigned i = 0; i < node->mNumMeshes; i++)
 		{
@@ -95,7 +95,7 @@ void Model::ProcessNode(aiNode* node, const aiScene* scene, Transform* parent) n
 			);
 
 			meshes.push_back(std::move(mesh));
-			object.GetComponent<MeshRenderer>().value()->AddMesh(meshes.back().get());
+			object->GetComponent<MeshRenderer>().value()->AddMesh(meshes.back().get());
 		}
 	}
 
@@ -103,19 +103,17 @@ void Model::ProcessNode(aiNode* node, const aiScene* scene, Transform* parent) n
 
 	if (!parent)
 	{
-		meshObject = std::move(object);
+		meshObject = std::move(*object);
 		newParent = meshObject.GetComponent<Transform>().value();
 	}
 	else
 	{
-		auto newChild = parent->gameObject->AddChild(std::move(object));
+		GameObject& newChild = parent->gameObject->AddChild(std::move(*object));
 		newParent = newChild.GetComponent<Transform>().value();
 	}
 
 	for (unsigned i = 0; i < node->mNumChildren; i++)
 		ProcessNode(node->mChildren[i], scene, newParent);
-
-	//meshObjects.push_back(std::move(object));
 }
 
 std::unique_ptr<Mesh> Model::ProcessMesh(aiMesh* mesh, const aiScene* scene) noexcept
