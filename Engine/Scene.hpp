@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include <vector>
+#include <list>
 #include <memory>
 
 class Engine;
@@ -27,5 +27,5 @@ public:
 	Engine& engine;
 protected:
 	std::string name;
-	std::vector<GameObject> sceneObjects;
+	std::list<GameObject> sceneObjects;
 };

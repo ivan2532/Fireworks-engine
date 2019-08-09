@@ -19,7 +19,7 @@ void HierarchyWindow::Draw() noexcept
 	nodeIndexCount = 0;
 	if (ImGui::Begin("Hierarchy", &open))
 	{
-		for (int i = 0; i < (int)editor.engine.activeScene->sceneObjects.size(); i++)
+		/*for (int i = 0; i < (int)editor.engine.activeScene->sceneObjects.size(); i++)
 		{
 			auto transform = editor.engine.activeScene->sceneObjects[i].GetComponent<Transform>();
 
@@ -30,6 +30,17 @@ void HierarchyWindow::Draw() noexcept
 			{
 				transform.value()->DrawHierarchy(editor, nodeIndexCount, std::to_string(i));
 			}
+		}*/
+		int indexCounter = 0;
+		for (auto it = editor.engine.activeScene->sceneObjects.begin(); it != editor.engine.activeScene->sceneObjects.end(); ++it, indexCounter++)
+		{
+			auto transform = it->GetComponent<Transform>();
+
+			if (!transform)
+				continue;
+
+			if (transform.value()->GetParent() == nullptr && !it->GetComponent<SceneCameraController>())
+				transform.value()->DrawHierarchy(editor, nodeIndexCount, std::to_string(indexCounter));
 		}
 	}
 	ImGui::End();
