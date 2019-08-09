@@ -33,7 +33,7 @@ std::filesystem::path AssetManager::GetAssetsDir() const noexcept
 void AssetManager::ScanAssets() noexcept
 {
 	folders.clear();
-	ScanDirectory(assetsDir, -1);
+	ScanDirectory(assetsDir, nullptr);
 }
 
 unsigned AssetManager::GetPreviewFromMeta(const std::filesystem::path& metaPath) const noexcept
@@ -68,7 +68,7 @@ unsigned AssetManager::GetPreviewFromMeta(const std::filesystem::path& metaPath)
 	return result;
 }
 
-void AssetManager::ScanDirectory(const std::filesystem::path& directory, int parentIndex) noexcept
+void AssetManager::ScanDirectory(const std::filesystem::path& directory, FolderNode* parent) noexcept
 {
 	auto curID = std::this_thread::get_id();
 
@@ -77,19 +77,18 @@ void AssetManager::ScanDirectory(const std::filesystem::path& directory, int par
 		FolderNode newFolder;
 		newFolder.path = directory.string();
 		newFolder.name = directory.filename().string();
-		newFolder.parentIndex = parentIndex;
-		int currentIndex;
+		newFolder.parent = parent;
 
-		currentIndex = (int)folders.size();
 		folders.push_back(std::move(newFolder));
+		FolderNode* currentFolder = &folders.back();
 
-		if (parentIndex != -1)
-			folders[parentIndex].childrenIndices.push_back(currentIndex);
+		if (parent != nullptr)
+			parent->children.push_back(currentFolder);
 
 		for (const auto& entry : std::filesystem::directory_iterator(directory))
 		{
 			if (std::filesystem::is_directory(entry.status()))
-				ScanDirectory(entry.path(), currentIndex);
+				ScanDirectory(entry.path(), currentFolder);
 			else
 			{
 				std::string fileExtension = entry.path().extension().string();
@@ -98,7 +97,7 @@ void AssetManager::ScanDirectory(const std::filesystem::path& directory, int par
 				{
 					if (modelExtension == fileExtension)
 					{
-						LoadModelAsset(entry.path(), currentIndex);
+						LoadModelAsset(entry.path(), currentFolder);
 						break;
 					}
 				}
@@ -107,7 +106,7 @@ void AssetManager::ScanDirectory(const std::filesystem::path& directory, int par
 	}
 }
 
-void AssetManager::LoadModelAsset(const std::filesystem::path& path, int folderIndex) noexcept
+void AssetManager::LoadModelAsset(const std::filesystem::path& path, FolderNode* folder) noexcept
 {
 	auto modelAsset = std::make_unique<Model>(currentID++, path.string(), path.stem().string(), shader);
 
@@ -162,5 +161,5 @@ void AssetManager::LoadModelAsset(const std::filesystem::path& path, int folderI
 		modelAsset->SetPreview(image);
 	}
 
-	folders[folderIndex].assets.push_back(std::move(modelAsset));
+	folder->assets.push_back(std::move(modelAsset));
 }

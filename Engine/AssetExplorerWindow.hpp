@@ -13,15 +13,15 @@ public:
 	void Draw() noexcept override;
 	void DrawAssetsTree() noexcept;
 private:
-	void DrawFolderTree(int folderIndex, const std::string& idBuildUp) noexcept;
-	void DrawFolderContents(int folderIndex) const noexcept;
+	void DrawFolderTree(FolderNode* folder, const std::string& idBuildUp) noexcept;
+	void DrawFolderContents(FolderNode* folder) const noexcept;
 private:
 	AssetManager assetManager;
 	float folderWidth;
 	float fileWidth;
 	int nodeIndexCount = 0;
 	int selectedFolderID = -1;
-	int selectedFolderIndex = -1;
+	FolderNode* selectedFolder = nullptr;
 public:
 	static constexpr float fileButtonSize = 70.0f;
 };

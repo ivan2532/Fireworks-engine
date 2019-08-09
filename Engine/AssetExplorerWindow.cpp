@@ -50,7 +50,7 @@ void AssetExplorerWindow::Draw() noexcept
 		ImGui::Spacing();
 
 		if (selectedFolderID != -1)
-			DrawFolderContents(selectedFolderIndex);
+			DrawFolderContents(selectedFolder);
 
 		ImGui::EndChild();
 	}
@@ -60,16 +60,16 @@ void AssetExplorerWindow::Draw() noexcept
 void AssetExplorerWindow::DrawAssetsTree() noexcept
 {
 	nodeIndexCount = 0;
-	DrawFolderTree(0, "0");
+	DrawFolderTree(&assetManager.folders.front(), "0");
 }
 
-void AssetExplorerWindow::DrawFolderTree(int folderIndex, const std::string& idBuildUp) noexcept
+void AssetExplorerWindow::DrawFolderTree(FolderNode* folder, const std::string& idBuildUp) noexcept
 {
 	int currentIndex = nodeIndexCount++;
 	auto nodeFlags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
 	auto id = idBuildUp;
 
-	if (assetManager.folders[folderIndex].childrenIndices.size() == 0)
+	if (folder->children.size() == 0)
 		nodeFlags |= ImGuiTreeNodeFlags_Leaf;
 
 	if (currentIndex == selectedFolderID)
@@ -80,53 +80,55 @@ void AssetExplorerWindow::DrawFolderTree(int folderIndex, const std::string& idB
 
 	auto icon = ICON_FA_FOLDER;
 
-	if (assetManager.folders[folderIndex].expanded)
+	if (folder->expanded)
 		icon = ICON_FA_FOLDER_OPEN;
 
 	std::ostringstream displayString;
-	displayString << icon << "  " << assetManager.folders[folderIndex].name;
+	displayString << icon << "  " << folder->name;
 	bool expandedNode = ImGui::TreeNodeEx(id.c_str(), nodeFlags, displayString.str().c_str());
 	
 	if (ImGui::IsItemClicked())
 	{
 		selectedFolderID = currentIndex;
-		selectedFolderIndex = folderIndex;
+		selectedFolder = folder;
 	}
 
 	if (expandedNode)
 	{
-		if (assetManager.folders[folderIndex].childrenIndices.size() > 0)
-			assetManager.folders[folderIndex].expanded = true;
+		if (folder->children.size() > 0)
+			folder->expanded = true;
 		else
-			assetManager.folders[folderIndex].expanded = false;
+			folder->expanded = false;
 
-		for (unsigned i = 0; i < assetManager.folders[folderIndex].childrenIndices.size(); i++)
-			DrawFolderTree(assetManager.folders[folderIndex].childrenIndices[i], id + std::to_string(i));
+		int indexCounter = 0;
+		for (auto it = folder->children.begin(); it != folder->children.end(); ++it, indexCounter++)
+			DrawFolderTree(*it, id + std::to_string(indexCounter));
 
 		ImGui::TreePop();
 	}
 	else
-		assetManager.folders[folderIndex].expanded = false;
+		folder->expanded = false;
 }
 
-void AssetExplorerWindow::DrawFolderContents(int folderIndex) const noexcept
+void AssetExplorerWindow::DrawFolderContents(FolderNode* folder) const noexcept
 {
 	ImGuiStyle& style = ImGui::GetStyle();
 	const auto columnCount = std::max(1, static_cast<int>(fileWidth /
 		(fileButtonSize + style.ItemSpacing.x + style.FramePadding.x + style.ItemInnerSpacing.x * 2)));
 	
-	for (unsigned i = 0; i < assetManager.folders[folderIndex].assets.size(); i++)
+	int indexCounter = 0;
+	for (auto it = folder->assets.begin(); it != folder->assets.end(); ++it, indexCounter++)
 	{
 		std::ostringstream columnID;
-		columnID << "##file_" << i << "_column";
+		columnID << "##file_" << indexCounter << "_column";
 		ImGui::Columns(columnCount, columnID.str().c_str());
 
-		if (!assetManager.folders[folderIndex].assets[i])
+		if (!(*it))
 			break;
 
-		ImGui::PushID(i);
+		ImGui::PushID(indexCounter);
 
-		ImGui::ImageButton((void*)(intptr_t)assetManager.folders[folderIndex].assets[i]->GetPreview(),
+		ImGui::ImageButton((void*)(intptr_t)(*it)->GetPreview(),
 			ImVec2(fileButtonSize, fileButtonSize),
 			ImVec2(0, 1), //Flip UVs
 			ImVec2(1, 0),
@@ -134,9 +136,9 @@ void AssetExplorerWindow::DrawFolderContents(int folderIndex) const noexcept
 		);
 		ImGui::PopID();
 
-		if (!assetManager.folders[folderIndex].assets[i])
+		if (!(*it))
 			break;
-		std::string textString = assetManager.folders[folderIndex].assets[i]->GetName();
+		std::string textString = (*it)->GetName();
 
 		ImGui::TextWrapped(textString.c_str());
 
