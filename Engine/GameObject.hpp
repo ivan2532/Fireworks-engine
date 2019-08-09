@@ -41,13 +41,13 @@ public:
 public:
 	GameObject& AddChild(const GameObject& child) noexcept;
 	GameObject& AddChild(GameObject&& child) noexcept;
-	std::vector<GameObject>& GetChildren() noexcept;
+	std::list<GameObject>& GetChildren() noexcept;
 
 	GameObject& AddToScene(Scene& scene, Transform* parent = nullptr) noexcept;
 private:
 	std::string name;
 	std::list<std::unique_ptr<Component>> components;
-	std::vector<GameObject> childrenObjects;
+	std::list<GameObject> childrenObjects;
 	bool deleteFlag = false;
 };
 

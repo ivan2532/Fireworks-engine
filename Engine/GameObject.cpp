@@ -142,7 +142,7 @@ GameObject& GameObject::AddChild(GameObject&& child) noexcept
 	return childrenObjects.back();
 }
 
-std::vector<GameObject>& GameObject::GetChildren() noexcept
+std::list<GameObject>& GameObject::GetChildren() noexcept
 {
 	return childrenObjects;
 }
