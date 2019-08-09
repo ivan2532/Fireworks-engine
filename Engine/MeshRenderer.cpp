@@ -13,7 +13,7 @@ void MeshRenderer::AddMesh(Mesh* m) noexcept
 	meshes.push_back(m);
 }
 
-std::vector<Mesh*>& MeshRenderer::GetMeshes() noexcept
+std::list<Mesh*>& MeshRenderer::GetMeshes() noexcept
 {
 	return meshes;
 }

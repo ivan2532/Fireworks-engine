@@ -9,6 +9,7 @@
 #include "Window.hpp"
 #include <memory>
 #include <optional>
+#include <list>
 
 class Engine;
 class Transform;
@@ -48,11 +49,11 @@ public:
 	Window* GetMainWindow() const noexcept;
 private:
 	Engine& engine;
-	std::vector<std::unique_ptr<EditorWindow>> editorWindows;
+	std::list<std::unique_ptr<EditorWindow>> editorWindows;
 	std::unique_ptr<GizmoManager> gizmoManager;
 private:
-	std::vector<std::unique_ptr<Undoable>> undoBuffer;
-	std::vector<std::unique_ptr<Undoable>> redoBuffer;
+	std::list<std::unique_ptr<Undoable>> undoBuffer;
+	std::list<std::unique_ptr<Undoable>> redoBuffer;
 private:
 	bool sceneViewFocused = false;
 	bool gameViewFocused = false;
