@@ -15,10 +15,12 @@ GameObject::GameObject(const GameObject& rhs) noexcept
 	name(rhs.name)
 {
 	components.resize(rhs.components.size());
-	for (unsigned i = 0; i < rhs.components.size(); i++)
+
+	auto rhsIt = rhs.components.begin();
+	for (auto it = components.begin(); it != components.end() && rhsIt != rhs.components.end(); ++it, ++rhsIt)
 	{
-		components[i] = std::move(rhs.components[i]->Clone(this));
-		components[i]->SetObject(this);
+		*it = std::move((*rhsIt)->Clone(this));
+		(*it)->SetObject(this);
 	}
 
 	auto transform = GetComponent<Transform>();
@@ -45,10 +47,12 @@ GameObject& GameObject::operator=(const GameObject& rhs) noexcept
 	childrenObjects = rhs.childrenObjects;
 
 	components.resize(rhs.components.size());
-	for (unsigned i = 0; i < rhs.components.size(); i++)
+
+	auto rhsIt = rhs.components.begin();
+	for (auto it = components.begin(); it != components.end() && rhsIt != rhs.components.end(); ++it, ++rhsIt)
 	{
-		components[i] = std::move(rhs.components[i]->Clone(this));
-		components[i]->SetObject(this);
+		*it = std::move((*rhsIt)->Clone(this));
+		(*it)->SetObject(this);
 	}
 
 	auto transform = rhs.GetComponent<Transform>();

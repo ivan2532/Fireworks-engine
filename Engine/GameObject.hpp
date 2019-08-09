@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <list>
 #include <memory>
 #include <optional>
 #include <utility>
@@ -45,7 +46,7 @@ public:
 	GameObject& AddToScene(Scene& scene, Transform* parent = nullptr) noexcept;
 private:
 	std::string name;
-	std::vector<std::unique_ptr<Component>> components; //TODO: Maybe switch everything in the engine from vector to list?
+	std::list<std::unique_ptr<Component>> components;
 	std::vector<GameObject> childrenObjects;
 	bool deleteFlag = false;
 };
