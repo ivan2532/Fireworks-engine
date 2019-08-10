@@ -340,6 +340,21 @@ Transform* Transform::GetParent() const noexcept
 
 void Transform::SetParent(Transform* p, bool addToChildren) noexcept
 {
+	if (parent)
+	{
+		Transform* oldParent = parent;
+		parent = nullptr;
+
+		for (auto it = oldParent->children.begin(); it != oldParent->children.end(); ++it)
+		{
+			if ((*it)->parent == nullptr)
+			{
+				oldParent->children.erase(it);
+				break;
+			}
+		}
+	}
+
 	parent = p;
 
 	if (addToChildren && parent)
@@ -377,19 +392,36 @@ void Transform::DrawHierarchy(Editor& editor, int& nodeIndexCount, const std::st
 		editor.GetEditorWindow<InspectorWindow>().value()->SetSelectedObject(gameObject);
 	}
 
+	struct TransformWrapper
+	{
+		Transform* pTransform;
+	} data{ const_cast<Transform*>(this) };
+
+	if (ImGui::BeginDragDropSource())
+	{
+		ImGui::SetDragDropPayload("HIERARCHY_DRAGGABLE_TRANSFORM", &data, sizeof(Transform*));
+		ImGui::EndDragDropSource();
+	}
+
 	if (ImGui::BeginDragDropTarget())
 	{
-		if (const ImGuiPayload * payload = ImGui::AcceptDragDropPayload("HIERARCHY_DRAGGABLE_MODEL"))
+		const ImGuiPayload* payload = nullptr;
+		if (payload = ImGui::AcceptDragDropPayload("HIERARCHY_DRAGGABLE_MODEL"))
 		{
 			struct ModelWrapper
 			{
 				Model* pModel;
 			};
 
-			ModelWrapper droppedModel = *reinterpret_cast<ModelWrapper*>(payload->Data);
-			droppedModel.pModel->LoadCPU();
-			droppedModel.pModel->LoadGPU();
-			droppedModel.pModel->GetObject().AddToScene(*editor.GetEngine().activeScene, const_cast<Transform*>(this));
+			Model* droppedModel = reinterpret_cast<ModelWrapper*>(payload->Data)->pModel;
+			droppedModel->LoadCPU();
+			droppedModel->LoadGPU();
+			droppedModel->GetObject().AddToScene(*editor.GetEngine().activeScene, const_cast<Transform*>(this));
+		}
+		else if (payload = ImGui::AcceptDragDropPayload("HIERARCHY_DRAGGABLE_TRANSFORM"))
+		{
+			Transform* droppedTransform = reinterpret_cast<TransformWrapper*>(payload->Data)->pTransform;
+			droppedTransform->SetParent(const_cast<Transform*>(this));
 		}
 
 		ImGui::EndDragDropTarget();
