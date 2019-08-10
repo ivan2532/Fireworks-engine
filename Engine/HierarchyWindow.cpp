@@ -1,9 +1,11 @@
 #include "HierarchyWindow.hpp"
 #include "imguiIncludes.hpp"
+#include "imgui/imgui_internal.h"
 #include "Engine.hpp"
 #include "Transform.hpp"
 #include "SceneCameraController.hpp"
 #include "GizmoManager.hpp"
+#include <iostream>
 
 HierarchyWindow::HierarchyWindow(Editor& editor) noexcept
 	:
@@ -17,20 +19,22 @@ void HierarchyWindow::Draw() noexcept
 		return;
 
 	nodeIndexCount = 0;
+
 	if (ImGui::Begin("Hierarchy", &open))
 	{
-		/*for (int i = 0; i < (int)editor.engine.activeScene->sceneObjects.size(); i++)
+		if (ImGui::BeginDragDropTarget())
 		{
-			auto transform = editor.engine.activeScene->sceneObjects[i].GetComponent<Transform>();
-
-			if (!transform)
-				continue;
-
-			if (transform.value()->GetParent() == nullptr && !editor.engine.activeScene->sceneObjects[i].GetComponent<SceneCameraController>())
+			if (const ImGuiPayload * payload = ImGui::AcceptDragDropPayload("HIERARCHY_DRAGGABLE_MODEL"))
 			{
-				transform.value()->DrawHierarchy(editor, nodeIndexCount, std::to_string(i));
+				Model* droppedModel = (Model*)payload->Data;
+				droppedModel->LoadCPU();
+				droppedModel->LoadGPU();
+				droppedModel->AddToScene(*editor.engine.activeScene);
 			}
-		}*/
+
+			ImGui::EndDragDropTarget();
+		}
+
 		int indexCounter = 0;
 		for (auto it = editor.engine.activeScene->sceneObjects.begin(); it != editor.engine.activeScene->sceneObjects.end(); ++it, indexCounter++)
 		{

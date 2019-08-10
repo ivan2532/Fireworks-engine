@@ -24,6 +24,9 @@ Mesh::Mesh(
 
 void Mesh::Draw(Shader& shader) const noexcept
 {
+	if (!loadedGPU)
+		std::cout << "WARNING: Drawing mesh while it isn't loaded!" << std::endl;
+
 	shader.Use();
 	unsigned diffuseNum = 1, specularNum = 1, normalNum = 1, metallicNum = 1;
 
@@ -66,6 +69,11 @@ std::string Mesh::GetName() const noexcept
 
 void Mesh::LoadGPU() noexcept
 {
+	if (loadedGPU)
+		return;
+
+	loadedGPU = true;
+
 	glGenVertexArrays(1u, &vertexArrayID);
 	glGenBuffers(1u, &vertexBufferID);
 	glGenBuffers(1u, &elementBufferID);

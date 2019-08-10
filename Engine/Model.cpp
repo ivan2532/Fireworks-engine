@@ -231,6 +231,9 @@ std::vector<Texture> Model::LoadMaterialTextures(aiMaterial* material, aiTexture
 
 void Model::AddToScene(Scene& scene)
 {
+	if (!loadedCPU || !loadedGPU)
+		std::cout << "WARNING: Adding model while it isn't loaded!" << std::endl;
+
 	meshObject.AddToScene(scene);
 }
 
@@ -238,25 +241,6 @@ void Model::LoadGPU() noexcept
 {
 	if (loadedGPU)
 		return;
-
-	/*auto meshObjectRenderer = meshObject.GetComponent<MeshRenderer>();
-
-	if (meshObjectRenderer)
-	{
-		for (auto& mesh : meshObjectRenderer.value()->GetMeshes())
-			mesh->InitMesh();
-	}
-
-	for (auto& object : meshObject.GetChildren())
-	{
-		auto meshRenderer = object.GetComponent<MeshRenderer>();
-
-		if (!meshRenderer)
-			continue;
-
-		for (auto& mesh : meshRenderer.value()->GetMeshes())
-			mesh->InitMesh();
-	}*/
 
 	LoadGPURecurse(meshObject);
 

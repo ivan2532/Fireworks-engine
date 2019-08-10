@@ -134,6 +134,16 @@ void AssetExplorerWindow::DrawFolderContents(FolderNode* folder) const noexcept
 			ImVec2(1, 0),
 			-1
 		);
+
+		if (auto check = dynamic_cast<Model*>(it->get()))
+		{
+			if (ImGui::BeginDragDropSource())
+			{
+				ImGui::SetDragDropPayload("HIERARCHY_DRAGGABLE_MODEL", it->get(), sizeof(Model));
+				ImGui::EndDragDropSource();
+			}
+		}
+
 		ImGui::PopID();
 
 		if (!(*it))

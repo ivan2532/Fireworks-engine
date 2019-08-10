@@ -1,6 +1,5 @@
 #pragma once
 #include "EditorWindow.hpp"
-#include <vector>
 #include <memory>
 
 class Engine;

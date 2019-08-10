@@ -58,6 +58,7 @@ public:
 	std::vector<unsigned> indices;
 	std::vector<Texture> textures;
 private:
+	bool loadedGPU = false;
 	std::string name;
 	unsigned vertexBufferID;
 	unsigned elementBufferID;

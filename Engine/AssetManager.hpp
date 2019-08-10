@@ -2,7 +2,6 @@
 #include "Asset.hpp"
 #include "AssetPreview.hpp"
 #include <string>
-#include <vector>
 #include <filesystem>
 #include <memory>
 #include <mutex>
