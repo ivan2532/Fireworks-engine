@@ -208,9 +208,15 @@ void Window::KeyCallback(int key, int scancode, int action, int mods) noexcept
 		return;
 
 	if (action == GLFW_PRESS)
+	{
 		keyDown.set(key, 1);
+		keyUp.set(key, 0);
+	}
 	else if (action == GLFW_RELEASE)
+	{
 		keyUp.set(key, 1);
+		keyDown.set(key, 0);
+	}
 }
 
 bool Window::GetKey(int key, bool respectCapture) noexcept

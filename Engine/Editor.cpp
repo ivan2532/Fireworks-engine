@@ -18,8 +18,8 @@ Editor::Editor(Engine& rEngine) noexcept
 
 void Editor::SpawnWindows() noexcept
 {
-	editorWindows.push_back(std::make_unique<HierarchyWindow>(*this));
 	editorWindows.push_back(std::make_unique<InspectorWindow>(*this));
+	editorWindows.push_back(std::make_unique<HierarchyWindow>(*this));
 	editorWindows.push_back(std::make_unique<AssetExplorerWindow>(*this));
 	editorWindows.push_back(std::make_unique<SceneViewWindow>(*this));
 }
@@ -183,6 +183,11 @@ void Editor::ProcessInput() noexcept
 		Undo();
 	if (engine.wnd.GetKey(GLFW_KEY_LEFT_CONTROL) && engine.wnd.GetKeyDown(GLFW_KEY_Y))
 		Redo();
+
+	for (const auto& editorWindow : editorWindows)
+	{
+		editorWindow->ProcessInput();
+	}
 }
 
 void Editor::PushUndoable(std::unique_ptr<Undoable> newUndoable) noexcept
@@ -211,6 +216,11 @@ void Editor::Redo() noexcept
 	redoBuffer.back()->Redo();
 	undoBuffer.push_back(std::move(redoBuffer.back()));
 	redoBuffer.pop_back();
+}
+
+Engine& Editor::GetEngine() noexcept
+{
+	return engine;
 }
 
 Window* Editor::GetMainWindow() const noexcept

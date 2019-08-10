@@ -51,7 +51,10 @@ void Scene::CheckObjectDelete() noexcept
 	for (auto it = sceneObjects.begin(); it != sceneObjects.end();)
 	{
 		if (it->deleteFlag == true)
+		{
+			it->deleteFlag = false;
 			it = sceneObjects.erase(it);
+		}
 		else
 			++it;
 	}

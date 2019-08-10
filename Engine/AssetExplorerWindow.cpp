@@ -10,7 +10,7 @@ namespace fs = std::filesystem;
 AssetExplorerWindow::AssetExplorerWindow(Editor& editor) noexcept
 	:
 	EditorWindow(editor, "Asset explorer"),
-	assetManager(editor, "C:/Fireworks projects/Test project/Assets", editor.engine.defaultShader)
+	assetManager(editor, "C:\\Fireworks projects\\Test project\\Assets", editor.engine.defaultShader)
 {
 }
 
@@ -139,7 +139,12 @@ void AssetExplorerWindow::DrawFolderContents(FolderNode* folder) const noexcept
 		{
 			if (ImGui::BeginDragDropSource())
 			{
-				ImGui::SetDragDropPayload("HIERARCHY_DRAGGABLE_MODEL", it->get(), sizeof(Model));
+				struct ModelWrapper
+				{
+					Model* pModel;
+				} data { check };
+
+				ImGui::SetDragDropPayload("HIERARCHY_DRAGGABLE_MODEL", &data, sizeof(ModelWrapper));
 				ImGui::EndDragDropSource();
 			}
 		}

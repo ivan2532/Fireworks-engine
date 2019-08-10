@@ -5,12 +5,20 @@
 #include "Transform.hpp"
 #include "SceneCameraController.hpp"
 #include "GizmoManager.hpp"
+#include "InspectorWindow.hpp"
+#include "GLFW/glfw3.h"
 #include <iostream>
 
 HierarchyWindow::HierarchyWindow(Editor& editor) noexcept
 	:
 	EditorWindow(editor, "Hierarchy")
 {
+	auto search = editor.GetEditorWindow<InspectorWindow>();
+
+	if (search)
+		inspectorWindow = search.value();
+	else
+		std::cout << "ERROR: No inspector window at time of hierarchy window creation." << std::endl;
 }
 
 void HierarchyWindow::Draw() noexcept
@@ -22,14 +30,21 @@ void HierarchyWindow::Draw() noexcept
 
 	if (ImGui::Begin("Hierarchy", &open))
 	{
+		windowFocused = ImGui::IsWindowFocused();
+
 		if (ImGui::BeginDragDropTarget())
 		{
 			if (const ImGuiPayload * payload = ImGui::AcceptDragDropPayload("HIERARCHY_DRAGGABLE_MODEL"))
 			{
-				Model* droppedModel = (Model*)payload->Data;
-				droppedModel->LoadCPU();
-				droppedModel->LoadGPU();
-				droppedModel->AddToScene(*editor.engine.activeScene);
+				struct ModelWrapper
+				{
+					Model* pModel;
+				};
+
+				ModelWrapper droppedModel = *reinterpret_cast<ModelWrapper*>(payload->Data);
+				droppedModel.pModel->LoadCPU();
+				droppedModel.pModel->LoadGPU();
+				droppedModel.pModel->GetObject().AddToScene(*editor.GetEngine().activeScene);
 			}
 
 			ImGui::EndDragDropTarget();
@@ -48,6 +63,18 @@ void HierarchyWindow::Draw() noexcept
 		}
 	}
 	ImGui::End();
+}
+
+void HierarchyWindow::ProcessInput() noexcept
+{
+	if (!windowFocused)
+		return;
+
+	if (inspectorWindow->selectedObject && editor.GetMainWindow()->GetKeyDown(GLFW_KEY_DELETE, false))
+	{
+		inspectorWindow->selectedObject->Delete();
+		inspectorWindow->selectedObject = nullptr;
+	}
 }
 
 int HierarchyWindow::GetSelectedHierarchy() const noexcept

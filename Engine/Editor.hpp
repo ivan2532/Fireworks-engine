@@ -46,6 +46,7 @@ public:
 	void PushUndoable(std::unique_ptr<Undoable> newUndoable) noexcept;
 	void Undo() noexcept;
 	void Redo() noexcept;
+	Engine& GetEngine() noexcept;
 	Window* GetMainWindow() const noexcept;
 private:
 	Engine& engine;

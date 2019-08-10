@@ -3,9 +3,11 @@
 #include "imguiIncludes.hpp"
 #include "GameObject.hpp"
 #include "Editor.hpp"
+#include "Engine.hpp"
 #include "Math.hpp"
 #include "HierarchyWindow.hpp"
 #include "InspectorWindow.hpp"
+#include "Model.hpp"
 #include <iostream>
 
 std::unique_ptr<Component> Transform::Clone(GameObject* go) const noexcept
@@ -373,6 +375,24 @@ void Transform::DrawHierarchy(Editor& editor, int& nodeIndexCount, const std::st
 	{
 		hierarchyWindow->SetSelectedHierarchy(currentIndex);
 		editor.GetEditorWindow<InspectorWindow>().value()->SetSelectedObject(gameObject);
+	}
+
+	if (ImGui::BeginDragDropTarget())
+	{
+		if (const ImGuiPayload * payload = ImGui::AcceptDragDropPayload("HIERARCHY_DRAGGABLE_MODEL"))
+		{
+			struct ModelWrapper
+			{
+				Model* pModel;
+			};
+
+			ModelWrapper droppedModel = *reinterpret_cast<ModelWrapper*>(payload->Data);
+			droppedModel.pModel->LoadCPU();
+			droppedModel.pModel->LoadGPU();
+			droppedModel.pModel->GetObject().AddToScene(*editor.GetEngine().activeScene, const_cast<Transform*>(this));
+		}
+
+		ImGui::EndDragDropTarget();
 	}
 
 	if (open)

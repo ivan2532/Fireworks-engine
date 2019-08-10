@@ -1,5 +1,6 @@
 #include "ImageLoader.h"
 #include "OpenGLIncludes.hpp"
+#include <filesystem>
 #include <iostream>
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -8,7 +9,7 @@
 unsigned ImageLoader::TextureFromFile(const char* path, const std::string& directory, bool gamma)
 {
 	std::string filename = std::string(path);
-	filename = directory + '/' + filename;
+	filename = (std::filesystem::path(directory) / std::filesystem::path(filename)).string();
 
 	unsigned textureID;
 	glGenTextures(1, &textureID);

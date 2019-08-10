@@ -20,13 +20,13 @@ public:
 	static const std::vector<std::string> supportedFormats;
 public:
 	Model(unsigned id, const std::filesystem::path& name, const std::string&, Shader& shader) noexcept;
-	void AddToScene(Scene&);
 	void LoadCPU(bool loadPreview = false) noexcept;
 	void LoadGPU() noexcept;
 	void UnloadCPU() noexcept; //Sets the loaded flag to false (doesn't literally unload)
 	void UnloadGPU() noexcept; //Sets the loaded flag to false (doesn't literally unload)
 	void Draw() noexcept;
 	void Draw(Shader& rShader) noexcept;
+	GameObject& GetObject() noexcept;
 public: //Preview getters
 	glm::vec3 GetSphereCenter() const noexcept;
 	float GetSphereRadius() const noexcept;

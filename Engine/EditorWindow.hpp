@@ -9,6 +9,7 @@ public:
 	EditorWindow(Editor& editor, const std::string& name) noexcept;
 public:
 	virtual void Draw() noexcept = 0;
+	virtual void ProcessInput() noexcept {};
 public:
 	std::string GetName() const noexcept;
 	bool GetOpen() const noexcept;

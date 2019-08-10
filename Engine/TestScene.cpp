@@ -9,12 +9,11 @@ TestScene::TestScene(Engine& rEngine, Window& w) noexcept
 	:
 	Scene(rEngine, "Test scene"),
 	wnd(w),
-	testModel(UINT16_MAX, /*"Material_ball/material_ball.obj"*/"TrexModelByJoel3d_FBX/TrexByJoel3d.fbx", "material_ball", rEngine.defaultShader)
+	testModel(UINT16_MAX, "TrexModelByJoel3d_FBX\\TrexByJoel3d.fbx", "trex_test", rEngine.defaultShader)
 {
 	testModel.LoadCPU();
 	testModel.LoadGPU();
-	testModel.AddToScene(*this);
-	//testModel.AddToScene(*this);
+	testModel.GetObject().AddToScene(*this);
 
 	GameObject transformTest("Test child");
 	transformTest.AddComponent<Transform>();

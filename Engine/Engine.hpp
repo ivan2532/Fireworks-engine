@@ -13,6 +13,7 @@ class Engine
 {
 	friend Editor;
 	friend Window;
+	friend Transform;
 	friend Camera;
 	friend class HierarchyWindow;
 public:

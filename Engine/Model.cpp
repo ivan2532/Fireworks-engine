@@ -41,7 +41,7 @@ void Model::LoadCPU(bool loadPreview) noexcept
 		return;
 	}
 
-	directory = assetPath.string().substr(0, assetPath.string().find_last_of('/'));
+	directory = assetPath.string().substr(0, assetPath.string().find_last_of('\\'));
 	ProcessNode(scene->mRootNode, scene, nullptr);
 
 	if (loadPreviewValues)
@@ -103,6 +103,7 @@ void Model::ProcessNode(aiNode* node, const aiScene* scene, Transform* parent) n
 
 	if (!parent)
 	{
+		object->SetName(assetName);
 		meshObject = std::move(*object);
 		newParent = meshObject.GetComponent<Transform>().value();
 	}
@@ -229,14 +230,6 @@ std::vector<Texture> Model::LoadMaterialTextures(aiMaterial* material, aiTexture
 	return std::move(textures);
 }
 
-void Model::AddToScene(Scene& scene)
-{
-	if (!loadedCPU || !loadedGPU)
-		std::cout << "WARNING: Adding model while it isn't loaded!" << std::endl;
-
-	meshObject.AddToScene(scene);
-}
-
 void Model::LoadGPU() noexcept
 {
 	if (loadedGPU)
@@ -285,6 +278,11 @@ void Model::Draw(Shader& rShader) noexcept
 	{
 		mesh->Draw(rShader);
 	}
+}
+
+GameObject& Model::GetObject() noexcept
+{
+	return meshObject;
 }
 
 glm::vec3 Model::GetSphereCenter() const noexcept
