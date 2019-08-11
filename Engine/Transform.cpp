@@ -400,6 +400,9 @@ void Transform::DrawHierarchy(Editor& editor, int& nodeIndexCount, const std::st
 	if (ImGui::BeginDragDropSource())
 	{
 		ImGui::SetDragDropPayload("HIERARCHY_DRAGGABLE_TRANSFORM", &data, sizeof(Transform*));
+
+		ImGui::Text(gameObject->GetName().c_str());
+
 		ImGui::EndDragDropSource();
 	}
 

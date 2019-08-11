@@ -145,6 +145,9 @@ void AssetExplorerWindow::DrawFolderContents(FolderNode* folder) const noexcept
 				} data { check };
 
 				ImGui::SetDragDropPayload("HIERARCHY_DRAGGABLE_MODEL", &data, sizeof(ModelWrapper));
+
+				ImGui::Text(check->GetName().c_str());
+				
 				ImGui::EndDragDropSource();
 			}
 		}

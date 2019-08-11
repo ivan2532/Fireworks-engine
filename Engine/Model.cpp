@@ -41,7 +41,12 @@ void Model::LoadCPU(bool loadPreview) noexcept
 		return;
 	}
 
+#ifdef _WIN32
 	directory = assetPath.string().substr(0, assetPath.string().find_last_of('\\'));
+#else
+	directory = assetPath.string().substr(0, assetPath.string().find_last_of('/'));
+#endif
+
 	ProcessNode(scene->mRootNode, scene, nullptr);
 
 	if (loadPreviewValues)

@@ -32,23 +32,51 @@ void HierarchyWindow::Draw() noexcept
 	{
 		windowFocused = ImGui::IsWindowFocused();
 
-		if (ImGui::BeginDragDropTarget())
+		ImRect windowContentRect(
+			ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMin().x,
+			ImGui::GetWindowPos().y + ImGui::GetWindowContentRegionMin().y,
+			ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x,
+			ImGui::GetWindowPos().y + ImGui::GetWindowContentRegionMax().y
+		);
+
+		ImGui::PushClipRect(
+			ImVec2(0, 0),
+			ImVec2((float)editor.GetMainWindow()->GetWidth(), (float)editor.GetMainWindow()->GetHeight()),
+			false
+		);
+
+		ImGui::PushID(1);
+		if (ImGui::BeginDragDropTargetCustom(windowContentRect, 1))
 		{
-			if (const ImGuiPayload * payload = ImGui::AcceptDragDropPayload("HIERARCHY_DRAGGABLE_MODEL"))
+			const ImGuiPayload* payload = nullptr;
+
+			if (payload = ImGui::AcceptDragDropPayload("HIERARCHY_DRAGGABLE_MODEL"))
 			{
 				struct ModelWrapper
 				{
 					Model* pModel;
 				};
 
-				ModelWrapper droppedModel = *reinterpret_cast<ModelWrapper*>(payload->Data);
-				droppedModel.pModel->LoadCPU();
-				droppedModel.pModel->LoadGPU();
-				droppedModel.pModel->GetObject().AddToScene(*editor.GetEngine().activeScene);
+				Model* droppedModel = reinterpret_cast<ModelWrapper*>(payload->Data)->pModel;
+				droppedModel->LoadCPU();
+				droppedModel->LoadGPU();
+				droppedModel->GetObject().AddToScene(*editor.GetEngine().activeScene);
+			}
+			else if (payload = ImGui::AcceptDragDropPayload("HIERARCHY_DRAGGABLE_TRANSFORM"))
+			{
+				struct TransformWrapper
+				{
+					Transform* pModel;
+				};
+
+				Transform* droppedTransformer = reinterpret_cast<TransformWrapper*>(payload->Data)->pModel;
+				droppedTransformer->SetParent(nullptr);
 			}
 
 			ImGui::EndDragDropTarget();
 		}
+		ImGui::PopID();
+		ImGui::PopClipRect();
 
 		int indexCounter = 0;
 		for (auto it = editor.engine.activeScene->sceneObjects.begin(); it != editor.engine.activeScene->sceneObjects.end(); ++it, indexCounter++)
@@ -69,7 +97,7 @@ void HierarchyWindow::ProcessInput() noexcept
 {
 	if (!windowFocused)
 		return;
-
+	
 	if (inspectorWindow->selectedObject && editor.GetMainWindow()->GetKeyDown(GLFW_KEY_DELETE, false))
 	{
 		inspectorWindow->selectedObject->Delete();
