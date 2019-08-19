@@ -419,7 +419,7 @@ void Transform::DrawHierarchy(Editor& editor, int& nodeIndexCount, const std::st
 			Model* droppedModel = reinterpret_cast<ModelWrapper*>(payload->Data)->pModel;
 			droppedModel->LoadCPU();
 			droppedModel->LoadGPU();
-			droppedModel->GetObject().AddToScene(*editor.GetEngine().activeScene, const_cast<Transform*>(this));
+			droppedModel->GetGameObject().AddToScene(*editor.GetEngine().activeScene, const_cast<Transform*>(this));
 		}
 		else if (payload = ImGui::AcceptDragDropPayload("HIERARCHY_DRAGGABLE_TRANSFORM"))
 		{

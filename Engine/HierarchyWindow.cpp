@@ -60,7 +60,7 @@ void HierarchyWindow::Draw() noexcept
 				Model* droppedModel = reinterpret_cast<ModelWrapper*>(payload->Data)->pModel;
 				droppedModel->LoadCPU();
 				droppedModel->LoadGPU();
-				droppedModel->GetObject().AddToScene(*editor.GetEngine().activeScene);
+				droppedModel->GetGameObject().AddToScene(*editor.GetEngine().activeScene);
 			}
 			else if (payload = ImGui::AcceptDragDropPayload("HIERARCHY_DRAGGABLE_TRANSFORM"))
 			{

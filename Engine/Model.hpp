@@ -26,7 +26,7 @@ public:
 	void UnloadGPU() noexcept; //Sets the loaded flag to false (doesn't literally unload)
 	void Draw() noexcept;
 	void Draw(Shader& rShader) noexcept;
-	GameObject& GetObject() noexcept;
+	GameObject& GetGameObject() noexcept;
 public: //Preview getters
 	glm::vec3 GetSphereCenter() const noexcept;
 	float GetSphereRadius() const noexcept;

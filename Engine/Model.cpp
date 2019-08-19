@@ -285,7 +285,7 @@ void Model::Draw(Shader& rShader) noexcept
 	}
 }
 
-GameObject& Model::GetObject() noexcept
+GameObject& Model::GetGameObject() noexcept
 {
 	return meshObject;
 }
