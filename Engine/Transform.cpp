@@ -368,7 +368,7 @@ void Transform::AddShaderToUpdate(Shader* shader) noexcept
 	shadersToUpdate.push_back(shader);
 }
 
-void Transform::DrawHierarchy(Editor& editor, int& nodeIndexCount, const std::string& idBuildUp) const noexcept
+void Transform::DrawHierarchy(Editor& editor, int& nodeIndexCount, const std::string& idBuildUp) noexcept
 {
 	auto hierarchyWindow = editor.GetEditorWindow<HierarchyWindow>().value();
 	const int currentIndex = nodeIndexCount;
@@ -424,7 +424,7 @@ void Transform::DrawHierarchy(Editor& editor, int& nodeIndexCount, const std::st
 		else if (payload = ImGui::AcceptDragDropPayload("HIERARCHY_DRAGGABLE_TRANSFORM"))
 		{
 			Transform* droppedTransform = reinterpret_cast<TransformWrapper*>(payload->Data)->pTransform;
-			droppedTransform->SetParent(const_cast<Transform*>(this));
+			droppedTransform->SetParent(this);
 		}
 
 		ImGui::EndDragDropTarget();
