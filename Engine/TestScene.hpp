@@ -13,4 +13,18 @@ public:
 private:
 	Window& wnd;
 	Model testModel;
+
+	glm::vec3 lightPositions[4] = {
+		   glm::vec3(-10.0f,  10.0f, 10.0f),
+		   glm::vec3(10.0f,  10.0f, 10.0f),
+		   glm::vec3(-10.0f, -10.0f, 10.0f),
+		   glm::vec3(10.0f, -10.0f, 10.0f),
+	};
+
+	glm::vec3 lightColors[4] = {
+		glm::vec3(300.0f, 300.0f, 300.0f),
+		glm::vec3(300.0f, 300.0f, 300.0f),
+		glm::vec3(300.0f, 300.0f, 300.0f),
+		glm::vec3(300.0f, 300.0f, 300.0f)
+	};
 };

@@ -47,6 +47,12 @@ void Mesh::Draw(Shader& shader) const noexcept
 			case Normal:
 				texName = "tex_normal" + std::to_string(normalNum++);
 				break;
+			case Ambient_Occlusion:
+				texName = "tex_ao" + std::to_string(normalNum++);
+				break;
+			case Metalness:
+				texName = "tex_metalness" + std::to_string(normalNum++);
+				break;
 			default:
 				std::cout << "Unknow texture type!";
 				break;

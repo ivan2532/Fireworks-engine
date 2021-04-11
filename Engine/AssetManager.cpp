@@ -70,8 +70,6 @@ unsigned AssetManager::GetPreviewFromMeta(const std::filesystem::path& metaPath)
 
 void AssetManager::ScanDirectory(const std::filesystem::path& directory, FolderNode* parent) noexcept
 {
-	auto curID = std::this_thread::get_id();
-
 	if (std::filesystem::exists(directory) && std::filesystem::is_directory(directory))
 	{
 		FolderNode newFolder;

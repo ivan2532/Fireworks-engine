@@ -11,7 +11,7 @@ Engine::Engine() noexcept
 	wnd(1920u, 1080u, "Fireworks engine", false, true, false, true),
 	editor(*this),
 	activeScene(std::make_unique<TestScene>(*this, wnd)),
-	defaultShader(wnd.GetGLVersionMajor(), wnd.GetGLVersionMinor(), "UnlitTextureVS.glsl", "UnlitTextureFS.glsl")
+	defaultShader(wnd.GetGLVersionMajor(), wnd.GetGLVersionMinor(), "PBR_VS.glsl", "PBR_FS.glsl")
 {
 	SetCallbacks();
 
@@ -74,7 +74,6 @@ void Engine::BeginFrame() noexcept
 	ImGui::NewFrame();
 
 	ImGuizmo::BeginFrame();
-
 
 	wnd.BindFramebuffer(); //Unbound in editor draw scene view
 	ClearBuffers();

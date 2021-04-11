@@ -11,7 +11,9 @@ enum TextureType
 {
 	Diffuse,
 	Specular,
-	Normal
+	Normal,
+	Metalness,
+	Ambient_Occlusion
 };
 
 struct Vertex

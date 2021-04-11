@@ -214,6 +214,8 @@
   <ItemGroup>
     <None Include="FlatShadedFS.glsl" />
     <None Include="FlatShadedVS.glsl" />
+    <None Include="PBR_FS.glsl" />
+    <None Include="PBR_VS.glsl" />
     <None Include="UnlitTextureFS.glsl" />
     <None Include="UnlitTextureVS.glsl" />
   </ItemGroup>

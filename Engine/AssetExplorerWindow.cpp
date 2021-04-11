@@ -93,6 +93,37 @@ void AssetExplorerWindow::DrawFolderTree(FolderNode* folder, const std::string& 
 		selectedFolder = folder;
 	}
 
+	struct FolderWrapper
+	{
+		FolderNode* pFolder;
+	} data{ folder };
+
+	if (ImGui::BeginDragDropSource())
+	{
+		ImGui::SetDragDropPayload("FOLDER_TREE_DRAGGABLE", &data, sizeof(FolderWrapper));
+
+		ImGui::Text(folder->name.c_str());
+
+		ImGui::EndDragDropSource();
+	}
+
+	if (ImGui::BeginDragDropTarget())
+	{
+		const ImGuiPayload* payload = nullptr;
+		if (payload = ImGui::AcceptDragDropPayload("FOLDER_TREE_DRAGGABLE"))
+		{
+			FolderNode* droppedModel = reinterpret_cast<FolderWrapper*>(payload->Data)->pFolder;
+			
+			std::filesystem::rename(droppedModel->path, std::filesystem::path(folder->path) / droppedModel->name);
+			assetManager.ScanAssets();
+			ImGui::EndDragDropTarget();
+			ImGui::TreePop();
+			return; //FIX MEEE
+		}
+
+		ImGui::EndDragDropTarget();
+	}
+
 	if (expandedNode)
 	{
 		if (folder->children.size() > 0)

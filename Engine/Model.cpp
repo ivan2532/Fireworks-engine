@@ -174,6 +174,14 @@ std::unique_ptr<Mesh> Model::ProcessMesh(aiMesh* mesh, const aiScene* scene) noe
 		std::vector<Texture> normalTextures = LoadMaterialTextures(material, aiTextureType_HEIGHT, Normal);
 		if(normalTextures.size() > 0)
 			textures.insert(textures.end(), normalTextures.begin(), normalTextures.end());
+
+		std::vector<Texture> aoTextures = LoadMaterialTextures(material, aiTextureType_AMBIENT_OCCLUSION, Ambient_Occlusion);
+		if (aoTextures.size() > 0)
+			textures.insert(textures.end(), aoTextures.begin(), aoTextures.end());
+
+		std::vector<Texture> metalnessTextures = LoadMaterialTextures(material, aiTextureType_METALNESS, Metalness);
+		if (metalnessTextures.size() > 0)
+			textures.insert(textures.end(), metalnessTextures.begin(), metalnessTextures.end());
 	}
 
 	if (loadPreviewValues)

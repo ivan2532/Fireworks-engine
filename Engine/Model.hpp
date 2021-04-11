@@ -19,7 +19,7 @@ class Model : public Asset
 public:
 	static const std::vector<std::string> supportedFormats;
 public:
-	Model(unsigned id, const std::filesystem::path& name, const std::string&, Shader& shader) noexcept;
+	Model(unsigned id, const std::filesystem::path& path, const std::string& name, Shader& shader) noexcept;
 	void LoadCPU(bool loadPreview = false) noexcept;
 	void LoadGPU() noexcept;
 	void UnloadCPU() noexcept; //Sets the loaded flag to false (doesn't literally unload)

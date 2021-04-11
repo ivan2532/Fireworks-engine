@@ -221,9 +221,6 @@
     <ClInclude Include="MeshRenderer.hpp">
       <Filter>Header Files\Components</Filter>
     </ClInclude>
-    <ClInclude Include="Scene.hpp">
-      <Filter>Header Files\Scenes</Filter>
-    </ClInclude>
     <ClInclude Include="Engine.hpp">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
@@ -323,6 +320,9 @@
     <ClInclude Include="Miniball.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Scene.hpp">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="UnlitTextureVS.glsl">
@@ -335,6 +335,12 @@
       <Filter>Shader Files</Filter>
     </None>
     <None Include="FlatShadedFS.glsl">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="PBR_VS.glsl">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="PBR_FS.glsl">
       <Filter>Shader Files</Filter>
     </None>
   </ItemGroup>
